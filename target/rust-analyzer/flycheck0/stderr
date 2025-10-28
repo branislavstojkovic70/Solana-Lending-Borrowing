@@ -1,0 +1,2119 @@
+    Updating crates.io index
+     Locking 151 packages to latest compatible versions
+   0.519150084s  INFO prepare_target{force=false package_id=lendborrow v0.1.0 (/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/programs/lendborrow) target="lendborrow"}: cargo::core::compiler::fingerprint: fingerprint error for lendborrow v0.1.0 (/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/programs/lendborrow)/Check { test: false }/TargetInner { ..: lib_target("lendborrow", ["cdylib", "lib"], "/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/programs/lendborrow/src/lib.rs", Edition2021) }
+   0.519323792s  INFO prepare_target{force=false package_id=lendborrow v0.1.0 (/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/programs/lendborrow) target="lendborrow"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/lendborrow-2d774a765b07faec/lib-lendborrow`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   7: cargo::ops::cargo_compile::compile_ws
+   8: cargo::ops::cargo_compile::compile_with_exec
+   9: cargo::ops::cargo_compile::compile
+  10: cargo::commands::check::exec
+  11: <cargo::cli::Exec>::exec
+  12: cargo::main
+  13: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  14: std::rt::lang_start::<()>::{closure#0}
+  15: std::rt::lang_start_internal
+  16: _main
+   0.543381500s  INFO prepare_target{force=false package_id=anchor-lang v0.32.1 target="anchor_lang"}: cargo::core::compiler::fingerprint: fingerprint error for anchor-lang v0.32.1/Check { test: false }/TargetInner { ..: lib_target("anchor_lang", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anchor-lang-0.32.1/src/lib.rs", Edition2021) }
+   0.543391459s  INFO prepare_target{force=false package_id=anchor-lang v0.32.1 target="anchor_lang"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/anchor-lang-bc1e30d89c52a4d5/lib-anchor_lang`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   8: cargo::ops::cargo_compile::compile_ws
+   9: cargo::ops::cargo_compile::compile_with_exec
+  10: cargo::ops::cargo_compile::compile
+  11: cargo::commands::check::exec
+  12: <cargo::cli::Exec>::exec
+  13: cargo::main
+  14: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  15: std::rt::lang_start::<()>::{closure#0}
+  16: std::rt::lang_start_internal
+  17: _main
+   0.552624417s  INFO prepare_target{force=false package_id=base64 v0.21.7 target="base64"}: cargo::core::compiler::fingerprint: fingerprint error for base64 v0.21.7/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("base64", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/base64-0.21.7/src/lib.rs", Edition2018) }
+   0.552637125s  INFO prepare_target{force=false package_id=base64 v0.21.7 target="base64"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/base64-df055d3510d3fcfc/lib-base64`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.552818209s  INFO prepare_target{force=false package_id=bincode v1.3.3 target="bincode"}: cargo::core::compiler::fingerprint: fingerprint error for bincode v1.3.3/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("bincode", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bincode-1.3.3/src/lib.rs", Edition2015) }
+   0.552822584s  INFO prepare_target{force=false package_id=bincode v1.3.3 target="bincode"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/bincode-c50f2ea3d98aa727/lib-bincode`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.552996000s  INFO prepare_target{force=false package_id=serde v1.0.228 target="serde"}: cargo::core::compiler::fingerprint: fingerprint error for serde v1.0.228/Check { test: false }/TargetInner { ..: lib_target("serde", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs", Edition2021) }
+   0.553000250s  INFO prepare_target{force=false package_id=serde v1.0.228 target="serde"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/serde-1dd718d818c4142c/lib-serde`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.553187792s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="serde_core"}: cargo::core::compiler::fingerprint: fingerprint error for serde_core v1.0.228/Check { test: false }/TargetInner { ..: lib_target("serde_core", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde_core-1.0.228/src/lib.rs", Edition2021) }
+   0.553191917s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="serde_core"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/serde_core-67c115808479ab76/lib-serde_core`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  11: cargo::ops::cargo_compile::compile_ws
+  12: cargo::ops::cargo_compile::compile_with_exec
+  13: cargo::ops::cargo_compile::compile
+  14: cargo::commands::check::exec
+  15: <cargo::cli::Exec>::exec
+  16: cargo::main
+  17: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  18: std::rt::lang_start::<()>::{closure#0}
+  19: std::rt::lang_start_internal
+  20: _main
+   0.553325709s  INFO prepare_target{force=false package_id=borsh v0.10.4 target="borsh"}: cargo::core::compiler::fingerprint: fingerprint error for borsh v0.10.4/Check { test: false }/TargetInner { ..: lib_target("borsh", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/borsh-0.10.4/src/lib.rs", Edition2018) }
+   0.553329000s  INFO prepare_target{force=false package_id=borsh v0.10.4 target="borsh"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/borsh-9f5ae16d24721fb1/lib-borsh`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.553980209s  INFO prepare_target{force=false package_id=hashbrown v0.13.2 target="hashbrown"}: cargo::core::compiler::fingerprint: fingerprint error for hashbrown v0.13.2/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("hashbrown", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hashbrown-0.13.2/src/lib.rs", Edition2021) }
+   0.553983500s  INFO prepare_target{force=false package_id=hashbrown v0.13.2 target="hashbrown"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/hashbrown-1cb412357cb398a7/lib-hashbrown`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.554142417s  INFO prepare_target{force=false package_id=ahash v0.8.12 target="ahash"}: cargo::core::compiler::fingerprint: fingerprint error for ahash v0.8.12/Check { test: false }/TargetInner { ..: lib_target("ahash", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ahash-0.8.12/src/lib.rs", Edition2018) }
+   0.554145459s  INFO prepare_target{force=false package_id=ahash v0.8.12 target="ahash"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/ahash-b254dbe5a5ac552d/lib-ahash`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  11: cargo::ops::cargo_compile::compile_ws
+  12: cargo::ops::cargo_compile::compile_with_exec
+  13: cargo::ops::cargo_compile::compile
+  14: cargo::commands::check::exec
+  15: <cargo::cli::Exec>::exec
+  16: cargo::main
+  17: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  18: std::rt::lang_start::<()>::{closure#0}
+  19: std::rt::lang_start_internal
+  20: _main
+   0.554663459s  INFO prepare_target{force=false package_id=cfg-if v1.0.4 target="cfg_if"}: cargo::core::compiler::fingerprint: fingerprint error for cfg-if v1.0.4/Check { test: false }/TargetInner { ..: lib_target("cfg_if", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cfg-if-1.0.4/src/lib.rs", Edition2018) }
+   0.554666709s  INFO prepare_target{force=false package_id=cfg-if v1.0.4 target="cfg_if"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/cfg-if-e4081bdeecd5067e/lib-cfg_if`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  12: cargo::ops::cargo_compile::compile_ws
+  13: cargo::ops::cargo_compile::compile_with_exec
+  14: cargo::ops::cargo_compile::compile
+  15: cargo::commands::check::exec
+  16: <cargo::cli::Exec>::exec
+  17: cargo::main
+  18: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  19: std::rt::lang_start::<()>::{closure#0}
+  20: std::rt::lang_start_internal
+  21: _main
+   0.554789042s  INFO prepare_target{force=false package_id=once_cell v1.21.3 target="once_cell"}: cargo::core::compiler::fingerprint: fingerprint error for once_cell v1.21.3/Check { test: false }/TargetInner { ..: lib_target("once_cell", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/once_cell-1.21.3/src/lib.rs", Edition2021) }
+   0.554792375s  INFO prepare_target{force=false package_id=once_cell v1.21.3 target="once_cell"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/once_cell-476054e150f16956/lib-once_cell`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  12: cargo::ops::cargo_compile::compile_ws
+  13: cargo::ops::cargo_compile::compile_with_exec
+  14: cargo::ops::cargo_compile::compile
+  15: cargo::commands::check::exec
+  16: <cargo::cli::Exec>::exec
+  17: cargo::main
+  18: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  19: std::rt::lang_start::<()>::{closure#0}
+  20: std::rt::lang_start_internal
+  21: _main
+   0.554918834s  INFO prepare_target{force=false package_id=zerocopy v0.8.27 target="zerocopy"}: cargo::core::compiler::fingerprint: fingerprint error for zerocopy v0.8.27/Check { test: false }/TargetInner { ..: lib_target("zerocopy", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.8.27/src/lib.rs", Edition2021) }
+   0.554921709s  INFO prepare_target{force=false package_id=zerocopy v0.8.27 target="zerocopy"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/zerocopy-14ea24064b7db007/lib-zerocopy`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  12: cargo::ops::cargo_compile::compile_ws
+  13: cargo::ops::cargo_compile::compile_with_exec
+  14: cargo::ops::cargo_compile::compile
+  15: cargo::commands::check::exec
+  16: <cargo::cli::Exec>::exec
+  17: cargo::main
+  18: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  19: std::rt::lang_start::<()>::{closure#0}
+  20: std::rt::lang_start_internal
+  21: _main
+   0.555420709s  INFO prepare_target{force=false package_id=bytemuck v1.24.0 target="bytemuck"}: cargo::core::compiler::fingerprint: fingerprint error for bytemuck v1.24.0/Check { test: false }/TargetInner { ..: lib_target("bytemuck", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bytemuck-1.24.0/src/lib.rs", Edition2018) }
+   0.555423750s  INFO prepare_target{force=false package_id=bytemuck v1.24.0 target="bytemuck"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/bytemuck-b124f35d27541a1a/lib-bytemuck`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.555694542s  INFO prepare_target{force=false package_id=solana-account-info v2.3.0 target="solana_account_info"}: cargo::core::compiler::fingerprint: fingerprint error for solana-account-info v2.3.0/Check { test: false }/TargetInner { ..: lib_target("solana_account_info", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-account-info-2.3.0/src/lib.rs", Edition2021) }
+   0.555697792s  INFO prepare_target{force=false package_id=solana-account-info v2.3.0 target="solana_account_info"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-account-info-6e32d439f58084a2/lib-solana_account_info`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.555980834s  INFO prepare_target{force=false package_id=solana-program-error v2.2.2 target="solana_program_error"}: cargo::core::compiler::fingerprint: fingerprint error for solana-program-error v2.2.2/Check { test: false }/TargetInner { ..: lib_target("solana_program_error", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-program-error-2.2.2/src/lib.rs", Edition2021) }
+   0.555983959s  INFO prepare_target{force=false package_id=solana-program-error v2.2.2 target="solana_program_error"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-program-error-e7fa9a2baeeaa9fd/lib-solana_program_error`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.556337334s  INFO prepare_target{force=false package_id=borsh v1.5.7 target="borsh"}: cargo::core::compiler::fingerprint: fingerprint error for borsh v1.5.7/Check { test: false }/TargetInner { ..: lib_target("borsh", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/borsh-1.5.7/src/lib.rs", Edition2018) }
+   0.556340375s  INFO prepare_target{force=false package_id=borsh v1.5.7 target="borsh"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/borsh-a625a6a81e218992/lib-borsh`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  11: cargo::ops::cargo_compile::compile_ws
+  12: cargo::ops::cargo_compile::compile_with_exec
+  13: cargo::ops::cargo_compile::compile
+  14: cargo::commands::check::exec
+  15: <cargo::cli::Exec>::exec
+  16: cargo::main
+  17: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  18: std::rt::lang_start::<()>::{closure#0}
+  19: std::rt::lang_start_internal
+  20: _main
+   0.558541625s  INFO prepare_target{force=false package_id=num-traits v0.2.19 target="num_traits"}: cargo::core::compiler::fingerprint: fingerprint error for num-traits v0.2.19/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("num_traits", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/num-traits-0.2.19/src/lib.rs", Edition2021) }
+   0.558569042s  INFO prepare_target{force=false package_id=num-traits v0.2.19 target="num_traits"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/num-traits-2729c4c75f57c8ab/lib-num_traits`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  11: cargo::ops::cargo_compile::compile_ws
+  12: cargo::ops::cargo_compile::compile_with_exec
+  13: cargo::ops::cargo_compile::compile
+  14: cargo::commands::check::exec
+  15: <cargo::cli::Exec>::exec
+  16: cargo::main
+  17: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  18: std::rt::lang_start::<()>::{closure#0}
+  19: std::rt::lang_start_internal
+  20: _main
+   0.559356875s  INFO prepare_target{force=false package_id=solana-decode-error v2.3.0 target="solana_decode_error"}: cargo::core::compiler::fingerprint: fingerprint error for solana-decode-error v2.3.0/Check { test: false }/TargetInner { ..: lib_target("solana_decode_error", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-decode-error-2.3.0/src/lib.rs", Edition2021) }
+   0.559362209s  INFO prepare_target{force=false package_id=solana-decode-error v2.3.0 target="solana_decode_error"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-decode-error-2c849151a3d471f9/lib-solana_decode_error`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  11: cargo::ops::cargo_compile::compile_ws
+  12: cargo::ops::cargo_compile::compile_with_exec
+  13: cargo::ops::cargo_compile::compile
+  14: cargo::commands::check::exec
+  15: <cargo::cli::Exec>::exec
+  16: cargo::main
+  17: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  18: std::rt::lang_start::<()>::{closure#0}
+  19: std::rt::lang_start_internal
+  20: _main
+   0.559532334s  INFO prepare_target{force=false package_id=solana-instruction v2.3.0 target="solana_instruction"}: cargo::core::compiler::fingerprint: fingerprint error for solana-instruction v2.3.0/Check { test: false }/TargetInner { ..: lib_target("solana_instruction", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.0/src/lib.rs", Edition2021) }
+   0.559536125s  INFO prepare_target{force=false package_id=solana-instruction v2.3.0 target="solana_instruction"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-instruction-30a451f7b332a078/lib-solana_instruction`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  11: cargo::ops::cargo_compile::compile_ws
+  12: cargo::ops::cargo_compile::compile_with_exec
+  13: cargo::ops::cargo_compile::compile
+  14: cargo::commands::check::exec
+  15: <cargo::cli::Exec>::exec
+  16: cargo::main
+  17: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  18: std::rt::lang_start::<()>::{closure#0}
+  19: std::rt::lang_start_internal
+  20: _main
+   0.559889042s  INFO prepare_target{force=false package_id=solana-pubkey v2.4.0 target="solana_pubkey"}: cargo::core::compiler::fingerprint: fingerprint error for solana-pubkey v2.4.0/Check { test: false }/TargetInner { ..: lib_target("solana_pubkey", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-pubkey-2.4.0/src/lib.rs", Edition2021) }
+   0.559892500s  INFO prepare_target{force=false package_id=solana-pubkey v2.4.0 target="solana_pubkey"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-pubkey-81c3a6b02d848b6a/lib-solana_pubkey`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  12: cargo::ops::cargo_compile::compile_ws
+  13: cargo::ops::cargo_compile::compile_with_exec
+  14: cargo::ops::cargo_compile::compile
+  15: cargo::commands::check::exec
+  16: <cargo::cli::Exec>::exec
+  17: cargo::main
+  18: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  19: std::rt::lang_start::<()>::{closure#0}
+  20: std::rt::lang_start_internal
+  21: _main
+   0.560413959s  INFO prepare_target{force=false package_id=curve25519-dalek v4.1.3 target="curve25519_dalek"}: cargo::core::compiler::fingerprint: fingerprint error for curve25519-dalek v4.1.3/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("curve25519_dalek", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/curve25519-dalek-4.1.3/src/lib.rs", Edition2021) }
+   0.560417500s  INFO prepare_target{force=false package_id=curve25519-dalek v4.1.3 target="curve25519_dalek"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/curve25519-dalek-c4bb420ceaf5e0e7/lib-curve25519_dalek`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  13: cargo::ops::cargo_compile::compile_ws
+  14: cargo::ops::cargo_compile::compile_with_exec
+  15: cargo::ops::cargo_compile::compile
+  16: cargo::commands::check::exec
+  17: <cargo::cli::Exec>::exec
+  18: cargo::main
+  19: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  20: std::rt::lang_start::<()>::{closure#0}
+  21: std::rt::lang_start_internal
+  22: _main
+   0.561380709s  INFO prepare_target{force=false package_id=digest v0.10.7 target="digest"}: cargo::core::compiler::fingerprint: fingerprint error for digest v0.10.7/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("digest", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/digest-0.10.7/src/lib.rs", Edition2018) }
+   0.561384709s  INFO prepare_target{force=false package_id=digest v0.10.7 target="digest"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/digest-c06aba04a0c94934/lib-digest`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: cargo::core::compiler::compile
+  13: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  14: cargo::ops::cargo_compile::compile_ws
+  15: cargo::ops::cargo_compile::compile_with_exec
+  16: cargo::ops::cargo_compile::compile
+  17: cargo::commands::check::exec
+  18: <cargo::cli::Exec>::exec
+  19: cargo::main
+  20: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  21: std::rt::lang_start::<()>::{closure#0}
+  22: std::rt::lang_start_internal
+  23: _main
+   0.561601792s  INFO prepare_target{force=false package_id=block-buffer v0.10.4 target="block_buffer"}: cargo::core::compiler::fingerprint: fingerprint error for block-buffer v0.10.4/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("block_buffer", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/block-buffer-0.10.4/src/lib.rs", Edition2018) }
+   0.561605375s  INFO prepare_target{force=false package_id=block-buffer v0.10.4 target="block_buffer"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/block-buffer-1ec997893cee80b3/lib-block_buffer`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: cargo::core::compiler::compile
+  13: cargo::core::compiler::compile
+  14: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  15: cargo::ops::cargo_compile::compile_ws
+  16: cargo::ops::cargo_compile::compile_with_exec
+  17: cargo::ops::cargo_compile::compile
+  18: cargo::commands::check::exec
+  19: <cargo::cli::Exec>::exec
+  20: cargo::main
+  21: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  22: std::rt::lang_start::<()>::{closure#0}
+  23: std::rt::lang_start_internal
+  24: _main
+   0.561781959s  INFO prepare_target{force=false package_id=generic-array v0.14.9 target="generic_array"}: cargo::core::compiler::fingerprint: fingerprint error for generic-array v0.14.9/Check { test: false }/TargetInner { ..: lib_target("generic_array", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/generic-array-0.14.9/src/lib.rs", Edition2015) }
+   0.561785084s  INFO prepare_target{force=false package_id=generic-array v0.14.9 target="generic_array"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/generic-array-f365bb2cfb326f87/lib-generic_array`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: cargo::core::compiler::compile
+  13: cargo::core::compiler::compile
+  14: cargo::core::compiler::compile
+  15: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  16: cargo::ops::cargo_compile::compile_ws
+  17: cargo::ops::cargo_compile::compile_with_exec
+  18: cargo::ops::cargo_compile::compile
+  19: cargo::commands::check::exec
+  20: <cargo::cli::Exec>::exec
+  21: cargo::main
+  22: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  23: std::rt::lang_start::<()>::{closure#0}
+  24: std::rt::lang_start_internal
+  25: _main
+   0.561945917s  INFO prepare_target{force=false package_id=typenum v1.19.0 target="typenum"}: cargo::core::compiler::fingerprint: fingerprint error for typenum v1.19.0/Check { test: false }/TargetInner { ..: lib_target("typenum", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/typenum-1.19.0/src/lib.rs", Edition2018) }
+   0.561948959s  INFO prepare_target{force=false package_id=typenum v1.19.0 target="typenum"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/typenum-145ac442564d975f/lib-typenum`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: cargo::core::compiler::compile
+  13: cargo::core::compiler::compile
+  14: cargo::core::compiler::compile
+  15: cargo::core::compiler::compile
+  16: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  17: cargo::ops::cargo_compile::compile_ws
+  18: cargo::ops::cargo_compile::compile_with_exec
+  19: cargo::ops::cargo_compile::compile
+  20: cargo::commands::check::exec
+  21: <cargo::cli::Exec>::exec
+  22: cargo::main
+  23: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  24: std::rt::lang_start::<()>::{closure#0}
+  25: std::rt::lang_start_internal
+  26: _main
+   0.562078334s  INFO prepare_target{force=false package_id=crypto-common v0.1.6 target="crypto_common"}: cargo::core::compiler::fingerprint: fingerprint error for crypto-common v0.1.6/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("crypto_common", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/crypto-common-0.1.6/src/lib.rs", Edition2018) }
+   0.562081667s  INFO prepare_target{force=false package_id=crypto-common v0.1.6 target="crypto_common"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/crypto-common-a525631dafb458e7/lib-crypto_common`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: cargo::core::compiler::compile
+  13: cargo::core::compiler::compile
+  14: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  15: cargo::ops::cargo_compile::compile_ws
+  16: cargo::ops::cargo_compile::compile_with_exec
+  17: cargo::ops::cargo_compile::compile
+  18: cargo::commands::check::exec
+  19: <cargo::cli::Exec>::exec
+  20: cargo::main
+  21: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  22: std::rt::lang_start::<()>::{closure#0}
+  23: std::rt::lang_start_internal
+  24: _main
+   0.562265209s  INFO prepare_target{force=false package_id=rand_core v0.6.4 target="rand_core"}: cargo::core::compiler::fingerprint: fingerprint error for rand_core v0.6.4/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("rand_core", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rand_core-0.6.4/src/lib.rs", Edition2018) }
+   0.562268292s  INFO prepare_target{force=false package_id=rand_core v0.6.4 target="rand_core"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/rand_core-9727b107564071e2/lib-rand_core`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: cargo::core::compiler::compile
+  13: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  14: cargo::ops::cargo_compile::compile_ws
+  15: cargo::ops::cargo_compile::compile_with_exec
+  16: cargo::ops::cargo_compile::compile
+  17: cargo::commands::check::exec
+  18: <cargo::cli::Exec>::exec
+  19: cargo::main
+  20: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  21: std::rt::lang_start::<()>::{closure#0}
+  22: std::rt::lang_start_internal
+  23: _main
+   0.562389167s  INFO prepare_target{force=false package_id=subtle v2.6.1 target="subtle"}: cargo::core::compiler::fingerprint: fingerprint error for subtle v2.6.1/Check { test: false }/TargetInner { ..: lib_target("subtle", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/subtle-2.6.1/src/lib.rs", Edition2018) }
+   0.562392167s  INFO prepare_target{force=false package_id=subtle v2.6.1 target="subtle"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/subtle-1e4c028ee06f73a2/lib-subtle`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: cargo::core::compiler::compile
+  13: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  14: cargo::ops::cargo_compile::compile_ws
+  15: cargo::ops::cargo_compile::compile_with_exec
+  16: cargo::ops::cargo_compile::compile
+  17: cargo::commands::check::exec
+  18: <cargo::cli::Exec>::exec
+  19: cargo::main
+  20: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  21: std::rt::lang_start::<()>::{closure#0}
+  22: std::rt::lang_start_internal
+  23: _main
+   0.562510209s  INFO prepare_target{force=false package_id=zeroize v1.8.2 target="zeroize"}: cargo::core::compiler::fingerprint: fingerprint error for zeroize v1.8.2/Check { test: false }/TargetInner { ..: lib_target("zeroize", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeroize-1.8.2/src/lib.rs", Edition2021) }
+   0.562513209s  INFO prepare_target{force=false package_id=zeroize v1.8.2 target="zeroize"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/zeroize-43401020716ca90d/lib-zeroize`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: cargo::core::compiler::compile
+  13: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  14: cargo::ops::cargo_compile::compile_ws
+  15: cargo::ops::cargo_compile::compile_with_exec
+  16: cargo::ops::cargo_compile::compile
+  17: cargo::commands::check::exec
+  18: <cargo::cli::Exec>::exec
+  19: cargo::main
+  20: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  21: std::rt::lang_start::<()>::{closure#0}
+  22: std::rt::lang_start_internal
+  23: _main
+   0.562671875s  INFO prepare_target{force=false package_id=five8 v0.2.1 target="five8"}: cargo::core::compiler::fingerprint: fingerprint error for five8 v0.2.1/Check { test: false }/TargetInner { ..: lib_target("five8", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/five8-0.2.1/src/lib.rs", Edition2021) }
+   0.562674875s  INFO prepare_target{force=false package_id=five8 v0.2.1 target="five8"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/five8-a85636fc19c8da47/lib-five8`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  13: cargo::ops::cargo_compile::compile_ws
+  14: cargo::ops::cargo_compile::compile_with_exec
+  15: cargo::ops::cargo_compile::compile
+  16: cargo::commands::check::exec
+  17: <cargo::cli::Exec>::exec
+  18: cargo::main
+  19: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  20: std::rt::lang_start::<()>::{closure#0}
+  21: std::rt::lang_start_internal
+  22: _main
+   0.562860167s  INFO prepare_target{force=false package_id=five8_core v0.1.2 target="five8_core"}: cargo::core::compiler::fingerprint: fingerprint error for five8_core v0.1.2/Check { test: false }/TargetInner { ..: lib_target("five8_core", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/five8_core-0.1.2/src/lib.rs", Edition2021) }
+   0.562863084s  INFO prepare_target{force=false package_id=five8_core v0.1.2 target="five8_core"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/five8_core-166b4bbc1f00d090/lib-five8_core`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: cargo::core::compiler::compile
+  13: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  14: cargo::ops::cargo_compile::compile_ws
+  15: cargo::ops::cargo_compile::compile_with_exec
+  16: cargo::ops::cargo_compile::compile
+  17: cargo::commands::check::exec
+  18: <cargo::cli::Exec>::exec
+  19: cargo::main
+  20: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  21: std::rt::lang_start::<()>::{closure#0}
+  22: std::rt::lang_start_internal
+  23: _main
+   0.562997125s  INFO prepare_target{force=false package_id=five8_const v0.1.4 target="five8_const"}: cargo::core::compiler::fingerprint: fingerprint error for five8_const v0.1.4/Check { test: false }/TargetInner { ..: lib_target("five8_const", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/five8_const-0.1.4/src/lib.rs", Edition2021) }
+   0.563000292s  INFO prepare_target{force=false package_id=five8_const v0.1.4 target="five8_const"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/five8_const-5ed4bad1930cedc0/lib-five8_const`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  13: cargo::ops::cargo_compile::compile_ws
+  14: cargo::ops::cargo_compile::compile_with_exec
+  15: cargo::ops::cargo_compile::compile
+  16: cargo::commands::check::exec
+  17: <cargo::cli::Exec>::exec
+  18: cargo::main
+  19: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  20: std::rt::lang_start::<()>::{closure#0}
+  21: std::rt::lang_start_internal
+  22: _main
+   0.563166959s  INFO prepare_target{force=false package_id=solana-atomic-u64 v2.2.1 target="solana_atomic_u64"}: cargo::core::compiler::fingerprint: fingerprint error for solana-atomic-u64 v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_atomic_u64", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-atomic-u64-2.2.1/src/lib.rs", Edition2021) }
+   0.563170084s  INFO prepare_target{force=false package_id=solana-atomic-u64 v2.2.1 target="solana_atomic_u64"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-atomic-u64-0537df99b3b14e07/lib-solana_atomic_u64`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  13: cargo::ops::cargo_compile::compile_ws
+  14: cargo::ops::cargo_compile::compile_with_exec
+  15: cargo::ops::cargo_compile::compile
+  16: cargo::commands::check::exec
+  17: <cargo::cli::Exec>::exec
+  18: cargo::main
+  19: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  20: std::rt::lang_start::<()>::{closure#0}
+  21: std::rt::lang_start_internal
+  22: _main
+   0.563340625s  INFO prepare_target{force=false package_id=solana-sanitize v2.2.1 target="solana_sanitize"}: cargo::core::compiler::fingerprint: fingerprint error for solana-sanitize v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_sanitize", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-sanitize-2.2.1/src/lib.rs", Edition2021) }
+   0.563343625s  INFO prepare_target{force=false package_id=solana-sanitize v2.2.1 target="solana_sanitize"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-sanitize-bd281c4333f6967e/lib-solana_sanitize`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  13: cargo::ops::cargo_compile::compile_ws
+  14: cargo::ops::cargo_compile::compile_with_exec
+  15: cargo::ops::cargo_compile::compile
+  16: cargo::commands::check::exec
+  17: <cargo::cli::Exec>::exec
+  18: cargo::main
+  19: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  20: std::rt::lang_start::<()>::{closure#0}
+  21: std::rt::lang_start_internal
+  22: _main
+   0.563475542s  INFO prepare_target{force=false package_id=solana-sha256-hasher v2.3.0 target="solana_sha256_hasher"}: cargo::core::compiler::fingerprint: fingerprint error for solana-sha256-hasher v2.3.0/Check { test: false }/TargetInner { ..: lib_target("solana_sha256_hasher", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-sha256-hasher-2.3.0/src/lib.rs", Edition2021) }
+   0.563478750s  INFO prepare_target{force=false package_id=solana-sha256-hasher v2.3.0 target="solana_sha256_hasher"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-sha256-hasher-4b19560cfbdb3c85/lib-solana_sha256_hasher`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  13: cargo::ops::cargo_compile::compile_ws
+  14: cargo::ops::cargo_compile::compile_with_exec
+  15: cargo::ops::cargo_compile::compile
+  16: cargo::commands::check::exec
+  17: <cargo::cli::Exec>::exec
+  18: cargo::main
+  19: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  20: std::rt::lang_start::<()>::{closure#0}
+  21: std::rt::lang_start_internal
+  22: _main
+   0.563695625s  INFO prepare_target{force=false package_id=sha2 v0.10.9 target="sha2"}: cargo::core::compiler::fingerprint: fingerprint error for sha2 v0.10.9/Check { test: false }/TargetInner { ..: lib_target("sha2", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.9/src/lib.rs", Edition2018) }
+   0.563698667s  INFO prepare_target{force=false package_id=sha2 v0.10.9 target="sha2"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/sha2-d7f749fe2fce280f/lib-sha2`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: cargo::core::compiler::compile
+  13: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  14: cargo::ops::cargo_compile::compile_ws
+  15: cargo::ops::cargo_compile::compile_with_exec
+  16: cargo::ops::cargo_compile::compile
+  17: cargo::commands::check::exec
+  18: <cargo::cli::Exec>::exec
+  19: cargo::main
+  20: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  21: std::rt::lang_start::<()>::{closure#0}
+  22: std::rt::lang_start_internal
+  23: _main
+   0.563916042s  INFO prepare_target{force=false package_id=cpufeatures v0.2.17 target="cpufeatures"}: cargo::core::compiler::fingerprint: fingerprint error for cpufeatures v0.2.17/Check { test: false }/TargetInner { ..: lib_target("cpufeatures", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/cpufeatures-0.2.17/src/lib.rs", Edition2018) }
+   0.563920209s  INFO prepare_target{force=false package_id=cpufeatures v0.2.17 target="cpufeatures"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/cpufeatures-eec1672f123f5562/lib-cpufeatures`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: cargo::core::compiler::compile
+  13: cargo::core::compiler::compile
+  14: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  15: cargo::ops::cargo_compile::compile_ws
+  16: cargo::ops::cargo_compile::compile_with_exec
+  17: cargo::ops::cargo_compile::compile
+  18: cargo::commands::check::exec
+  19: <cargo::cli::Exec>::exec
+  20: cargo::main
+  21: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  22: std::rt::lang_start::<()>::{closure#0}
+  23: std::rt::lang_start_internal
+  24: _main
+   0.564122125s  INFO prepare_target{force=false package_id=libc v0.2.177 target="libc"}: cargo::core::compiler::fingerprint: fingerprint error for libc v0.2.177/Check { test: false }/TargetInner { ..: lib_target("libc", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libc-0.2.177/src/lib.rs", Edition2021) }
+   0.564125917s  INFO prepare_target{force=false package_id=libc v0.2.177 target="libc"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/libc-c742a520eca8d4ed/lib-libc`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: cargo::core::compiler::compile
+  13: cargo::core::compiler::compile
+  14: cargo::core::compiler::compile
+  15: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  16: cargo::ops::cargo_compile::compile_ws
+  17: cargo::ops::cargo_compile::compile_with_exec
+  18: cargo::ops::cargo_compile::compile
+  19: cargo::commands::check::exec
+  20: <cargo::cli::Exec>::exec
+  21: cargo::main
+  22: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  23: std::rt::lang_start::<()>::{closure#0}
+  24: std::rt::lang_start_internal
+  25: _main
+   0.564293125s  INFO prepare_target{force=false package_id=solana-hash v2.3.0 target="solana_hash"}: cargo::core::compiler::fingerprint: fingerprint error for solana-hash v2.3.0/Check { test: false }/TargetInner { ..: lib_target("solana_hash", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-hash-2.3.0/src/lib.rs", Edition2021) }
+   0.564297084s  INFO prepare_target{force=false package_id=solana-hash v2.3.0 target="solana_hash"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-hash-580feed18cbe1486/lib-solana_hash`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: cargo::core::compiler::compile
+  11: cargo::core::compiler::compile
+  12: cargo::core::compiler::compile
+  13: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  14: cargo::ops::cargo_compile::compile_ws
+  15: cargo::ops::cargo_compile::compile_with_exec
+  16: cargo::ops::cargo_compile::compile
+  17: cargo::commands::check::exec
+  18: <cargo::cli::Exec>::exec
+  19: cargo::main
+  20: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  21: std::rt::lang_start::<()>::{closure#0}
+  22: std::rt::lang_start_internal
+  23: _main
+   0.564633250s  INFO prepare_target{force=false package_id=solana-msg v2.2.1 target="solana_msg"}: cargo::core::compiler::fingerprint: fingerprint error for solana-msg v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_msg", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-msg-2.2.1/src/lib.rs", Edition2021) }
+   0.564636834s  INFO prepare_target{force=false package_id=solana-msg v2.2.1 target="solana_msg"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-msg-65381b8bd9e1b924/lib-solana_msg`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  11: cargo::ops::cargo_compile::compile_ws
+  12: cargo::ops::cargo_compile::compile_with_exec
+  13: cargo::ops::cargo_compile::compile
+  14: cargo::commands::check::exec
+  15: <cargo::cli::Exec>::exec
+  16: cargo::main
+  17: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  18: std::rt::lang_start::<()>::{closure#0}
+  19: std::rt::lang_start_internal
+  20: _main
+   0.564768917s  INFO prepare_target{force=false package_id=solana-program-memory v2.3.1 target="solana_program_memory"}: cargo::core::compiler::fingerprint: fingerprint error for solana-program-memory v2.3.1/Check { test: false }/TargetInner { ..: lib_target("solana_program_memory", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-program-memory-2.3.1/src/lib.rs", Edition2021) }
+   0.564772792s  INFO prepare_target{force=false package_id=solana-program-memory v2.3.1 target="solana_program_memory"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-program-memory-eaa484a1ac2d3ff8/lib-solana_program_memory`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.564900084s  INFO prepare_target{force=false package_id=solana-clock v2.2.2 target="solana_clock"}: cargo::core::compiler::fingerprint: fingerprint error for solana-clock v2.2.2/Check { test: false }/TargetInner { ..: lib_target("solana_clock", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-clock-2.2.2/src/lib.rs", Edition2021) }
+   0.564903750s  INFO prepare_target{force=false package_id=solana-clock v2.2.2 target="solana_clock"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-clock-a62e48267b653cef/lib-solana_clock`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.565193417s  INFO prepare_target{force=false package_id=solana-sdk-ids v2.2.1 target="solana_sdk_ids"}: cargo::core::compiler::fingerprint: fingerprint error for solana-sdk-ids v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_sdk_ids", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-sdk-ids-2.2.1/src/lib.rs", Edition2021) }
+   0.565197167s  INFO prepare_target{force=false package_id=solana-sdk-ids v2.2.1 target="solana_sdk_ids"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-sdk-ids-c0901292fabacccf/lib-solana_sdk_ids`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.565561834s  INFO prepare_target{force=false package_id=solana-sysvar-id v2.2.1 target="solana_sysvar_id"}: cargo::core::compiler::fingerprint: fingerprint error for solana-sysvar-id v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_sysvar_id", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-sysvar-id-2.2.1/src/lib.rs", Edition2021) }
+   0.565567125s  INFO prepare_target{force=false package_id=solana-sysvar-id v2.2.1 target="solana_sysvar_id"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-sysvar-id-37460fe47b881df9/lib-solana_sysvar_id`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.565825500s  INFO prepare_target{force=false package_id=solana-cpi v2.2.1 target="solana_cpi"}: cargo::core::compiler::fingerprint: fingerprint error for solana-cpi v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_cpi", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-cpi-2.2.1/src/lib.rs", Edition2021) }
+   0.565829750s  INFO prepare_target{force=false package_id=solana-cpi v2.2.1 target="solana_cpi"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-cpi-d00803d827c9a240/lib-solana_cpi`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.566145625s  INFO prepare_target{force=false package_id=solana-define-syscall v2.3.0 target="solana_define_syscall"}: cargo::core::compiler::fingerprint: fingerprint error for solana-define-syscall v2.3.0/Check { test: false }/TargetInner { ..: lib_target("solana_define_syscall", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-define-syscall-2.3.0/src/lib.rs", Edition2021) }
+   0.566150042s  INFO prepare_target{force=false package_id=solana-define-syscall v2.3.0 target="solana_define_syscall"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-define-syscall-086568967671daea/lib-solana_define_syscall`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.566286250s  INFO prepare_target{force=false package_id=solana-feature-gate-interface v2.2.2 target="solana_feature_gate_interface"}: cargo::core::compiler::fingerprint: fingerprint error for solana-feature-gate-interface v2.2.2/Check { test: false }/TargetInner { ..: lib_target("solana_feature_gate_interface", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-feature-gate-interface-2.2.2/src/lib.rs", Edition2021) }
+   0.566290667s  INFO prepare_target{force=false package_id=solana-feature-gate-interface v2.2.2 target="solana_feature_gate_interface"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-feature-gate-interface-41b6bd9b2ef85e12/lib-solana_feature_gate_interface`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.566528709s  INFO prepare_target{force=false package_id=solana-instructions-sysvar v2.2.2 target="solana_instructions_sysvar"}: cargo::core::compiler::fingerprint: fingerprint error for solana-instructions-sysvar v2.2.2/Check { test: false }/TargetInner { ..: lib_target("solana_instructions_sysvar", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instructions-sysvar-2.2.2/src/lib.rs", Edition2021) }
+   0.566533000s  INFO prepare_target{force=false package_id=solana-instructions-sysvar v2.2.2 target="solana_instructions_sysvar"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-instructions-sysvar-54474edb7e42de4d/lib-solana_instructions_sysvar`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.566907917s  INFO prepare_target{force=false package_id=bitflags v2.10.0 target="bitflags"}: cargo::core::compiler::fingerprint: fingerprint error for bitflags v2.10.0/Check { test: false }/TargetInner { ..: lib_target("bitflags", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bitflags-2.10.0/src/lib.rs", Edition2021) }
+   0.566912000s  INFO prepare_target{force=false package_id=bitflags v2.10.0 target="bitflags"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/bitflags-80f97544ebc8bb8a/lib-bitflags`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.567033292s  INFO prepare_target{force=false package_id=solana-serialize-utils v2.2.1 target="solana_serialize_utils"}: cargo::core::compiler::fingerprint: fingerprint error for solana-serialize-utils v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_serialize_utils", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-serialize-utils-2.2.1/src/lib.rs", Edition2021) }
+   0.567037084s  INFO prepare_target{force=false package_id=solana-serialize-utils v2.2.1 target="solana_serialize_utils"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-serialize-utils-cfb516aeb84ef509/lib-solana_serialize_utils`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.567271625s  INFO prepare_target{force=false package_id=solana-invoke v0.4.0 target="solana_invoke"}: cargo::core::compiler::fingerprint: fingerprint error for solana-invoke v0.4.0/Check { test: false }/TargetInner { ..: lib_target("solana_invoke", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-invoke-0.4.0/src/lib.rs", Edition2021) }
+   0.567275584s  INFO prepare_target{force=false package_id=solana-invoke v0.4.0 target="solana_invoke"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-invoke-6cf5694564ebcccc/lib-solana_invoke`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.567555625s  INFO prepare_target{force=false package_id=solana-program-entrypoint v2.3.0 target="solana_program_entrypoint"}: cargo::core::compiler::fingerprint: fingerprint error for solana-program-entrypoint v2.3.0/Check { test: false }/TargetInner { ..: lib_target("solana_program_entrypoint", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-program-entrypoint-2.3.0/src/lib.rs", Edition2021) }
+   0.567559334s  INFO prepare_target{force=false package_id=solana-program-entrypoint v2.3.0 target="solana_program_entrypoint"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-program-entrypoint-7c345da2d9929a75/lib-solana_program_entrypoint`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.567822917s  INFO prepare_target{force=false package_id=solana-stable-layout v2.2.1 target="solana_stable_layout"}: cargo::core::compiler::fingerprint: fingerprint error for solana-stable-layout v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_stable_layout", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-stable-layout-2.2.1/src/lib.rs", Edition2021) }
+   0.567827000s  INFO prepare_target{force=false package_id=solana-stable-layout v2.2.1 target="solana_stable_layout"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-stable-layout-b97f6a05ed1f22bb/lib-solana_stable_layout`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.568044542s  INFO prepare_target{force=false package_id=solana-loader-v3-interface v3.0.0 target="solana_loader_v3_interface"}: cargo::core::compiler::fingerprint: fingerprint error for solana-loader-v3-interface v3.0.0/Check { test: false }/TargetInner { ..: lib_target("solana_loader_v3_interface", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-loader-v3-interface-3.0.0/src/lib.rs", Edition2021) }
+   0.568048792s  INFO prepare_target{force=false package_id=solana-loader-v3-interface v3.0.0 target="solana_loader_v3_interface"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-loader-v3-interface-d7f4b830da6a1d3c/lib-solana_loader_v3_interface`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.568364417s  INFO prepare_target{force=false package_id=serde_bytes v0.11.19 target="serde_bytes"}: cargo::core::compiler::fingerprint: fingerprint error for serde_bytes v0.11.19/Check { test: false }/TargetInner { ..: lib_target("serde_bytes", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde_bytes-0.11.19/src/lib.rs", Edition2018) }
+   0.568368250s  INFO prepare_target{force=false package_id=serde_bytes v0.11.19 target="serde_bytes"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/serde_bytes-de636491bbaa328f/lib-serde_bytes`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.568518959s  INFO prepare_target{force=false package_id=solana-system-interface v1.0.0 target="solana_system_interface"}: cargo::core::compiler::fingerprint: fingerprint error for solana-system-interface v1.0.0/Check { test: false }/TargetInner { ..: lib_target("solana_system_interface", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-system-interface-1.0.0/src/lib.rs", Edition2021) }
+   0.568522917s  INFO prepare_target{force=false package_id=solana-system-interface v1.0.0 target="solana_system_interface"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-system-interface-27e2cd148ffbd3cc/lib-solana_system_interface`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.568825167s  INFO prepare_target{force=false package_id=solana-program-option v2.2.1 target="solana_program_option"}: cargo::core::compiler::fingerprint: fingerprint error for solana-program-option v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_program_option", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-program-option-2.2.1/src/lib.rs", Edition2021) }
+   0.568828917s  INFO prepare_target{force=false package_id=solana-program-option v2.2.1 target="solana_program_option"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-program-option-6f4e485131193acd/lib-solana_program_option`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.568942709s  INFO prepare_target{force=false package_id=solana-program-pack v2.2.1 target="solana_program_pack"}: cargo::core::compiler::fingerprint: fingerprint error for solana-program-pack v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_program_pack", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-program-pack-2.2.1/src/lib.rs", Edition2021) }
+   0.568946334s  INFO prepare_target{force=false package_id=solana-program-pack v2.2.1 target="solana_program_pack"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-program-pack-a2814fdf1e32268f/lib-solana_program_pack`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.569134875s  INFO prepare_target{force=false package_id=solana-sysvar v2.3.0 target="solana_sysvar"}: cargo::core::compiler::fingerprint: fingerprint error for solana-sysvar v2.3.0/Check { test: false }/TargetInner { ..: lib_target("solana_sysvar", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-sysvar-2.3.0/src/lib.rs", Edition2021) }
+   0.569138584s  INFO prepare_target{force=false package_id=solana-sysvar v2.3.0 target="solana_sysvar"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-sysvar-0a4b63cbc4d20d05/lib-solana_sysvar`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.569904417s  INFO prepare_target{force=false package_id=base64 v0.22.1 target="base64"}: cargo::core::compiler::fingerprint: fingerprint error for base64 v0.22.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("base64", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/base64-0.22.1/src/lib.rs", Edition2018) }
+   0.569908084s  INFO prepare_target{force=false package_id=base64 v0.22.1 target="base64"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/base64-e9624de5dbdfd071/lib-base64`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.570071584s  INFO prepare_target{force=false package_id=lazy_static v1.5.0 target="lazy_static"}: cargo::core::compiler::fingerprint: fingerprint error for lazy_static v1.5.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("lazy_static", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lazy_static-1.5.0/src/lib.rs", Edition2015) }
+   0.570075417s  INFO prepare_target{force=false package_id=lazy_static v1.5.0 target="lazy_static"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/lazy_static-942cb55898e871cc/lib-lazy_static`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.570224667s  INFO prepare_target{force=false package_id=solana-epoch-rewards v2.2.1 target="solana_epoch_rewards"}: cargo::core::compiler::fingerprint: fingerprint error for solana-epoch-rewards v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_epoch_rewards", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-epoch-rewards-2.2.1/src/lib.rs", Edition2021) }
+   0.570230834s  INFO prepare_target{force=false package_id=solana-epoch-rewards v2.2.1 target="solana_epoch_rewards"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-epoch-rewards-e652c43b01978ddd/lib-solana_epoch_rewards`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.570542875s  INFO prepare_target{force=false package_id=solana-epoch-schedule v2.2.1 target="solana_epoch_schedule"}: cargo::core::compiler::fingerprint: fingerprint error for solana-epoch-schedule v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_epoch_schedule", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-epoch-schedule-2.2.1/src/lib.rs", Edition2021) }
+   0.570546709s  INFO prepare_target{force=false package_id=solana-epoch-schedule v2.2.1 target="solana_epoch_schedule"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-epoch-schedule-8b7ce17a585de106/lib-solana_epoch_schedule`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.570860375s  INFO prepare_target{force=false package_id=solana-fee-calculator v2.2.1 target="solana_fee_calculator"}: cargo::core::compiler::fingerprint: fingerprint error for solana-fee-calculator v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_fee_calculator", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-fee-calculator-2.2.1/src/lib.rs", Edition2021) }
+   0.570864375s  INFO prepare_target{force=false package_id=solana-fee-calculator v2.2.1 target="solana_fee_calculator"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-fee-calculator-bf1b8f48c25dcc1b/lib-solana_fee_calculator`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.571129959s  INFO prepare_target{force=false package_id=log v0.4.28 target="log"}: cargo::core::compiler::fingerprint: fingerprint error for log v0.4.28/Check { test: false }/TargetInner { ..: lib_target("log", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.28/src/lib.rs", Edition2021) }
+   0.571133500s  INFO prepare_target{force=false package_id=log v0.4.28 target="log"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/log-b5dca57161be22ab/lib-log`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  11: cargo::ops::cargo_compile::compile_ws
+  12: cargo::ops::cargo_compile::compile_with_exec
+  13: cargo::ops::cargo_compile::compile
+  14: cargo::commands::check::exec
+  15: <cargo::cli::Exec>::exec
+  16: cargo::main
+  17: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  18: std::rt::lang_start::<()>::{closure#0}
+  19: std::rt::lang_start_internal
+  20: _main
+   0.571304917s  INFO prepare_target{force=false package_id=solana-last-restart-slot v2.2.1 target="solana_last_restart_slot"}: cargo::core::compiler::fingerprint: fingerprint error for solana-last-restart-slot v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_last_restart_slot", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-last-restart-slot-2.2.1/src/lib.rs", Edition2021) }
+   0.571308542s  INFO prepare_target{force=false package_id=solana-last-restart-slot v2.2.1 target="solana_last_restart_slot"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-last-restart-slot-a065db39a094a011/lib-solana_last_restart_slot`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.571636709s  INFO prepare_target{force=false package_id=solana-rent v2.2.1 target="solana_rent"}: cargo::core::compiler::fingerprint: fingerprint error for solana-rent v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_rent", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-rent-2.2.1/src/lib.rs", Edition2021) }
+   0.571640542s  INFO prepare_target{force=false package_id=solana-rent v2.2.1 target="solana_rent"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-rent-5fe33c2e134399f5/lib-solana_rent`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.571942250s  INFO prepare_target{force=false package_id=solana-slot-hashes v2.2.1 target="solana_slot_hashes"}: cargo::core::compiler::fingerprint: fingerprint error for solana-slot-hashes v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_slot_hashes", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-slot-hashes-2.2.1/src/lib.rs", Edition2021) }
+   0.571946417s  INFO prepare_target{force=false package_id=solana-slot-hashes v2.2.1 target="solana_slot_hashes"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-slot-hashes-f1e45e1dfb362d6f/lib-solana_slot_hashes`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.572260584s  INFO prepare_target{force=false package_id=solana-slot-history v2.2.1 target="solana_slot_history"}: cargo::core::compiler::fingerprint: fingerprint error for solana-slot-history v2.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_slot_history", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-slot-history-2.2.1/src/lib.rs", Edition2021) }
+   0.572264375s  INFO prepare_target{force=false package_id=solana-slot-history v2.2.1 target="solana_slot_history"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-slot-history-ed933ce263c11f6c/lib-solana_slot_history`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.572555000s  INFO prepare_target{force=false package_id=bv v0.11.1 target="bv"}: cargo::core::compiler::fingerprint: fingerprint error for bv v0.11.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("bv", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bv-0.11.1/src/lib.rs", Edition2015) }
+   0.572559375s  INFO prepare_target{force=false package_id=bv v0.11.1 target="bv"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/bv-c01171c3d5a5d3ee/lib-bv`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: cargo::core::compiler::compile
+  10: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  11: cargo::ops::cargo_compile::compile_ws
+  12: cargo::ops::cargo_compile::compile_with_exec
+  13: cargo::ops::cargo_compile::compile
+  14: cargo::commands::check::exec
+  15: <cargo::cli::Exec>::exec
+  16: cargo::main
+  17: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  18: std::rt::lang_start::<()>::{closure#0}
+  19: std::rt::lang_start_internal
+  20: _main
+   0.573315084s  INFO prepare_target{force=false package_id=solana-stake-interface v1.2.1 target="solana_stake_interface"}: cargo::core::compiler::fingerprint: fingerprint error for solana-stake-interface v1.2.1/Check { test: false }/TargetInner { ..: lib_target("solana_stake_interface", ["rlib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-stake-interface-1.2.1/src/lib.rs", Edition2021) }
+   0.573322459s  INFO prepare_target{force=false package_id=solana-stake-interface v1.2.1 target="solana_stake_interface"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/solana-stake-interface-a387059906716c80/lib-solana_stake_interface`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: cargo::core::compiler::compile
+   9: <cargo::core::compiler::build_runner::BuildRunner>::compile
+  10: cargo::ops::cargo_compile::compile_ws
+  11: cargo::ops::cargo_compile::compile_with_exec
+  12: cargo::ops::cargo_compile::compile
+  13: cargo::commands::check::exec
+  14: <cargo::cli::Exec>::exec
+  15: cargo::main
+  16: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  17: std::rt::lang_start::<()>::{closure#0}
+  18: std::rt::lang_start_internal
+  19: _main
+   0.573830667s  INFO prepare_target{force=false package_id=thiserror v1.0.69 target="thiserror"}: cargo::core::compiler::fingerprint: fingerprint error for thiserror v1.0.69/Check { test: false }/TargetInner { ..: lib_target("thiserror", ["lib"], "/Users/branislavstojkovic/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-1.0.69/src/lib.rs", Edition2021) }
+   0.573836084s  INFO prepare_target{force=false package_id=thiserror v1.0.69 target="thiserror"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/thiserror-cb141aafdce1ade5/lib-thiserror`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: cargo::core::compiler::compile
+   7: cargo::core::compiler::compile
+   8: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   9: cargo::ops::cargo_compile::compile_ws
+  10: cargo::ops::cargo_compile::compile_with_exec
+  11: cargo::ops::cargo_compile::compile
+  12: cargo::commands::check::exec
+  13: <cargo::cli::Exec>::exec
+  14: cargo::main
+  15: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  16: std::rt::lang_start::<()>::{closure#0}
+  17: std::rt::lang_start_internal
+  18: _main
+   0.574047959s  INFO prepare_target{force=false package_id=lendborrow v0.1.0 (/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/programs/lendborrow) target="lendborrow"}: cargo::core::compiler::fingerprint: fingerprint error for lendborrow v0.1.0 (/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/programs/lendborrow)/Check { test: true }/TargetInner { ..: lib_target("lendborrow", ["cdylib", "lib"], "/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/programs/lendborrow/src/lib.rs", Edition2021) }
+   0.574054334s  INFO prepare_target{force=false package_id=lendborrow v0.1.0 (/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/programs/lendborrow) target="lendborrow"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/target/debug/.fingerprint/lendborrow-2bb6c9ec54851a9d/test-lib-lendborrow`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   7: cargo::ops::cargo_compile::compile_ws
+   8: cargo::ops::cargo_compile::compile_with_exec
+   9: cargo::ops::cargo_compile::compile
+  10: cargo::commands::check::exec
+  11: <cargo::cli::Exec>::exec
+  12: cargo::main
+  13: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  14: std::rt::lang_start::<()>::{closure#0}
+  15: std::rt::lang_start_internal
+  16: _main
+    Checking typenum v1.19.0
+    Checking serde_core v1.0.228
+    Checking cfg-if v1.0.4
+    Checking five8_core v0.1.2
+    Checking zerocopy v0.8.27
+    Checking libc v0.2.177
+    Checking once_cell v1.21.3
+    Checking bytemuck v1.24.0
+    Checking solana-atomic-u64 v2.2.1
+    Checking five8 v0.2.1
+    Checking solana-sanitize v2.2.1
+    Checking num-traits v0.2.19
+    Checking zeroize v1.8.2
+    Checking rand_core v0.6.4
+    Checking subtle v2.6.1
+    Checking borsh v1.5.7
+    Checking five8_const v0.1.4
+    Checking solana-msg v2.2.1
+    Checking solana-program-memory v2.3.1
+    Checking log v0.4.28
+    Checking bitflags v2.10.0
+    Checking base64 v0.22.1
+    Checking lazy_static v1.5.0
+    Checking generic-array v0.14.9
+    Checking cpufeatures v0.2.17
+    Checking solana-define-syscall v2.3.0
+    Checking thiserror v1.0.69
+    Checking base64 v0.21.7
+    Checking solana-program-option v2.2.1
+    Checking solana-decode-error v2.3.0
+    Checking crypto-common v0.1.6
+    Checking block-buffer v0.10.4
+    Checking digest v0.10.7
+    Checking sha2 v0.10.9
+    Checking curve25519-dalek v4.1.3
+    Checking ahash v0.8.12
+    Checking hashbrown v0.13.2
+    Checking serde v1.0.228
+    Checking serde_bytes v0.11.19
+    Checking borsh v0.10.4
+    Checking solana-hash v2.3.0
+    Checking bincode v1.3.3
+    Checking bv v0.11.1
+    Checking solana-fee-calculator v2.2.1
+    Checking solana-sha256-hasher v2.3.0
+    Checking solana-pubkey v2.4.0
+    Checking solana-sdk-ids v2.2.1
+    Checking solana-instruction v2.3.0
+    Checking solana-sysvar-id v2.2.1
+    Checking solana-feature-gate-interface v2.2.2
+    Checking solana-clock v2.2.2
+    Checking solana-epoch-rewards v2.2.1
+    Checking solana-last-restart-slot v2.2.1
+    Checking solana-rent v2.2.1
+    Checking solana-epoch-schedule v2.2.1
+    Checking solana-slot-history v2.2.1
+    Checking solana-slot-hashes v2.2.1
+    Checking solana-program-error v2.2.2
+    Checking solana-system-interface v1.0.0
+    Checking solana-serialize-utils v2.2.1
+    Checking solana-stable-layout v2.2.1
+    Checking solana-account-info v2.3.0
+    Checking solana-program-pack v2.2.1
+    Checking solana-program-entrypoint v2.3.0
+    Checking solana-cpi v2.2.1
+    Checking solana-instructions-sysvar v2.2.2
+    Checking solana-invoke v0.4.0
+    Checking solana-stake-interface v1.2.1
+    Checking solana-loader-v3-interface v3.0.0
+    Checking solana-sysvar v2.3.0
+    Checking anchor-lang v0.32.1
+    Checking lendborrow v0.1.0 (/Users/branislavstojkovic/Documents/GitHub/Solana-Lending-Borrowing/lendborrow/programs/lendborrow)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.07s
