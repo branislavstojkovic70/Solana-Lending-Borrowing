@@ -18,6 +18,13 @@ pub mod lendborrow {
     ) -> Result<()> {
         instructions::lending_market_init(ctx, quote_currency)
     }
+
+    pub fn set_lending_market_owner(
+        ctx: Context<SetLendingMarketOwner>,
+        new_owner: Pubkey,
+    ) -> Result<()> {
+        instructions::set_lending_market_owner::handler(ctx, new_owner)
+    }
 }
 
 #[derive(Accounts)]
