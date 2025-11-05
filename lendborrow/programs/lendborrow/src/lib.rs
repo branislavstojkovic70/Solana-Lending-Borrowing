@@ -46,6 +46,13 @@ pub mod lendborrow {
         instructions::refresh_obligation::handler(ctx)
     }
 
+    pub fn deposit_obligation_collateral(
+        ctx: Context<DepositObligationCollateral>,
+        collateral_amount: u64,
+    ) -> Result<()> {
+        instructions::deposit_obligation_collateral::handler(ctx, collateral_amount)
+    }
+
 }
 
 #[derive(Accounts)]
