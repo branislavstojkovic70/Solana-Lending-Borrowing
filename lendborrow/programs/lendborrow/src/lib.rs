@@ -4,8 +4,8 @@ pub mod errors;
 pub mod instructions;
 pub mod states;
 
-use states::*;
 use instructions::*;
+use states::*;
 
 declare_id!("BEu3NGWrqp2HX98HMSqSHgmr2d2A8gXHzrJgPtanvK1M");
 
@@ -35,6 +35,12 @@ pub mod lendborrow {
         config: ReserveConfig,
     ) -> Result<()> {
         instructions::reserve_init::handler(ctx, liquidity_amount, config)
+    }
+
+    pub fn init_obligation(
+        ctx: Context<InitObligation>,
+    ) -> Result<()> {
+        instructions::obligation_init::handler(ctx)
     }
 }
 

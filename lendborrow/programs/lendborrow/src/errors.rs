@@ -21,8 +21,62 @@ pub enum LendingError {
     InvalidNewOwner,
 
     #[msg("Invalid reserve configuration")]
-    InvalidReserveConfig, 
+    InvalidReserveConfig,
 
     #[msg("Invalid liquidity amount")]
-    InvalidLiquidityAmount, 
+    InvalidLiquidityAmount,
+
+    #[msg("Invalid amount")]
+    InvalidAmount,
+
+    #[msg("Invalid lending market")]
+    InvalidLendingMarket,
+
+    #[msg("Invalid liquidity mint")]
+    InvalidLiquidityMint,
+
+    #[msg("Invalid liquidity supply")]
+    InvalidLiquiditySupply,
+
+    #[msg("Invalid collateral mint")]
+    InvalidCollateralMint,
+
+    #[msg("Math overflow")]
+    MathOverflow,
+
+    #[msg("Reserve is stale and must be refreshed")]
+    ReserveStale,
+
+    #[msg("Insufficient liquidity")]
+    InsufficientLiquidity,
+
+    #[msg("Obligation cannot have more than 10 deposits and borrows combined")]
+    ObligationReserveLimit,
+
+    #[msg("Obligation has no deposits")]
+    ObligationDepositsEmpty,
+
+    #[msg("Obligation has no borrows")]
+    ObligationBorrowsEmpty,
+
+    #[msg("Obligation deposits have zero value")]
+    ObligationDepositsZero,
+
+    #[msg("Obligation borrows have zero value")]
+    ObligationBorrowsZero,
+
+    #[msg("Obligation is healthy and cannot be liquidated")]
+    ObligationHealthy,
+
+    #[msg("Obligation is stale and must be refreshed")]
+    ObligationStale,
+
+    #[msg("Invalid obligation owner")]
+    InvalidObligationOwner,
+
+    #[msg("Invalid obligation collateral")]
+    InvalidObligationCollateral,
+
+    #[msg("Invalid obligation liquidity")]
+    InvalidObligationLiquidity,
 }
