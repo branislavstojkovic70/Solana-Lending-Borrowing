@@ -1093,6 +1093,7 @@ describe("Lending Protocol", () => {
         .initLendingMarket(quoteCurrency)
         .accounts({
           owner: admin.publicKey,
+          //@ts-ignore
           lendingMarket: lendingMarketPDA,
           tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
           systemProgram: SystemProgram.programId,
@@ -1128,6 +1129,7 @@ describe("Lending Protocol", () => {
       const tx = await program.methods
         .initObligation()
         .accounts({
+          //@ts-ignore
           obligation: obligation1PDA,
           lendingMarket: lendingMarketPDA,
           owner: user1.publicKey,
@@ -1160,6 +1162,7 @@ describe("Lending Protocol", () => {
         await program.methods
           .initObligation()
           .accounts({
+            //@ts-ignore
             obligation: obligation1PDA,
             lendingMarket: lendingMarketPDA,
             owner: user1.publicKey,
@@ -1181,6 +1184,7 @@ describe("Lending Protocol", () => {
       const tx = await program.methods
         .initObligation()
         .accounts({
+          //@ts-ignore
           obligation: obligation2PDA,
           lendingMarket: lendingMarketPDA,
           owner: user2.publicKey,
@@ -1362,6 +1366,7 @@ describe("Lending Protocol", () => {
         .initLendingMarket(quoteCurrency)
         .accounts({
           owner: admin.publicKey,
+          //@ts-ignore
           lendingMarket: lendingMarketPDA,
           tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
           systemProgram: SystemProgram.programId,
@@ -1384,6 +1389,7 @@ describe("Lending Protocol", () => {
       await program.methods
         .initObligation()
         .accounts({
+          //@ts-ignore
           obligation: obligation1PDA,
           lendingMarket: lendingMarketPDA,
           owner: user1.publicKey,
@@ -1405,6 +1411,7 @@ describe("Lending Protocol", () => {
       await program.methods
         .initObligation()
         .accounts({
+          //@ts-ignore
           obligation: obligation2PDA,
           lendingMarket: lendingMarketPDA,
           owner: user2.publicKey,
@@ -1695,6 +1702,7 @@ describe("Lending Protocol", () => {
         await program.methods
           .initObligation()
           .accounts({
+            //@ts-ignore
             obligation: obligation1PDA,
             lendingMarket: lendingMarketPDA,
             owner: user1.publicKey,
@@ -1771,6 +1779,7 @@ describe("Lending Protocol", () => {
         .initLendingMarket(quoteCurrency)
         .accounts({
           owner: admin.publicKey,
+          //@ts-ignore
           lendingMarket: lendingMarketPDA,
           tokenProgram: TOKEN_PROGRAM_ID,
           systemProgram: SystemProgram.programId,
@@ -1781,16 +1790,14 @@ describe("Lending Protocol", () => {
       console.log(" Lending market created");
 
       console.log(" Creating mints...");
-      // Create liquidity mint (e.g., SOL)
       liquidityMint = await createMint(
         connection,
         admin,
         admin.publicKey,
         null,
-        9 // SOL decimals
+        9
       );
 
-      // Create collateral mint
       collateralMint = await createMint(
         connection,
         admin,
@@ -1812,6 +1819,7 @@ describe("Lending Protocol", () => {
       );
 
       const reserveLiquiditySupplyKeypair = Keypair.generate();
+      //@ts-ignore
       reserveLiquiditySupply = reserveLiquiditySupplyKeypair.publicKey;
 
       const reserveCollateralSupplyKeypair = Keypair.generate();
@@ -1856,6 +1864,7 @@ describe("Lending Protocol", () => {
       await program.methods
         .initObligation()
         .accounts({
+          //@ts-ignore
           obligation: obligationPDA,
           lendingMarket: lendingMarketPDA,
           owner: user.publicKey,
@@ -1903,6 +1912,7 @@ describe("Lending Protocol", () => {
             reserve: reservePDA,
             obligation: obligationPDA,
             lendingMarket: lendingMarketPDA,
+            //@ts-ignore
             lendingMarketAuthority: lendingMarketAuthority,
             obligationOwner: user.publicKey,
             userTransferAuthority: user.publicKey,
@@ -1955,6 +1965,7 @@ describe("Lending Protocol", () => {
             reserve: reservePDA,
             obligation: obligationPDA,
             lendingMarket: lendingMarketPDA,
+            //@ts-ignore
             lendingMarketAuthority: lendingMarketAuthority,
             obligationOwner: user.publicKey,
             userTransferAuthority: user.publicKey,
@@ -2002,8 +2013,9 @@ describe("Lending Protocol", () => {
             reserve: reservePDA,
             obligation: obligationPDA,
             lendingMarket: lendingMarketPDA,
+            //@ts-ignore
             lendingMarketAuthority: lendingMarketAuthority,
-            obligationOwner: wrongUser.publicKey, // Wrong owner!
+            obligationOwner: wrongUser.publicKey,
             userTransferAuthority: user.publicKey,
             tokenProgram: TOKEN_PROGRAM_ID,
           })
