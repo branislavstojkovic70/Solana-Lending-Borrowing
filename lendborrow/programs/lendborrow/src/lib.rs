@@ -42,6 +42,10 @@ pub mod lendborrow {
     ) -> Result<()> {
         instructions::obligation_init::handler(ctx)
     }
+    pub fn refresh_obligation(ctx: Context<RefreshObligation>) -> Result<()> {
+        instructions::refresh_obligation::handler(ctx)
+    }
+
 }
 
 #[derive(Accounts)]

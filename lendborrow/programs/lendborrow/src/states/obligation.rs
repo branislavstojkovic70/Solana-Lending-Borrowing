@@ -1,33 +1,21 @@
+// states/obligation.rs
 use anchor_lang::prelude::*;
 
-/// Maximum number of collateral and liquidity reserve accounts combined
 pub const MAX_OBLIGATION_RESERVES: usize = 10;
 
-/// Lending market obligation state
 #[account]
 #[derive(InitSpace)]
 pub struct Obligation {
     pub version: u8,
-    
     pub last_update_slot: u64,
-    
     pub lending_market: Pubkey,
-    
     pub owner: Pubkey,
-    
     pub deposited_value: u128,
-    
     pub borrowed_value: u128,
-    
     pub allowed_borrow_value: u128,
-    
     pub unhealthy_borrow_value: u128,
-    
     pub deposits_len: u8,
-    
     pub borrows_len: u8,
-    
-
     #[max_len(896)] 
     pub data_flat: Vec<u8>,
 }
@@ -103,19 +91,77 @@ impl Obligation {
         
         None
     }
+    
+    pub fn find_collateral_by_index(&self, index: usize) -> Result<(ObligationCollateral, usize)> {
+        require!(
+            index < self.deposits_len as usize,
+            crate::errors::LendingError::InvalidObligationIndex
+        );
+        
+        let offset = index * ObligationCollateral::LEN;
+        require!(
+            offset + ObligationCollateral::LEN <= self.data_flat.len(),
+            crate::errors::LendingError::InvalidObligationData
+        );
+        
+        let collateral_slice = &self.data_flat[offset..offset + ObligationCollateral::LEN];
+        let collateral = ObligationCollateral::deserialize(&mut &collateral_slice[..])?;
+        
+        Ok((collateral, index))
+    }
+    
+    pub fn find_liquidity_by_index(&self, index: usize) -> Result<(ObligationLiquidity, usize)> {
+        require!(
+            index < self.borrows_len as usize,
+            crate::errors::LendingError::InvalidObligationIndex
+        );
+        
+        let offset = (self.deposits_len as usize * ObligationCollateral::LEN) 
+            + (index * ObligationLiquidity::LEN);
+        require!(
+            offset + ObligationLiquidity::LEN <= self.data_flat.len(),
+            crate::errors::LendingError::InvalidObligationData
+        );
+        
+        let liquidity_slice = &self.data_flat[offset..offset + ObligationLiquidity::LEN];
+        let liquidity = ObligationLiquidity::deserialize(&mut &liquidity_slice[..])?;
+        
+        Ok((liquidity, index))
+    }
+    
+    pub fn update_collateral(&mut self, index: usize, collateral: ObligationCollateral) -> Result<()> {
+        let offset = index * ObligationCollateral::LEN;
+        let mut collateral_bytes = Vec::new();
+        collateral.serialize(&mut collateral_bytes)?;
+        
+        self.data_flat[offset..offset + ObligationCollateral::LEN]
+            .copy_from_slice(&collateral_bytes);
+        
+        Ok(())
+    }
+    
+    pub fn update_liquidity(&mut self, index: usize, liquidity: ObligationLiquidity) -> Result<()> {
+        let offset = (self.deposits_len as usize * ObligationCollateral::LEN) 
+            + (index * ObligationLiquidity::LEN);
+        let mut liquidity_bytes = Vec::new();
+        liquidity.serialize(&mut liquidity_bytes)?;
+        
+        self.data_flat[offset..offset + ObligationLiquidity::LEN]
+            .copy_from_slice(&liquidity_bytes);
+        
+        Ok(())
+    }
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, PartialEq)]
 pub struct ObligationCollateral {
     pub deposit_reserve: Pubkey,
-    
     pub deposited_amount: u64,
-    
     pub market_value: u128,
 }
 
 impl ObligationCollateral {
-    pub const LEN: usize = 32 + 8 + 16; 
+    pub const LEN: usize = 32 + 8 + 16;
     
     pub fn new(deposit_reserve: Pubkey) -> Self {
         Self {
@@ -145,17 +191,14 @@ impl ObligationCollateral {
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, PartialEq)]
 pub struct ObligationLiquidity {
     pub borrow_reserve: Pubkey,
-    
     pub cumulative_borrow_rate_wads: u128,
-    
     pub borrowed_amount_wads: u128,
-    
     pub market_value: u128,
 }
 
 impl ObligationLiquidity {
-    pub const LEN: usize = 32 + 16 + 16 + 16; 
-    pub const INITIAL_BORROW_RATE: u128 = 1_000_000_000_000_000_000; 
+    pub const LEN: usize = 32 + 16 + 16 + 16;
+    pub const INITIAL_BORROW_RATE: u128 = 1_000_000_000_000_000_000;
     
     pub fn new(borrow_reserve: Pubkey) -> Self {
         Self {

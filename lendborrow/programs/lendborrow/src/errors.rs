@@ -79,4 +79,20 @@ pub enum LendingError {
 
     #[msg("Invalid obligation liquidity")]
     InvalidObligationLiquidity,
+
+    #[msg("Invalid obligation index")]
+    InvalidObligationIndex,
+    
+    #[msg("Invalid obligation data")]
+    InvalidObligationData,
+    
+    #[msg("Invalid reserve count")]
+    InvalidReserveCount,
+    
+    #[msg("No reserves to refresh")]
+    NoReservesToRefresh,
+    
+    #[msg("Invalid reserve for obligation")]
+    InvalidReserveForObligation,
+    
 }

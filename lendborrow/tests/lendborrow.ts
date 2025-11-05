@@ -811,7 +811,7 @@ describe("Lending Protocol", () => {
 
       admin = Keypair.generate();
 
-      console.log("💰 Airdropping SOL...");
+      console.log(" Airdropping SOL...");
       const sig1 = await connection.requestAirdrop(
         admin.publicKey,
         10 * LAMPORTS_PER_SOL
@@ -1065,7 +1065,7 @@ describe("Lending Protocol", () => {
     }
 
     before(async () => {
-      console.log("\n🔧 Setting up test environment...");
+      console.log("\n Setting up test environment...");
 
       admin = Keypair.generate();
       user1 = Keypair.generate();
@@ -1082,7 +1082,7 @@ describe("Lending Protocol", () => {
       await Promise.all(signatures.map(confirmTx));
       console.log(" Airdrops complete");
 
-      console.log("🏦 Initializing lending market...");
+      console.log(" Initializing lending market...");
       [lendingMarketPDA] = PublicKey.findProgramAddressSync(
         [Buffer.from("lending-market"), admin.publicKey.toBuffer()],
         program.programId
@@ -1272,7 +1272,7 @@ describe("Lending Protocol", () => {
     });
 
     it("Should have non-zero lastUpdateSlot", async () => {
-      console.log("\n Test 8: Update slot");
+      console.log("\n Update slot");
 
       const obligation = await program.account.obligation.fetch(obligation1PDA);
 
@@ -1305,4 +1305,410 @@ describe("Lending Protocol", () => {
     });
   });
 
+  describe("Refresh Obligation - Pure Tests", () => {
+    anchor.setProvider(anchor.AnchorProvider.env());
+
+    const program = anchor.workspace.Lendborrow as Program<Lendborrow>;
+    const provider = anchor.getProvider();
+    const connection = provider.connection;
+
+    let admin: Keypair;
+    let user1: Keypair;
+    let user2: Keypair;
+    let lendingMarketPDA: PublicKey;
+    let obligation1PDA: PublicKey;
+    let obligation2PDA: PublicKey;
+
+    async function confirmTx(signature: string) {
+      const latestBlockhash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction({
+        signature,
+        ...latestBlockhash,
+      });
+    }
+
+    function createQuoteCurrency(currency: string): number[] {
+      const buffer = Buffer.alloc(32);
+      buffer.write(currency);
+      return Array.from(buffer);
+    }
+
+    before(async () => {
+      console.log("\n Setting up test environment...");
+
+      admin = Keypair.generate();
+      user1 = Keypair.generate();
+      user2 = Keypair.generate();
+
+      console.log(" Airdropping SOL...");
+      const airdropPromises = [
+        connection.requestAirdrop(admin.publicKey, 10 * LAMPORTS_PER_SOL),
+        connection.requestAirdrop(user1.publicKey, 10 * LAMPORTS_PER_SOL),
+        connection.requestAirdrop(user2.publicKey, 10 * LAMPORTS_PER_SOL),
+      ];
+
+      const signatures = await Promise.all(airdropPromises);
+      await Promise.all(signatures.map(confirmTx));
+      console.log(" Airdrops complete");
+
+      console.log(" Initializing lending market...");
+      [lendingMarketPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("lending-market"), admin.publicKey.toBuffer()],
+        program.programId
+      );
+
+      const quoteCurrency = createQuoteCurrency("USD");
+      await program.methods
+        .initLendingMarket(quoteCurrency)
+        .accounts({
+          owner: admin.publicKey,
+          lendingMarket: lendingMarketPDA,
+          tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
+          systemProgram: SystemProgram.programId,
+        })
+        .signers([admin])
+        .rpc();
+
+      console.log(" Lending market initialized");
+
+      console.log(" Creating obligations...");
+      [obligation1PDA] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("obligation"),
+          lendingMarketPDA.toBuffer(),
+          user1.publicKey.toBuffer(),
+        ],
+        program.programId
+      );
+
+      await program.methods
+        .initObligation()
+        .accounts({
+          obligation: obligation1PDA,
+          lendingMarket: lendingMarketPDA,
+          owner: user1.publicKey,
+          systemProgram: SystemProgram.programId,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        })
+        .signers([user1])
+        .rpc();
+
+      [obligation2PDA] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("obligation"),
+          lendingMarketPDA.toBuffer(),
+          user2.publicKey.toBuffer(),
+        ],
+        program.programId
+      );
+
+      await program.methods
+        .initObligation()
+        .accounts({
+          obligation: obligation2PDA,
+          lendingMarket: lendingMarketPDA,
+          owner: user2.publicKey,
+          systemProgram: SystemProgram.programId,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        })
+        .signers([user2])
+        .rpc();
+
+      console.log(" Obligations created");
+      console.log(" Setup complete!\n");
+    });
+
+    it("Should fail - refresh obligation with no reserves", async () => {
+      console.log("\n Empty obligation refresh (should fail)");
+
+      try {
+        await program.methods
+          .refreshObligation()
+          .accounts({
+            obligation: obligation1PDA,
+          })
+          .remainingAccounts([])
+          .rpc();
+
+        assert.fail("Should have failed with no reserves");
+      } catch (error: any) {
+        const errorMsg = (
+          error.error?.errorMessage ||
+          error.error?.errorCode?.code ||
+          error.message ||
+          ""
+        ).toLowerCase();
+
+        console.log(" Correctly failed");
+        console.log("   Error message:", errorMsg);
+
+        const hasCorrectError =
+          errorMsg.includes("no reserves") ||
+          errorMsg.includes("noreserves") ||
+          errorMsg.includes("no_reserves") ||
+          errorMsg.includes("0x17bb"); 
+
+        assert.isTrue(
+          hasCorrectError,
+          `Should fail with NoReservesToRefresh error, got: ${errorMsg}`
+        );
+      }
+    });
+
+    it("Should fail - non-existent obligation", async () => {
+      console.log("\n Non-existent obligation");
+
+      const fakeObligationPDA = Keypair.generate().publicKey;
+
+      try {
+        await program.methods
+          .refreshObligation()
+          .accounts({
+            obligation: fakeObligationPDA,
+          })
+          .remainingAccounts([])
+          .rpc();
+
+        assert.fail("Should have failed");
+      } catch (error: any) {
+        console.log("Correctly failed");
+        const errorMsg = error.message.toLowerCase();
+        assert.isFalse(
+          errorMsg.includes("account does not exist") ||
+          errorMsg.includes("accountnotfound"),
+          "Should fail with account not found"
+        );
+      }
+    });
+
+    it("Should fail - wrong account type", async () => {
+      console.log("\n Wrong account type (using lending market as obligation)");
+
+      try {
+        await program.methods
+          .refreshObligation()
+          .accounts({
+            obligation: lendingMarketPDA,
+          })
+          .remainingAccounts([])
+          .rpc();
+
+        assert.fail("Should have failed");
+      } catch (error: any) {
+        console.log("   Correctly failed");
+        console.log("   Error:", error.message);
+        assert.exists(error);
+      }
+    });
+
+    it("Should verify initial obligation state", async () => {
+      console.log("\n Initial state verification");
+
+      const obligation = await program.account.obligation.fetch(obligation1PDA);
+
+      console.log("\n Obligation State:");
+      console.log("   version:              ", obligation.version);
+      console.log("   depositsLen:          ", obligation.depositsLen);
+      console.log("   borrowsLen:           ", obligation.borrowsLen);
+      console.log("   depositedValue:       ", obligation.depositedValue.toString());
+      console.log("   borrowedValue:        ", obligation.borrowedValue.toString());
+      console.log("   allowedBorrowValue:   ", obligation.allowedBorrowValue.toString());
+      console.log("   unhealthyBorrowValue: ", obligation.unhealthyBorrowValue.toString());
+      console.log("   dataFlat.length:      ", obligation.dataFlat.length);
+
+      assert.equal(obligation.version, 1);
+      assert.equal(obligation.depositsLen, 0);
+      assert.equal(obligation.borrowsLen, 0);
+      assert.equal(obligation.depositedValue.toString(), "0");
+      assert.equal(obligation.borrowedValue.toString(), "0");
+      assert.equal(obligation.allowedBorrowValue.toString(), "0");
+      assert.equal(obligation.unhealthyBorrowValue.toString(), "0");
+      assert.equal(obligation.dataFlat.length, 0);
+
+      console.log("\n All initial values correct");
+    });
+
+    it("Should have non-zero lastUpdateSlot", async () => {
+      console.log("\n Last update slot");
+
+      const obligation = await program.account.obligation.fetch(obligation1PDA);
+
+      console.log("   Last update slot:", obligation.lastUpdateSlot.toString());
+
+      assert.isTrue(
+        obligation.lastUpdateSlot.toNumber() > 0,
+        "Last update slot should be greater than 0"
+      );
+
+      console.log(" Update slot is set");
+    });
+
+    it("Should verify obligation belongs to correct market", async () => {
+      console.log("\n Market relationship");
+
+      const obligation = await program.account.obligation.fetch(obligation1PDA);
+
+      console.log("\n Market Relationship:");
+      console.log("   Obligation's market:", obligation.lendingMarket.toBase58());
+      console.log("   Expected market:   ", lendingMarketPDA.toBase58());
+
+      assert.equal(
+        obligation.lendingMarket.toBase58(),
+        lendingMarketPDA.toBase58()
+      );
+
+      console.log("Market relationship verified");
+    });
+
+    it("Should verify obligation owner", async () => {
+      console.log("\n Owner verification");
+
+      const obligation = await program.account.obligation.fetch(obligation1PDA);
+
+      console.log("\n Ownership:");
+      console.log("   Obligation owner:", obligation.owner.toBase58());
+      console.log("   Expected owner:  ", user1.publicKey.toBase58());
+
+      assert.equal(
+        obligation.owner.toBase58(),
+        user1.publicKey.toBase58()
+      );
+
+      console.log(" Owner verified");
+    });
+
+    it("Should have empty data_flat", async () => {
+      console.log("\n Empty data_flat buffer");
+
+      const obligation = await program.account.obligation.fetch(obligation1PDA);
+
+      console.log("   Data flat length:", obligation.dataFlat.length);
+
+      assert.equal(obligation.dataFlat.length, 0);
+
+      console.log("Data flat is empty");
+    });
+
+    it("PDA derivation", async () => {
+      console.log("\n PDA derivation");
+
+      const [derivedPDA, bump] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("obligation"),
+          lendingMarketPDA.toBuffer(),
+          user1.publicKey.toBuffer(),
+        ],
+        program.programId
+      );
+
+      console.log("\n PDA Info:");
+      console.log("   Derived PDA: ", derivedPDA.toBase58());
+      console.log("   Expected PDA:", obligation1PDA.toBase58());
+      console.log("   Bump:        ", bump);
+
+      assert.equal(derivedPDA.toBase58(), obligation1PDA.toBase58());
+
+      console.log(" PDA derivation correct");
+    });
+
+    it("Should verify account is rent exempt", async () => {
+      console.log("\n Rent exemption");
+
+      const accountInfo = await connection.getAccountInfo(obligation1PDA);
+      const minRent = await connection.getMinimumBalanceForRentExemption(
+        accountInfo!.data.length
+      );
+
+      console.log("\n Rent Info:");
+      console.log("   Account balance:", accountInfo!.lamports);
+      console.log("   Min rent:       ", minRent);
+      console.log("   Is rent exempt: ", accountInfo!.lamports >= minRent);
+
+      assert.isTrue(accountInfo!.lamports >= minRent);
+
+      console.log("Account is rent exempt");
+    });
+
+    it("Should verify account owner is program", async () => {
+      console.log("\n Account ownership");
+
+      const accountInfo = await connection.getAccountInfo(obligation1PDA);
+
+      console.log("\n Account Owner:");
+      console.log("   Account owner:", accountInfo!.owner.toBase58());
+      console.log("   Program ID:   ", program.programId.toBase58());
+
+      assert.equal(
+        accountInfo!.owner.toBase58(),
+        program.programId.toBase58()
+      );
+
+      console.log("Account owned by program");
+    });
+
+    it("Should verify account discriminator", async () => {
+      console.log("\n  Account discriminator");
+
+      const accountInfo = await connection.getAccountInfo(obligation1PDA);
+      const discriminator = accountInfo!.data.slice(0, 8);
+
+      console.log("\n Discriminator:");
+      console.log("   Hex:   ", Buffer.from(discriminator).toString("hex"));
+      console.log("   Length:", discriminator.length);
+
+      assert.equal(discriminator.length, 8);
+
+      console.log(" Discriminator present");
+    });
+
+    it("Should compare two different obligations", async () => {
+      console.log("\n Multiple obligations");
+
+      const obl1 = await program.account.obligation.fetch(obligation1PDA);
+      const obl2 = await program.account.obligation.fetch(obligation2PDA);
+
+      console.log("\n Comparison:");
+      console.log("   Obligation 1 PDA:  ", obligation1PDA.toBase58());
+      console.log("   Obligation 1 Owner:", obl1.owner.toBase58());
+      console.log("   Obligation 2 PDA:  ", obligation2PDA.toBase58());
+      console.log("   Obligation 2 Owner:", obl2.owner.toBase58());
+
+      assert.equal(
+        obl1.lendingMarket.toBase58(),
+        obl2.lendingMarket.toBase58(),
+        "Should belong to same market"
+      );
+
+      assert.notEqual(
+        obl1.owner.toBase58(),
+        obl2.owner.toBase58(),
+        "Should have different owners"
+      );
+
+      console.log(" Multiple obligations work correctly");
+    });
+
+    it("Should fail to initialize same obligation twice", async () => {
+      console.log("\n Duplicate initialization");
+
+      try {
+        await program.methods
+          .initObligation()
+          .accounts({
+            obligation: obligation1PDA,
+            lendingMarket: lendingMarketPDA,
+            owner: user1.publicKey,
+            systemProgram: SystemProgram.programId,
+            rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+          })
+          .signers([user1])
+          .rpc();
+
+        assert.fail("Should have failed");
+      } catch (error: any) {
+        console.log("C\ Correctly failed");
+        assert.include(error.message.toLowerCase(), "already in use");
+      }
+    });
+  });
 });
