@@ -15,8 +15,14 @@ pub enum LendingError {
     MarketNotInitialized,
 
     #[msg("New owner must be different from current owner")]
-    SameOwner, 
+    SameOwner,
 
     #[msg("Invalid new owner. Cannot be default pubkey")]
-    InvalidNewOwner, 
+    InvalidNewOwner,
+
+    #[msg("Invalid reserve configuration")]
+    InvalidReserveConfig, 
+
+    #[msg("Invalid liquidity amount")]
+    InvalidLiquidityAmount, 
 }

@@ -1,7 +1,11 @@
 import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
+import { Program, BN } from "@coral-xyz/anchor";
 import { Lendborrow } from "../target/types/lendborrow";
 import {
+  createMint,
+  getAccount,
+  getOrCreateAssociatedTokenAccount,
+  mintTo,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram } from "@solana/web3.js";
@@ -98,6 +102,7 @@ describe("Lending Protocol", () => {
           .initLendingMarket(invalidCurrency)
           .accounts({
             owner: testOwner.publicKey,
+            //@ts-ignore
             lendingMarket: testMarketPDA,
             tokenProgram: TOKEN_PROGRAM_ID,
             systemProgram: SystemProgram.programId,
@@ -139,6 +144,7 @@ describe("Lending Protocol", () => {
           .initLendingMarket(invalidCurrency)
           .accounts({
             owner: testOwner.publicKey,
+            //@ts-ignore
             lendingMarket: testMarketPDA,
             tokenProgram: TOKEN_PROGRAM_ID,
             systemProgram: SystemProgram.programId,
@@ -166,6 +172,7 @@ describe("Lending Protocol", () => {
         .initLendingMarket(quoteCurrency)
         .accounts({
           owner: admin.publicKey,
+          //@ts-ignore
           lendingMarket: lendingMarketPDA,
           tokenProgram: TOKEN_PROGRAM_ID,
           systemProgram: SystemProgram.programId,
@@ -214,6 +221,7 @@ describe("Lending Protocol", () => {
           .initLendingMarket(quoteCurrency)
           .accounts({
             owner: admin.publicKey,
+            //@ts-ignore
             lendingMarket: lendingMarketPDA,
             tokenProgram: TOKEN_PROGRAM_ID,
             systemProgram: SystemProgram.programId,
@@ -257,6 +265,7 @@ describe("Lending Protocol", () => {
           .initLendingMarket(quoteCurrency)
           .accounts({
             owner: newOwner.publicKey,
+            //@ts-ignore
             lendingMarket: newMarketPDA,
             tokenProgram: TOKEN_PROGRAM_ID,
             systemProgram: SystemProgram.programId,
@@ -296,6 +305,7 @@ describe("Lending Protocol", () => {
           .initLendingMarket(quoteCurrency)
           .accounts({
             owner: unauthorizedUser.publicKey,
+            //@ts-ignore
             lendingMarket: lendingMarketPDA,
             tokenProgram: TOKEN_PROGRAM_ID,
             systemProgram: SystemProgram.programId,
@@ -338,6 +348,7 @@ describe("Lending Protocol", () => {
         .initLendingMarket(quoteCurrency)
         .accounts({
           owner: newOwner.publicKey,
+          //@ts-ignore
           lendingMarket: newMarketPDA,
           tokenProgram: TOKEN_PROGRAM_ID,
           systemProgram: SystemProgram.programId,
@@ -380,6 +391,7 @@ describe("Lending Protocol", () => {
         .initLendingMarket(quoteCurrency)
         .accounts({
           owner: newOwner.publicKey,
+          //@ts-ignore
           lendingMarket: newMarketPDA,
           tokenProgram: TOKEN_PROGRAM_ID,
           systemProgram: SystemProgram.programId,
@@ -531,6 +543,7 @@ describe("Lending Protocol", () => {
           .initLendingMarket(quoteCurrency)
           .accounts({
             owner: newOwner.publicKey,
+            //@ts-ignore
             lendingMarket: newMarketPDA,
             tokenProgram: TOKEN_PROGRAM_ID,
             systemProgram: SystemProgram.programId,
@@ -548,6 +561,478 @@ describe("Lending Protocol", () => {
       console.log(
         ` Average: ${(duration / count).toFixed(2)}ms per market`
       );
+    });
+  });
+
+  describe("Set Lending Market Owner", () => {
+    let newOwner: Keypair;
+
+    it("Should set new lending market owner", async () => {
+      console.log("\n Testing ownership transfer...");
+
+      newOwner = Keypair.generate();
+
+      const airdropSig = await connection.requestAirdrop(
+        newOwner.publicKey,
+        2 * LAMPORTS_PER_SOL
+      );
+      await confirmTx(airdropSig);
+
+      console.log("Current owner:", admin.publicKey.toBase58());
+      console.log("New owner:", newOwner.publicKey.toBase58());
+
+      const tx = await program.methods
+        .setLendingMarketOwner(newOwner.publicKey)
+        .accounts({
+          lendingMarket: lendingMarketPDA,
+          //@ts-ignore
+          owner: admin.publicKey,
+        })
+        .signers([admin])
+        .rpc();
+
+      await confirmTx(tx);
+      console.log(" Tx:", tx);
+
+      const market = await program.account.lendingMarket.fetch(lendingMarketPDA);
+
+      assert.equal(
+        market.owner.toBase58(),
+        newOwner.publicKey.toBase58(),
+        "Owner should be updated"
+      );
+
+      console.log("   Owner successfully changed");
+      console.log("   Old owner:", admin.publicKey.toBase58());
+      console.log("   New owner:", market.owner.toBase58());
+    });
+
+    it("Should reject transfer from non-owner", async () => {
+      console.log("\n Testing unauthorized transfer...");
+
+      const unauthorizedUser = Keypair.generate();
+      const airdropSig = await connection.requestAirdrop(
+        unauthorizedUser.publicKey,
+        2 * LAMPORTS_PER_SOL
+      );
+      await confirmTx(airdropSig);
+
+      const anotherOwner = Keypair.generate();
+
+      try {
+        await program.methods
+          .setLendingMarketOwner(anotherOwner.publicKey)
+          .accounts({
+            lendingMarket: lendingMarketPDA,
+            //@ts-ignore
+            owner: unauthorizedUser.publicKey,
+          })
+          .signers([unauthorizedUser])
+          .rpc();
+
+        assert.fail("Should have thrown error");
+      } catch (err: any) {
+        const errMsg = err.toString();
+        assert.isTrue(
+          errMsg.includes("InvalidOwner") || errMsg.includes("6001"),
+          "Should fail with InvalidOwner error"
+        );
+        console.log(" Correctly rejected unauthorized transfer");
+      }
+    });
+
+    it("Should reject setting same owner", async () => {
+      console.log("\n Testing same owner rejection...");
+
+      try {
+        await program.methods
+          .setLendingMarketOwner(newOwner.publicKey)
+          .accounts({
+            lendingMarket: lendingMarketPDA,
+            //@ts-ignore
+            owner: newOwner.publicKey,
+          })
+          .signers([newOwner])
+          .rpc();
+
+        assert.fail("Should have thrown error");
+      } catch (err: any) {
+        const errMsg = err.toString();
+        assert.isTrue(
+          errMsg.includes("SameOwner") || errMsg.includes("6004"),
+          "Should fail with SameOwner error"
+        );
+        console.log(" Correctly rejected same owner");
+      }
+    });
+
+    it("Should reject default pubkey as new owner", async () => {
+      console.log("\n Testing default pubkey rejection...");
+
+      const defaultPubkey = PublicKey.default;
+
+      try {
+        await program.methods
+          .setLendingMarketOwner(defaultPubkey)
+          .accounts({
+            lendingMarket: lendingMarketPDA,
+            //@ts-ignore
+            owner: newOwner.publicKey,
+          })
+          .signers([newOwner])
+          .rpc();
+
+        assert.fail("Should have thrown error");
+      } catch (err: any) {
+        const errMsg = err.toString();
+        assert.isTrue(
+          errMsg.includes("InvalidNewOwner") || errMsg.includes("6005"),
+          "Should fail with InvalidNewOwner error"
+        );
+        console.log(" Correctly rejected default pubkey");
+      }
+    });
+
+    it("Should allow multiple ownership transfers", async () => {
+      console.log("\n Testing multiple transfers...");
+
+      const owner2 = Keypair.generate();
+      const owner3 = Keypair.generate();
+
+      const sig2 = await connection.requestAirdrop(
+        owner2.publicKey,
+        2 * LAMPORTS_PER_SOL
+      );
+      await confirmTx(sig2);
+
+      const sig3 = await connection.requestAirdrop(
+        owner3.publicKey,
+        2 * LAMPORTS_PER_SOL
+      );
+      await confirmTx(sig3);
+
+      const tx1 = await program.methods
+        .setLendingMarketOwner(owner2.publicKey)
+        .accounts({
+          lendingMarket: lendingMarketPDA,
+          //@ts-ignore
+          owner: newOwner.publicKey,
+        })
+        .signers([newOwner])
+        .rpc();
+      await confirmTx(tx1);
+
+      let market = await program.account.lendingMarket.fetch(lendingMarketPDA);
+      assert.equal(market.owner.toBase58(), owner2.publicKey.toBase58());
+      console.log(" Transfer 1: newOwner -> owner2");
+
+      const tx2 = await program.methods
+        .setLendingMarketOwner(owner3.publicKey)
+        .accounts({
+          lendingMarket: lendingMarketPDA,
+          //@ts-ignore
+          owner: owner2.publicKey,
+        })
+        .signers([owner2])
+        .rpc();
+      await confirmTx(tx2);
+
+      market = await program.account.lendingMarket.fetch(lendingMarketPDA);
+      assert.equal(market.owner.toBase58(), owner3.publicKey.toBase58());
+      console.log(" Transfer 2: owner2 -> owner3");
+
+      console.log(" Multiple transfers successful");
+    });
+
+    it("Should verify old owner loses access", async () => {
+      console.log("\n Testing old owner loses access...");
+
+      const newUser = Keypair.generate();
+
+      try {
+        await program.methods
+          .setLendingMarketOwner(newUser.publicKey)
+          .accounts({
+            lendingMarket: lendingMarketPDA,
+            //@ts-ignore
+            owner: admin.publicKey,
+          })
+          .signers([admin])
+          .rpc();
+
+        assert.fail("Should have thrown error");
+      } catch (err: any) {
+        const errMsg = err.toString();
+        assert.isTrue(
+          errMsg.includes("InvalidOwner") || errMsg.includes("6001"),
+          "Should fail because admin is no longer owner"
+        );
+        console.log(" Old owner correctly lost access");
+      }
+    });
+  });
+
+  describe("Init Reserve", () => {
+    anchor.setProvider(anchor.AnchorProvider.env());
+
+    const program = anchor.workspace.lendborrow as Program<Lendborrow>;
+    const provider = anchor.getProvider();
+    const connection = provider.connection;
+
+    let admin: Keypair;
+    let usdcMint: PublicKey;
+    let adminUsdcAccount: PublicKey;
+    let lendingMarketPDA: PublicKey;
+    let lendingMarketAuthorityPDA: PublicKey;
+    let reservePDA: PublicKey;
+    let liquiditySupplyPDA: PublicKey;
+    let liquidityFeeReceiverPDA: PublicKey;
+    let collateralMintPDA: PublicKey;
+    let collateralSupplyPDA: PublicKey;
+    let pythProductMock: Keypair;
+    let pythPriceMock: Keypair;
+
+    async function confirmTx(signature: string) {
+      const latestBlockhash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction({
+        signature,
+        ...latestBlockhash,
+      });
+    }
+
+    function createQuoteCurrency(currency: string): number[] {
+      const buffer = Buffer.alloc(32);
+      buffer.write(currency);
+      return Array.from(buffer);
+    }
+
+    before(async () => {
+      console.log("\n Setting up test environment...");
+
+      admin = Keypair.generate();
+
+      console.log("💰 Airdropping SOL...");
+      const sig1 = await connection.requestAirdrop(
+        admin.publicKey,
+        10 * LAMPORTS_PER_SOL
+      );
+      await confirmTx(sig1);
+
+      console.log(" Airdrops complete");
+
+      console.log(" Creating token mints...");
+      usdcMint = await createMint(
+        connection,
+        admin,
+        admin.publicKey,
+        null,
+        6,
+        undefined,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+
+      console.log("USDC Mint:", usdcMint.toBase58());
+
+      const adminUsdcAcc = await getOrCreateAssociatedTokenAccount(
+        connection,
+        admin,
+        usdcMint,
+        admin.publicKey,
+        false,
+        undefined,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+      adminUsdcAccount = adminUsdcAcc.address;
+
+      await mintTo(
+        connection,
+        admin,
+        usdcMint,
+        adminUsdcAccount,
+        admin,
+        100_000_000_000,
+        [],
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+
+      console.log(" Tokens minted");
+
+      console.log(" Initializing lending market...");
+      [lendingMarketPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("lending-market"), admin.publicKey.toBuffer()],
+        program.programId
+      );
+
+      const quoteCurrency = createQuoteCurrency("USD");
+
+      await program.methods
+        .initLendingMarket(quoteCurrency)
+        .accounts({
+          owner: admin.publicKey,
+          //@ts-ignore
+          lendingMarket: lendingMarketPDA,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          systemProgram: SystemProgram.programId,
+        })
+        .signers([admin])
+        .rpc();
+
+      console.log(" Lending market initialized");
+
+      [lendingMarketAuthorityPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("authority"), lendingMarketPDA.toBuffer()],
+        program.programId
+      );
+
+      pythProductMock = Keypair.generate();
+      pythPriceMock = Keypair.generate();
+
+      [reservePDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("reserve"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [liquiditySupplyPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("liquidity-supply"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [liquidityFeeReceiverPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("fee-receiver"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [collateralMintPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("collateral-mint"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [collateralSupplyPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("collateral-supply"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      console.log(" Setup complete!\n");
+    });
+
+    it("Should initialize USDC reserve successfully", async () => {
+      console.log("\n Initializing USDC reserve...");
+
+      const liquidityAmount = new BN("1000000000"); 
+
+      const config = {
+        optimalUtilizationRate: 80,     
+        loanToValueRatio: 50,             
+        liquidationBonus: 5,             
+        liquidationThreshold: 55,         
+        minBorrowRate: 0,                
+        optimalBorrowRate: 4,            
+        maxBorrowRate: 30,                
+        fees: {
+          borrowFeeWad: new BN("10000000000000000"),      
+          flashLoanFeeWad: new BN("9000000000000000"),  
+          hostFeePercentage: 20,                          
+        },
+      };
+
+      console.log(" Sending config:", config);
+
+      const adminCollateralAddress = await anchor.utils.token.associatedAddress({
+        mint: collateralMintPDA,
+        owner: admin.publicKey,
+      });
+
+      console.log(" Reserve PDAs:");
+      console.log("   Reserve:", reservePDA.toBase58());
+      console.log("   Admin Collateral ATA:", adminCollateralAddress.toBase58());
+
+      const adminUsdcBefore = await getAccount(
+        connection,
+        adminUsdcAccount,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+      console.log(" Admin USDC before:", Number(adminUsdcBefore.amount) / 1e6);
+
+      const tx = await program.methods
+        .initReserve(liquidityAmount, config)
+        .accounts({
+          sourceLiquidity: adminUsdcAccount,
+          //@ts-ignore
+          destinationCollateral: adminCollateralAddress,
+          reserve: reservePDA,
+          liquidityMint: usdcMint,
+          liquiditySupply: liquiditySupplyPDA,
+          liquidityFeeReceiver: liquidityFeeReceiverPDA,
+          pythProduct: pythProductMock.publicKey,
+          pythPrice: pythPriceMock.publicKey,
+          collateralMint: collateralMintPDA,
+          collateralSupply: collateralSupplyPDA,
+          lendingMarket: lendingMarketPDA,
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          owner: admin.publicKey,
+          userTransferAuthority: admin.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          associatedTokenProgram: anchor.utils.token.ASSOCIATED_PROGRAM_ID,
+          systemProgram: SystemProgram.programId,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        })
+        .signers([admin])
+        .rpc();
+
+      await confirmTx(tx);
+      console.log(" Transaction confirmed:", tx);
+
+      const reserve = await program.account.reserve.fetch(reservePDA);
+      console.log("\n Reserve initialized!");
+      console.log("   Version:", reserve.version);
+      console.log("   LTV:", reserve.config.loanToValueRatio);
+      console.log("   Liquidation threshold:", reserve.config.liquidationThreshold);
+
+      console.log("   Available liquidity:", Number(reserve.liquidityAvailableAmount) / 1e6, "USDC");
+
+      const liquiditySupply = await getAccount(
+        connection,
+        liquiditySupplyPDA,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+      console.log("   Liquidity in reserve:", Number(liquiditySupply.amount) / 1e6, "USDC");
+
+      const adminCollateral = await getAccount(
+        connection,
+        adminCollateralAddress,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+      console.log("   Collateral minted:", Number(adminCollateral.amount) / 1e6, "lpUSDC");
+
+      assert.equal(reserve.version, 1, "Version should be 1");
+      assert.equal(reserve.config.loanToValueRatio, 50, "LTV should be 50");
+      assert.equal(reserve.config.liquidationThreshold, 55, "Threshold should be 55");
+
+      assert.equal(
+        reserve.liquidityAvailableAmount.toString(),
+        liquidityAmount.toString(),
+        "Available amount should match"
+      );
+
+      assert.equal(
+        Number(liquiditySupply.amount),
+        liquidityAmount.toNumber(),
+        "Liquidity supply should match"
+      );
+
+      assert.equal(
+        Number(adminCollateral.amount),
+        liquidityAmount.toNumber(),
+        "Collateral minted should match"
+      );
+
+      console.log("\n All checks passed!");
     });
   });
 });

@@ -4,12 +4,15 @@ pub mod errors;
 pub mod instructions;
 pub mod states;
 
+use states::*;
 use instructions::*;
 
 declare_id!("BEu3NGWrqp2HX98HMSqSHgmr2d2A8gXHzrJgPtanvK1M");
 
 #[program]
 pub mod lendborrow {
+    use crate::states::ReserveConfig;
+
     use super::*;
 
     pub fn init_lending_market(
@@ -24,6 +27,14 @@ pub mod lendborrow {
         new_owner: Pubkey,
     ) -> Result<()> {
         instructions::set_lending_market_owner::handler(ctx, new_owner)
+    }
+
+    pub fn init_reserve(
+        ctx: Context<InitReserve>,
+        liquidity_amount: u64,
+        config: ReserveConfig,
+    ) -> Result<()> {
+        instructions::reserve_init::handler(ctx, liquidity_amount, config)
     }
 }
 

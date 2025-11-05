@@ -2,7 +2,6 @@ use anchor_lang::prelude::*;
 use crate::states::LendingMarket;
 use crate::errors::LendingError;
 
-/// Set the new owner of a lending market
 pub fn handler(
     ctx: Context<SetLendingMarketOwner>,
     new_owner: Pubkey,
@@ -29,6 +28,7 @@ pub fn handler(
         old_owner,
         new_owner,
     });
+
     //TODO: Delete this after tests!!!
     msg!("   Lending market owner updated");
     msg!("   Market: {}", lending_market.key());
