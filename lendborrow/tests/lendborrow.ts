@@ -7,6 +7,8 @@ import {
   getOrCreateAssociatedTokenAccount,
   mintTo,
   TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddress,
+  createAssociatedTokenAccountInstruction
 } from "@solana/spl-token";
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram } from "@solana/web3.js";
 import { assert } from "chai";
@@ -1745,7 +1747,6 @@ describe("Lending Protocol", () => {
       });
     }
 
-    // Helper function to create quote currency
     function createQuoteCurrency(currency: string): number[] {
       const buffer = Buffer.alloc(32);
       buffer.write(currency);
@@ -1910,6 +1911,7 @@ describe("Lending Protocol", () => {
             sourceCollateral: userCollateralAccount,
             destinationCollateral: reserveCollateralSupply,
             reserve: reservePDA,
+            //@ts-ignore
             obligation: obligationPDA,
             lendingMarket: lendingMarketPDA,
             //@ts-ignore
@@ -1963,6 +1965,7 @@ describe("Lending Protocol", () => {
             sourceCollateral: userCollateralAccount,
             destinationCollateral: reserveCollateralSupply,
             reserve: reservePDA,
+            //@ts-ignore
             obligation: obligationPDA,
             lendingMarket: lendingMarketPDA,
             //@ts-ignore
@@ -2011,6 +2014,7 @@ describe("Lending Protocol", () => {
             sourceCollateral: userCollateralAccount,
             destinationCollateral: reserveCollateralSupply,
             reserve: reservePDA,
+            //@ts-ignore
             obligation: obligationPDA,
             lendingMarket: lendingMarketPDA,
             //@ts-ignore
@@ -2095,6 +2099,457 @@ describe("Lending Protocol", () => {
       console.log("\n" + "=".repeat(70));
       console.log(" All tests completed!");
       console.log("=".repeat(70) + "\n");
+    });
+  });
+  describe("Withdraw Obligation Collateral", () => {
+    anchor.setProvider(anchor.AnchorProvider.env());
+
+    const program = anchor.workspace.lendborrow as Program<Lendborrow>;
+    const provider = anchor.getProvider();
+    const connection = provider.connection;
+
+    let admin: Keypair;
+    let user: Keypair;
+    let usdcMint: PublicKey;
+    let adminUsdcAccount: PublicKey;
+    let userCollateralAccount: PublicKey;
+    let lendingMarketPDA: PublicKey;
+    let lendingMarketAuthorityPDA: PublicKey;
+    let reservePDA: PublicKey;
+    let obligationPDA: PublicKey;
+    let collateralMintPDA: PublicKey;
+    let collateralSupplyPDA: PublicKey;
+    let liquiditySupplyPDA: PublicKey;
+    let liquidityFeeReceiverPDA: PublicKey;
+    let pythPriceMock: Keypair;
+    let pythProductMock: Keypair;
+
+    const { transfer } = require("@solana/spl-token");
+
+    async function confirmTx(signature: string) {
+      const latestBlockhash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction({
+        signature,
+        ...latestBlockhash,
+      });
+      return signature;
+    }
+
+    function createQuoteCurrency(currency: string): number[] {
+      const buffer = Buffer.alloc(32);
+      buffer.write(currency);
+      return Array.from(buffer);
+    }
+
+    async function getCollateralBalance(account: PublicKey): Promise<bigint> {
+      const acc = await getAccount(connection, account, undefined, TOKEN_PROGRAM_ID);
+      return acc.amount;
+    }
+
+    async function displayObligationInfo(title: string) {
+      const obligation = await program.account.obligation.fetch(obligationPDA);
+      console.log(`${title}`);
+      console.log(`Deposits: ${obligation.depositsLen}`);
+      console.log(`Borrows: ${obligation.borrowsLen}`);
+      console.log(`Deposited Value: ${obligation.depositedValue.toString()}`);
+    }
+
+    before(async () => {
+      admin = Keypair.generate();
+      user = Keypair.generate();
+      pythPriceMock = Keypair.generate();
+      pythProductMock = Keypair.generate();
+
+      console.log("Airdropping SOL...");
+      const sigs = await Promise.all([
+        connection.requestAirdrop(admin.publicKey, 20 * LAMPORTS_PER_SOL),
+        connection.requestAirdrop(user.publicKey, 20 * LAMPORTS_PER_SOL),
+      ]);
+      await Promise.all(sigs.map(confirmTx));
+
+      console.log("Creating USDC mint...");
+      usdcMint = await createMint(
+        connection,
+        admin,
+        admin.publicKey,
+        null,
+        6,
+        undefined,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+
+      const adminUsdcAcc = await getOrCreateAssociatedTokenAccount(
+        connection,
+        admin,
+        usdcMint,
+        admin.publicKey,
+        false,
+        undefined,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+      adminUsdcAccount = adminUsdcAcc.address;
+
+      await mintTo(
+        connection,
+        admin,
+        usdcMint,
+        adminUsdcAccount,
+        admin,
+        1_000_000_000_000,
+        [],
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+
+      console.log("Initializing lending market...");
+      [lendingMarketPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("lending-market"), admin.publicKey.toBuffer()],
+        program.programId
+      );
+
+      [lendingMarketAuthorityPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("authority"), lendingMarketPDA.toBuffer()],
+        program.programId
+      );
+
+      await program.methods
+        .initLendingMarket(createQuoteCurrency("USD"))
+        .accounts({
+          owner: admin.publicKey,
+          //@ts-ignore
+          lendingMarket: lendingMarketPDA,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          systemProgram: SystemProgram.programId,
+        })
+        .signers([admin])
+        .rpc();
+
+      console.log("Setting up reserve...");
+      [reservePDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("reserve"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [liquiditySupplyPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("liquidity-supply"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [liquidityFeeReceiverPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("fee-receiver"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [collateralMintPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("collateral-mint"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [collateralSupplyPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("collateral-supply"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      const config = {
+        optimalUtilizationRate: 80,
+        loanToValueRatio: 50,
+        liquidationBonus: 5,
+        liquidationThreshold: 55,
+        minBorrowRate: 0,
+        optimalBorrowRate: 4,
+        maxBorrowRate: 30,
+        fees: {
+          borrowFeeWad: new BN("10000000000000000"),
+          flashLoanFeeWad: new BN("9000000000000000"),
+          hostFeePercentage: 20,
+        },
+      };
+
+      const adminCollateralAddress = await getAssociatedTokenAddress(
+        collateralMintPDA,
+        admin.publicKey,
+        false,
+        TOKEN_PROGRAM_ID
+      );
+
+      await program.methods
+        .initReserve(new BN("10000000000"), config)
+        .accounts({
+          sourceLiquidity: adminUsdcAccount,
+          //@ts-ignore
+          destinationCollateral: adminCollateralAddress,
+          reserve: reservePDA,
+          liquidityMint: usdcMint,
+          liquiditySupply: liquiditySupplyPDA,
+          liquidityFeeReceiver: liquidityFeeReceiverPDA,
+          pythProduct: pythProductMock.publicKey,
+          pythPrice: pythPriceMock.publicKey,
+          collateralMint: collateralMintPDA,
+          collateralSupply: collateralSupplyPDA,
+          lendingMarket: lendingMarketPDA,
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          owner: admin.publicKey,
+          userTransferAuthority: admin.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          associatedTokenProgram: anchor.utils.token.ASSOCIATED_PROGRAM_ID,
+          systemProgram: SystemProgram.programId,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        })
+        .signers([admin])
+        .rpc();
+
+      console.log("Initializing obligation...");
+      [obligationPDA] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("obligation"),
+          lendingMarketPDA.toBuffer(),
+          user.publicKey.toBuffer(),
+        ],
+        program.programId
+      );
+
+      await program.methods
+        .initObligation()
+        .accounts({
+          //@ts-ignore
+          obligation: obligationPDA,
+          lendingMarket: lendingMarketPDA,
+          owner: user.publicKey,
+          systemProgram: SystemProgram.programId,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        })
+        .signers([user])
+        .rpc();
+
+      console.log("Setting up user collateral...");
+      userCollateralAccount = await getAssociatedTokenAddress(
+        collateralMintPDA,
+        user.publicKey,
+        false,
+        TOKEN_PROGRAM_ID
+      );
+
+      const createUserCollateralIx = createAssociatedTokenAccountInstruction(
+        user.publicKey,
+        userCollateralAccount,
+        user.publicKey,
+        collateralMintPDA,
+        TOKEN_PROGRAM_ID
+      );
+
+      const createAccountTx = new anchor.web3.Transaction().add(createUserCollateralIx);
+      await provider.sendAndConfirm(createAccountTx, [user]);
+
+      const transferAmount = BigInt(5000 * 1e6);
+      await transfer(
+        connection,
+        admin,
+        adminCollateralAddress,
+        userCollateralAccount,
+        admin.publicKey,
+        transferAmount,
+        [],
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+    });
+    it("Should deposit and withdraw in same transaction (no staleness)", async () => {
+      const depositAmount = new BN(2000 * 1e6);
+
+      await program.methods
+        .depositObligationCollateral(depositAmount)
+        .accounts({
+          sourceCollateral: userCollateralAccount,
+          destinationCollateral: collateralSupplyPDA,
+          reserve: reservePDA,
+          //@ts-ignore
+          obligation: obligationPDA,
+          lendingMarket: lendingMarketPDA,
+          //@ts-ignore
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          obligationOwner: user.publicKey,
+          userTransferAuthority: user.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([user])
+        .rpc();
+
+      await displayObligationInfo("After Deposit");
+
+      console.log("\n Testing immediate withdraw (same slot)...");
+
+      const withdrawAmount = new BN(500 * 1e6);
+
+      await program.methods
+        .withdrawObligationCollateral(withdrawAmount)
+        .accounts({
+          sourceCollateral: collateralSupplyPDA,
+          destinationCollateral: userCollateralAccount,
+          withdrawReserve: reservePDA,
+          //@ts-ignore
+          obligation: obligationPDA,
+          lendingMarket: lendingMarketPDA,
+          //@ts-ignore
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          obligationOwner: user.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([user])
+        .rpc();
+
+      await displayObligationInfo("After Withdraw");
+
+      console.log("Deposit and withdraw successful!");
+    });
+
+    it("Should withdraw with u64::MAX", async () => {
+      const u64Max = new BN("18446744073709551615");
+
+      await program.methods
+        .withdrawObligationCollateral(u64Max)
+        .accounts({
+          sourceCollateral: collateralSupplyPDA,
+          destinationCollateral: userCollateralAccount,
+          withdrawReserve: reservePDA,
+          //@ts-ignore
+          obligation: obligationPDA,
+          lendingMarket: lendingMarketPDA,
+          //@ts-ignore
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          obligationOwner: user.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([user])
+        .rpc();
+
+      const obligation = await program.account.obligation.fetch(obligationPDA);
+
+      console.log("Withdrew all collateral");
+      console.log(`Deposits remaining: ${obligation.depositsLen}`);
+
+      assert.equal(obligation.depositsLen, 0, "Should have no deposits");
+    });
+
+    it("Should reject zero amount", async () => {
+      await program.methods
+        .depositObligationCollateral(new BN(1000 * 1e6))
+        .accounts({
+          sourceCollateral: userCollateralAccount,
+          destinationCollateral: collateralSupplyPDA,
+          reserve: reservePDA,
+          //@ts-ignore
+          obligation: obligationPDA,
+          lendingMarket: lendingMarketPDA,
+          //@ts-ignore
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          obligationOwner: user.publicKey,
+          userTransferAuthority: user.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([user])
+        .rpc();
+
+      try {
+        await program.methods
+          .withdrawObligationCollateral(new BN(0))
+          .accounts({
+            sourceCollateral: collateralSupplyPDA,
+            destinationCollateral: userCollateralAccount,
+            withdrawReserve: reservePDA,
+            //@ts-ignore
+            obligation: obligationPDA,
+            lendingMarket: lendingMarketPDA,
+            //@ts-ignore
+            lendingMarketAuthority: lendingMarketAuthorityPDA,
+            obligationOwner: user.publicKey,
+            tokenProgram: TOKEN_PROGRAM_ID,
+          })
+          .signers([user])
+          .rpc();
+
+        assert.fail("Should have failed");
+      } catch (error: any) {
+        console.log("Correctly rejected zero amount");
+        assert.isTrue(
+          error.message.includes("InvalidAmount") || error.message.includes("6003")
+        );
+      }
+    });
+
+    it("Should reject non-owner withdrawal", async () => {
+      console.log("\n Testing non-owner withdrawal...");
+
+      const malicious = Keypair.generate();
+      const sig = await connection.requestAirdrop(malicious.publicKey, 5 * LAMPORTS_PER_SOL);
+      await confirmTx(sig);
+
+      try {
+        await program.methods
+          .withdrawObligationCollateral(new BN(100 * 1e6))
+          .accounts({
+            sourceCollateral: collateralSupplyPDA,
+            destinationCollateral: userCollateralAccount,
+            withdrawReserve: reservePDA,
+            //@ts-ignore
+            obligation: obligationPDA,
+            lendingMarket: lendingMarketPDA,
+            //@ts-ignore
+            lendingMarketAuthority: lendingMarketAuthorityPDA,
+            obligationOwner: malicious.publicKey,
+            tokenProgram: TOKEN_PROGRAM_ID,
+          })
+          .signers([malicious])
+          .rpc();
+
+        assert.fail("Should have failed");
+      } catch (error: any) {
+        console.log("Correctly rejected non-owner");
+        assert.isTrue(
+          error.message.includes("InvalidObligationOwner") ||
+          error.message.includes("ConstraintSeeds") ||
+          error.message.includes("6002")
+        );
+      }
+    });
+
+    it("Verify state", async () => {
+      console.log("\n" + "═".repeat(80));
+      console.log("═".repeat(80));
+
+      await program.methods
+        .withdrawObligationCollateral(new BN("18446744073709551615"))
+        .accounts({
+          sourceCollateral: collateralSupplyPDA,
+          destinationCollateral: userCollateralAccount,
+          withdrawReserve: reservePDA,
+          //@ts-ignore
+          obligation: obligationPDA,
+          lendingMarket: lendingMarketPDA,
+          //@ts-ignore
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          obligationOwner: user.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([user])
+        .rpc();
+
+      const obligation = await program.account.obligation.fetch(obligationPDA);
+      const reserve = await program.account.reserve.fetch(reservePDA);
+      const userBalance = await getCollateralBalance(userCollateralAccount);
+
+      console.log("\n    FINAL STATE:");
+      console.log(`      Obligation deposits: ${obligation.depositsLen}`);
+      console.log(`      Obligation borrows: ${obligation.borrowsLen}`);
+      console.log(`      User balance: ${Number(userBalance) / 1e6} lpUSDC`);
+      console.log(`      Reserve liquidity: ${Number(reserve.liquidityAvailableAmount) / 1e6} USDC`);
+
+      console.log("\n" + "═".repeat(80));
+      console.log("═".repeat(80) + "\n");
+
+      assert.equal(obligation.depositsLen, 0);
+      assert.equal(obligation.borrowsLen, 0);
     });
   });
 });

@@ -29,17 +29,6 @@ pub fn lending_market_init(
         bump,
     });
 
-    //TODO: Remove that after code testing !
-    msg!("   Lending market initialized");
-    msg!("   Market: {}", lending_market.key());
-    msg!("   Owner: {}", lending_market.owner);
-    msg!(
-        "   Quote: {}",
-        std::str::from_utf8(&quote_currency)
-            .unwrap_or("binary")
-            .trim_end_matches('\0')
-    );
-
     Ok(())
 }
 

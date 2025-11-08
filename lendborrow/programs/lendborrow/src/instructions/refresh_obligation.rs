@@ -27,8 +27,7 @@ pub fn handler(ctx: Context<RefreshObligation>) -> Result<()> {
     let mut total_borrowed_value: u128 = 0;
     
     let mut reserve_index = 0;
-    
-    // Step 1: Refresh all collateral deposits
+
     for i in 0..obligation.deposits_len as usize {
         let deposit_reserve_info = &reserve_accounts[reserve_index];
         reserve_index += 1;
@@ -40,7 +39,7 @@ pub fn handler(ctx: Context<RefreshObligation>) -> Result<()> {
             LendingError::InvalidReserveForObligation
         );
         
-        // FIX: Deserialize direktno iz AccountInfo data
+
         let reserve_data = deposit_reserve_info.try_borrow_data()?;
         let mut reserve_data_slice: &[u8] = &reserve_data;
         let deposit_reserve = Reserve::try_deserialize(&mut reserve_data_slice)?;
@@ -49,12 +48,14 @@ pub fn handler(ctx: Context<RefreshObligation>) -> Result<()> {
             deposit_reserve.last_update_slot >= clock.slot.saturating_sub(1),
             LendingError::ReserveStale
         );
-        
-        // Calculate market value of deposited collateral
+
         let liquidity_amount = deposit_reserve.collateral_to_liquidity(collateral.deposited_amount)?;
+        
+        const WAD: u128 = 1_000_000_000_000_000_000;
         
         let market_value = (deposit_reserve.liquidity_market_price as u128)
             .checked_mul(liquidity_amount as u128)
+            .and_then(|v| v.checked_div(WAD)) 
             .ok_or(LendingError::MathOverflow)?;
         
         collateral.market_value = market_value;
@@ -62,8 +63,7 @@ pub fn handler(ctx: Context<RefreshObligation>) -> Result<()> {
         total_deposited_value = total_deposited_value
             .checked_add(market_value)
             .ok_or(LendingError::MathOverflow)?;
-        
-        // Calculate allowed borrow value based on LTV ratio
+
         let allowed_value = market_value
             .checked_mul(deposit_reserve.config.loan_to_value_ratio as u128)
             .and_then(|v| v.checked_div(100))
@@ -73,7 +73,7 @@ pub fn handler(ctx: Context<RefreshObligation>) -> Result<()> {
             .checked_add(allowed_value)
             .ok_or(LendingError::MathOverflow)?;
         
-        // Calculate unhealthy borrow value based on liquidation threshold
+
         let unhealthy_value = market_value
             .checked_mul(deposit_reserve.config.liquidation_threshold as u128)
             .and_then(|v| v.checked_div(100))
@@ -86,7 +86,6 @@ pub fn handler(ctx: Context<RefreshObligation>) -> Result<()> {
         obligation.update_collateral(index, collateral)?;
     }
     
-    // Step 2: Refresh all liquidity borrows
     for i in 0..obligation.borrows_len as usize {
         let borrow_reserve_info = &reserve_accounts[reserve_index];
         reserve_index += 1;
@@ -98,7 +97,6 @@ pub fn handler(ctx: Context<RefreshObligation>) -> Result<()> {
             LendingError::InvalidReserveForObligation
         );
         
-        // FIX: Isti pristup kao gore
         let reserve_data = borrow_reserve_info.try_borrow_data()?;
         let mut reserve_data_slice: &[u8] = &reserve_data;
         let borrow_reserve = Reserve::try_deserialize(&mut reserve_data_slice)?;
@@ -108,28 +106,30 @@ pub fn handler(ctx: Context<RefreshObligation>) -> Result<()> {
             LendingError::ReserveStale
         );
         
-        // Accrue interest on the borrowed amount
+        const WAD: u128 = 1_000_000_000_000_000_000;
+        
         let compounded_interest_rate = borrow_reserve
-            .liquidity_cumulative_borrow_rate_wads
-            .checked_div(liquidity.cumulative_borrow_rate_wads)
+            .liquidity_borrowed_amount_wads
+            .checked_mul(WAD)
+            .and_then(|v| v.checked_div(liquidity.cumulative_borrow_rate_wads))
             .ok_or(LendingError::MathOverflow)?;
         
         let accrued_borrow_amount = liquidity.borrowed_amount_wads
             .checked_mul(compounded_interest_rate)
-            .and_then(|v| v.checked_div(Reserve::INITIAL_BORROW_RATE))
+            .and_then(|v| v.checked_div(WAD))  
             .ok_or(LendingError::MathOverflow)?;
         
         liquidity.borrowed_amount_wads = accrued_borrow_amount;
         liquidity.cumulative_borrow_rate_wads = borrow_reserve.liquidity_cumulative_borrow_rate_wads;
         
-        // Calculate market value of borrowed liquidity
-        let borrowed_amount = accrued_borrow_amount
-            .checked_div(Reserve::INITIAL_BORROW_RATE)
+        
+        let borrowed_base_amount = accrued_borrow_amount
+            .checked_div(WAD)
             .ok_or(LendingError::MathOverflow)?;
         
-        let market_value = borrow_reserve
-            .liquidity_market_price
-            .checked_mul(borrowed_amount)
+        let market_value = (borrowed_base_amount as u128)
+            .checked_mul(borrow_reserve.liquidity_market_price as u128)
+            .and_then(|v| v.checked_div(WAD))  
             .ok_or(LendingError::MathOverflow)?;
         
         liquidity.market_value = market_value;
@@ -141,7 +141,7 @@ pub fn handler(ctx: Context<RefreshObligation>) -> Result<()> {
         obligation.update_liquidity(index, liquidity)?;
     }
     
-    // Step 3: Update obligation totals
+
     obligation.deposited_value = total_deposited_value;
     obligation.borrowed_value = total_borrowed_value;
     obligation.allowed_borrow_value = total_allowed_borrow_value;
@@ -159,10 +159,13 @@ pub fn handler(ctx: Context<RefreshObligation>) -> Result<()> {
     Ok(())
 }
 
+
 #[derive(Accounts)]
 pub struct RefreshObligation<'info> {
     #[account(mut)]
     pub obligation: Box<Account<'info, Obligation>>,
+    
+
 }
 
 #[event]

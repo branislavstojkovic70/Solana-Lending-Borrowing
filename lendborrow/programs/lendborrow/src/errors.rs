@@ -100,4 +100,22 @@ pub enum LendingError {
 
     #[msg("Invalid collateral supply")]
     InvalidCollateralSupply,
+
+    #[msg("Withdraw amount is too large")]
+    WithdrawTooLarge,
+
+    #[msg("Withdraw amount is too small")]
+    WithdrawTooSmall,
+
+    #[msg("Obligation collateral is empty")]
+    ObligationCollateralEmpty,
+
+    #[msg("Reserve Colateral is disabled")]
+    ReserveCollateralDisabled,
+
+    #[msg("Negative interest rate")]
+    NegativeInterestRate,
+
+    #[msg("Obligation is unhealthy")]
+    ObligationUnhealthy,
 }

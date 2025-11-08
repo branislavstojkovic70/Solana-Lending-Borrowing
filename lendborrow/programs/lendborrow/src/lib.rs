@@ -37,9 +37,7 @@ pub mod lendborrow {
         instructions::reserve_init::handler(ctx, liquidity_amount, config)
     }
 
-    pub fn init_obligation(
-        ctx: Context<InitObligation>,
-    ) -> Result<()> {
+    pub fn init_obligation(ctx: Context<InitObligation>) -> Result<()> {
         instructions::obligation_init::handler(ctx)
     }
     pub fn refresh_obligation(ctx: Context<RefreshObligation>) -> Result<()> {
@@ -52,7 +50,12 @@ pub mod lendborrow {
     ) -> Result<()> {
         instructions::deposit_obligation_collateral::handler(ctx, collateral_amount)
     }
-
+    pub fn withdraw_obligation_collateral(
+        ctx: Context<WithdrawObligationCollateral>,
+        collateral_amount: u64,
+    ) -> Result<()> {
+        instructions::withdraw_obligation_collateral::handler(ctx, collateral_amount)
+    }
 }
 
 #[derive(Accounts)]
