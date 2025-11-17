@@ -3,10 +3,11 @@ use anchor_lang::prelude::*;
 pub mod errors;
 pub mod instructions;
 pub mod states;
+pub mod utils;
 
 use instructions::*;
 use states::*;
-
+pub use utils::*;
 declare_id!("BEu3NGWrqp2HX98HMSqSHgmr2d2A8gXHzrJgPtanvK1M");
 
 #[program]
@@ -55,6 +56,31 @@ pub mod lendborrow {
         collateral_amount: u64,
     ) -> Result<()> {
         instructions::withdraw_obligation_collateral::handler(ctx, collateral_amount)
+    }
+
+    pub fn borrow_obligation_liquidity(
+        ctx: Context<BorrowObligationLiquidity>,
+        liquidity_amount: u64,
+    ) -> Result<()> {
+        instructions::borrow_obligation_liquidity::handler(ctx, liquidity_amount)
+    }
+
+    pub fn refresh_reserve(ctx: Context<RefreshReserve>) -> Result<()> {
+        instructions::refresh_reserve::handler(ctx)
+    }
+
+    pub fn repay_obligation_liquidity(
+        ctx: Context<RepayObligationLiquidity>,
+        liquidity_amount: u64,
+    ) -> Result<()> {
+        instructions::repay_obligation_liquidity::handler(ctx, liquidity_amount)
+    }
+
+    pub fn liquidate_obligation(
+        ctx: Context<LiquidateObligation>,
+        liquidity_amount: u64,
+    ) -> Result<()> {
+        instructions::liquidate_obligation::handler(ctx, liquidity_amount)
     }
 }
 

@@ -48,12 +48,10 @@ pub fn handler(
 
     match obligation.find_collateral(reserve.key()) {
         Ok((mut collateral, index)) => {
-            msg!("   ✅ Found existing collateral at index {}", index);
             collateral.deposit(collateral_amount)?;
             obligation.update_collateral(index, collateral)?;
         }
         Err(_) => {
-            msg!("   ✅ Creating new collateral entry");
             let index = obligation.find_or_add_collateral(reserve.key())?;
             let (mut collateral, _) = obligation.find_collateral_by_index(index)?;
             collateral.deposit(collateral_amount)?;
@@ -63,12 +61,6 @@ pub fn handler(
 
     obligation.last_update_slot = clock.slot;
     
-    msg!("   ✅ Deposit successful!");
-    msg!("   New deposited_amount: {}", {
-        let (col, _) = obligation.find_collateral(reserve.key()).unwrap();
-        col.deposited_amount
-    });
-
     emit!(CollateralDeposited {
         obligation: obligation.key(),
         reserve: reserve.key(),

@@ -13,6 +13,11 @@ pub fn lending_market_init(
         LendingError::InvalidQuoteCurrency
     );
 
+    require!(
+        ctx.accounts.owner.key() != Pubkey::default(),
+        LendingError::InvalidOwner
+    );
+
     let lending_market = &mut ctx.accounts.lending_market;
     let bump = ctx.bumps.lending_market;
 

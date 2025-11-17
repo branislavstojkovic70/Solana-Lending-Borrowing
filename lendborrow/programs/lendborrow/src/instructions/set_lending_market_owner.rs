@@ -28,13 +28,6 @@ pub fn handler(
         old_owner,
         new_owner,
     });
-
-    //TODO: Delete this after tests!!!
-    msg!("   Lending market owner updated");
-    msg!("   Market: {}", lending_market.key());
-    msg!("   Old owner: {}", old_owner);
-    msg!("   New owner: {}", new_owner);
-
     Ok(())
 }
 

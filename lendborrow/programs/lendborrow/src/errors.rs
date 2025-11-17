@@ -3,119 +3,184 @@ use anchor_lang::prelude::*;
 #[error_code]
 pub enum LendingError {
     #[msg("Invalid quote currency format. Must be valid UTF-8 string or non-zero pubkey")]
-    InvalidQuoteCurrency,
-
+    InvalidQuoteCurrency, // 6000
+    
     #[msg("Invalid owner. Only the market owner can perform this action")]
-    InvalidOwner,
-
+    InvalidOwner, // 6001
+    
     #[msg("Market already initialized")]
-    MarketAlreadyInitialized,
-
-    #[msg("Market not initialized")]
-    MarketNotInitialized,
-
-    #[msg("New owner must be different from current owner")]
-    SameOwner,
-
-    #[msg("Invalid new owner. Cannot be default pubkey")]
-    InvalidNewOwner,
-
-    #[msg("Invalid reserve configuration")]
-    InvalidReserveConfig,
-
-    #[msg("Invalid liquidity amount")]
-    InvalidLiquidityAmount,
-
+    MarketAlreadyInitialized, // 6002
+    
     #[msg("Invalid amount")]
-    InvalidAmount,
-
+    InvalidAmount, // 6003
+    
+    #[msg("New owner must be different from current owner")]
+    SameOwner, // 6004
+    
+    #[msg("Invalid new owner. Cannot be default pubkey")]
+    InvalidNewOwner, // 6005
+    
+    #[msg("Invalid reserve configuration")]
+    InvalidReserveConfig, // 6006
+    
+    #[msg("Invalid liquidity amount")]
+    InvalidLiquidityAmount, // 6007
+    
     #[msg("Invalid lending market")]
-    InvalidLendingMarket,
-
+    InvalidLendingMarket, // 6008
+    
     #[msg("Invalid liquidity mint")]
-    InvalidLiquidityMint,
-
+    InvalidLiquidityMint, // 6009
+    
     #[msg("Invalid liquidity supply")]
-    InvalidLiquiditySupply,
-
+    InvalidLiquiditySupply, // 6010
+    
     #[msg("Invalid collateral mint")]
-    InvalidCollateralMint,
-
+    InvalidCollateralMint, // 6011
+    
     #[msg("Math overflow")]
-    MathOverflow,
-
+    MathOverflow, // 6012
+    
     #[msg("Reserve is stale and must be refreshed")]
-    ReserveStale,
-
+    ReserveStale, // 6013
+    
     #[msg("Insufficient liquidity")]
-    InsufficientLiquidity,
-
+    InsufficientLiquidity, // 6014
+    
     #[msg("Obligation cannot have more than 10 deposits and borrows combined")]
-    ObligationReserveLimit,
-
+    ObligationReserveLimit, // 6015
+    
     #[msg("Obligation has no deposits")]
-    ObligationDepositsEmpty,
-
+    ObligationDepositsEmpty, // 6016
+    
     #[msg("Obligation has no borrows")]
-    ObligationBorrowsEmpty,
-
+    ObligationBorrowsEmpty, // 6017
+    
     #[msg("Obligation deposits have zero value")]
-    ObligationDepositsZero,
-
+    ObligationDepositsZero, // 6018
+    
     #[msg("Obligation borrows have zero value")]
-    ObligationBorrowsZero,
-
+    ObligationBorrowsZero, // 6019
+    
     #[msg("Obligation is healthy and cannot be liquidated")]
-    ObligationHealthy,
-
+    ObligationHealthy, // 6020
+    
     #[msg("Obligation is stale and must be refreshed")]
-    ObligationStale,
-
+    ObligationStale, // 6021
+    
     #[msg("Invalid obligation owner")]
-    InvalidObligationOwner,
-
+    InvalidObligationOwner, // 6022
+    
     #[msg("Invalid obligation collateral")]
-    InvalidObligationCollateral,
-
+    InvalidObligationCollateral, // 6023
+    
     #[msg("Invalid obligation liquidity")]
-    InvalidObligationLiquidity,
-
+    InvalidObligationLiquidity, // 6024
+    
     #[msg("Invalid obligation index")]
-    InvalidObligationIndex,
-
+    InvalidObligationIndex, // 6025
+    
     #[msg("Invalid obligation data")]
-    InvalidObligationData,
-
+    InvalidObligationData, // 6026
+    
     #[msg("Invalid reserve count")]
-    InvalidReserveCount,
-
+    InvalidReserveCount, // 6027
+    
     #[msg("No reserves to refresh")]
-    NoReservesToRefresh,
-
+    NoReservesToRefresh, // 6028
+    
     #[msg("Invalid reserve for obligation")]
-    InvalidReserveForObligation,
-
+    InvalidReserveForObligation, // 6029
+    
     #[msg("Invalid market")]
-    InvalidMarket,
-
+    InvalidMarket, // 6030
+    
     #[msg("Invalid collateral supply")]
-    InvalidCollateralSupply,
-
+    InvalidCollateralSupply, // 6031
+    
     #[msg("Withdraw amount is too large")]
-    WithdrawTooLarge,
-
+    WithdrawTooLarge, // 6032
+    
     #[msg("Withdraw amount is too small")]
-    WithdrawTooSmall,
-
+    WithdrawTooSmall, // 6033
+    
     #[msg("Obligation collateral is empty")]
-    ObligationCollateralEmpty,
-
-    #[msg("Reserve Colateral is disabled")]
-    ReserveCollateralDisabled,
-
+    ObligationCollateralEmpty, // 6034
+    
+    #[msg("Reserve collateral is disabled")]
+    ReserveCollateralDisabled, // 6035
+    
     #[msg("Negative interest rate")]
-    NegativeInterestRate,
-
+    NegativeInterestRate, // 6036
+    
     #[msg("Obligation is unhealthy")]
-    ObligationUnhealthy,
+    ObligationUnhealthy, // 6037
+    
+    #[msg("Liquidation amount is too small")]
+    LiquidationTooSmall, // 6038
+    
+    #[msg("Liquidation amount is too large")]
+    LiquidationTooLarge, // 6039
+    
+    #[msg("Cannot liquidate own obligation")]
+    CannotLiquidateOwnObligation, // 6040
+    
+    #[msg("Market not initialized")]
+    MarketNotInitialized, // 6041
+    
+    #[msg("Invalid oracle configuration")]
+    InvalidOracleConfig, // 6042
+    
+    #[msg("Oracle price is stale")]
+    OraclePriceStale, // 6043
+    
+    #[msg("Oracle price is invalid or negative")]
+    OraclePriceInvalid, // 6044
+    
+    #[msg("Oracle price confidence interval too wide")]
+    OraclePriceConfidenceTooWide, // 6045
+    
+    #[msg("Invalid account input")]
+    InvalidAccountInput, // 6046
+    
+    #[msg("Invalid mint")]
+    InvalidMint, // 6047
+    
+    #[msg("Insufficient collateral to borrow the requested amount")]
+    InsufficientCollateral, // 6048
+    
+    #[msg("Borrow amount exceeds reserve liquidity")]
+    BorrowExceedsLiquidity, // 6049
+    
+    #[msg("Borrow amount exceeds user borrow limit")]
+    BorrowExceedsUserLimit, // 6050
+    
+    #[msg("Repay amount exceeds user borrow balance")]
+    RepayExceedsUserBalance, // 6051
+    
+    #[msg("Borrow amount is too large")]
+    BorrowTooLarge, // 6052
+    
+    #[msg("Borrow amount is too small")]
+    BorrowTooSmall, // 6053
+    
+    #[msg("Invalid fee receiver")]
+    InvalidFeeReceiver, // 6054
+    
+    #[msg("Invalid destination account")]
+    InvalidDestinationAccount, // 6055
+
+
+    #[msg("Repay amount is too small")]
+    RepayTooSmall,
+
+    #[msg("Obligation liquidity not found")]
+    ObligationLiquidityNotFound,
+
+    #[msg("Obligation liquidity is empty")]
+    ObligationLiquidityEmpty,
+
+    #[msg("Invalid market authority")]
+    InvalidMarketAuthority,
+
 }

@@ -9,6 +9,7 @@ pub struct Reserve {
     pub last_update_slot: u64,
     pub lending_market: Pubkey,
     pub liquidity_mint: Pubkey,
+    pub liquidity_mint_decimals: u8,  // ✅ ADDED!
     pub liquidity_supply: Pubkey,
     pub liquidity_fee_receiver: Pubkey,
     pub liquidity_oracle: Pubkey,
