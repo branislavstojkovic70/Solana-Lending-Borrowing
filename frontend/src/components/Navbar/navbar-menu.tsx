@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import {
   Dashboard,
   TrendingUp,
@@ -22,9 +23,36 @@ const navigationItems: NavigationItem[] = [
   { path: "/portfolio", label: "Portfolio", icon: <Receipt /> },
 ];
 
-export const NavigationMenu = () => {
+interface NavigationMenuProps {
+  variant?: "horizontal" | "vertical";
+  onItemClick?: () => void;
+}
+
+export const NavigationMenu: React.FC<NavigationMenuProps> = ({ 
+  variant = "horizontal",
+  onItemClick 
+}) => {
+  const theme = useTheme();
+
+  if (variant === "vertical") {
+    return (
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+        {navigationItems.map((item) => (
+          <NavButton
+            key={item.path}
+            path={item.path}
+            label={item.label}
+            icon={item.icon}
+            fullWidth
+            onClick={onItemClick}
+          />
+        ))}
+      </Box>
+    );
+  }
+
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+    <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 2 }}>
       {navigationItems.map((item) => (
         <NavButton
           key={item.path}

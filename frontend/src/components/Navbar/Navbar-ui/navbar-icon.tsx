@@ -1,35 +1,43 @@
 import { Box } from "@mui/material";
 
 interface NavbarIconProps {
-  iconUrl: string;
+  iconUrl: string;  
   alt: string;
   size?: number;
+  borderRadius?: string | number;
+  backgroundColor?: string;
+  onClick?: () => void;
 }
 
 export const NavbarIcon: React.FC<NavbarIconProps> = ({ 
-  iconUrl, 
+  iconUrl,
   alt, 
-  size = 32 
+  size = 32,
+  borderRadius = "50%",
+  backgroundColor = "background.paper",
+  onClick
 }) => {
   return (
     <Box
+      onClick={onClick}
       sx={{
         width: size,
         height: size,
-        borderRadius: "50%",
+        borderRadius,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         overflow: "hidden",
-        backgroundColor: "background.paper",
+        backgroundColor,
+        cursor: onClick ? 'pointer' : 'default',
       }}
     >
       <img
-        src={iconUrl}
+        src={iconUrl}  // 👈 Ažuriraj i ovde
         alt={alt}
         style={{
-          width: size - 4,
-          height: size - 4,
+          width: '100%',
+          height: '100%',
           objectFit: "contain",
         }}
       />

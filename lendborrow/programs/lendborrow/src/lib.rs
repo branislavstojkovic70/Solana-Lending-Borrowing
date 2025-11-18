@@ -8,7 +8,7 @@ pub mod utils;
 use instructions::*;
 use states::*;
 pub use utils::*;
-declare_id!("BEu3NGWrqp2HX98HMSqSHgmr2d2A8gXHzrJgPtanvK1M");
+declare_id!("HUiEdjMzMgLtNsqnz6VW8HogCMMSojNLSf5gHLmV7N9b");
 
 #[program]
 pub mod lendborrow {

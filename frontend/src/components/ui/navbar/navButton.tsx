@@ -6,16 +6,30 @@ interface NavButtonProps {
   path: string;
   label: string;
   icon: React.ReactNode;
+  fullWidth?: boolean;
+  onClick?: () => void;
 }
 
-export const NavButton: React.FC<NavButtonProps> = ({ path, label, icon }) => {
+export const NavButton: React.FC<NavButtonProps> = ({ 
+  path, 
+  label, 
+  icon,
+  fullWidth = false,
+  onClick 
+}) => {
   const navigate = useNavigate();
   const theme = useTheme();
 
+  const handleClick = () => {
+    navigate(path);
+    onClick?.();
+  };
+
   return (
     <Button
-      onClick={() => navigate(path)}
+      onClick={handleClick}
       startIcon={icon}
+      fullWidth={fullWidth}
       sx={{
         textTransform: "none",
         color: theme.palette.primary.contrastText,
@@ -25,10 +39,16 @@ export const NavButton: React.FC<NavButtonProps> = ({ path, label, icon }) => {
         py: 1,
         borderRadius: "8px",
         transition: "all 0.2s",
+        justifyContent: fullWidth ? "flex-start" : "center", // 👈 Levo poravnanje za fullWidth
+        textAlign: "left", // 👈 Tekst poravnat na levo
         "&:hover": {
           backgroundColor: theme.palette.action.hover,
-          transform: "translateY(-2px)",
+          transform: fullWidth ? "translateX(4px)" : "translateY(-2px)", // 👈 Horizontalni hover za mobile
         },
+        // 👇 Dodaj margin za bolji spacing u mobile meniju
+        ...(fullWidth && {
+          my: 0.5,
+        })
       }}
     >
       {label}

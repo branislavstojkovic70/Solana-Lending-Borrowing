@@ -1,8 +1,10 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, IconButton } from "@mui/material";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useTheme } from "@mui/material/styles";
+import { Logout } from "@mui/icons-material"; 
 import { WalletButton } from "../../ui/wallet/walletButton";
 import { NavbarIcon } from "./navbar-icon";
+
 
 export const NavbarWallet = () => {
   const { publicKey, disconnect, wallet, connected } = useWallet();
@@ -22,10 +24,11 @@ export const NavbarWallet = () => {
   const walletName = wallet?.adapter?.name || "Wallet";
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+    <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1, md: 2 } }}>
+      {/* Desktop Wallet Info */}
       <Box
         sx={{
-          display: "flex",
+          display: { xs: "none", sm: "flex" },
           alignItems: "center",
           gap: 1.5,
           backgroundColor: theme.palette.action.hover,
@@ -36,8 +39,8 @@ export const NavbarWallet = () => {
         }}
       >
         <NavbarIcon 
-          iconUrl={walletIcon} 
-          alt={walletName} 
+          iconUrl={walletIcon}
+          alt={walletName}
           size={32}
         />
         <Typography
@@ -52,10 +55,29 @@ export const NavbarWallet = () => {
         </Typography>
       </Box>
 
+      <Box sx={{ display: { xs: "flex", sm: "none" }, alignItems: "center", gap: 1 }}>
+        <NavbarIcon 
+          iconUrl={walletIcon}
+          alt={walletName}
+          size={32}
+        />
+        <Typography
+          sx={{
+            fontSize: "12px",
+            fontWeight: 600,
+            color: theme.palette.primary.contrastText,
+            fontFamily: "monospace",
+          }}
+        >
+          {shortenAddress(publicKey.toBase58())}
+        </Typography>
+      </Box>
+
       <Button
         onClick={disconnect}
         variant="outlined"
         sx={{
+          display: { xs: "none", sm: "block" },
           textTransform: "none",
           color: theme.palette.error.main,
           borderColor: theme.palette.error.main,
@@ -74,6 +96,19 @@ export const NavbarWallet = () => {
       >
         Disconnect
       </Button>
+
+      <IconButton
+        onClick={disconnect}
+        sx={{
+          display: { xs: "flex", sm: "none" },
+          color: theme.palette.error.main,
+          "&:hover": {
+            backgroundColor: theme.palette.error.light,
+          },
+        }}
+      >
+        <Logout />
+      </IconButton>
     </Box>
   );
 };
