@@ -5012,5 +5012,4 @@ describe("Lending Protocol", () => {
       }
     });
   });
-
 });

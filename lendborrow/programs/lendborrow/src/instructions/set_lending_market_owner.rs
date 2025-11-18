@@ -1,18 +1,12 @@
-use anchor_lang::prelude::*;
-use crate::states::LendingMarket;
 use crate::errors::LendingError;
+use crate::states::LendingMarket;
+use anchor_lang::prelude::*;
 
-pub fn handler(
-    ctx: Context<SetLendingMarketOwner>,
-    new_owner: Pubkey,
-) -> Result<()> {
+pub fn handler(ctx: Context<SetLendingMarketOwner>, new_owner: Pubkey) -> Result<()> {
     let lending_market = &mut ctx.accounts.lending_market;
     let current_owner = ctx.accounts.owner.key();
 
-    require!(
-        new_owner != current_owner,
-        LendingError::SameOwner
-    );
+    require!(new_owner != current_owner, LendingError::SameOwner);
 
     require!(
         new_owner != Pubkey::default(),
@@ -20,7 +14,7 @@ pub fn handler(
     );
 
     let old_owner = lending_market.owner;
-    
+
     lending_market.owner = new_owner;
 
     emit!(LendingMarketOwnerChanged {

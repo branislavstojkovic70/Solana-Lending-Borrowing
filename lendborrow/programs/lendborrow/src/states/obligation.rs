@@ -115,7 +115,6 @@ impl Obligation {
             return Err(crate::errors::LendingError::ObligationLiquidityEmpty.into());
         };
 
-
         self.borrowed_value = self
             .borrowed_value
             .checked_sub(value_decrease)

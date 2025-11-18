@@ -1,8 +1,6 @@
-use anchor_lang::prelude::*;
-use crate::states::{Obligation, Reserve};
 use crate::errors::LendingError;
-
-
+use crate::states::{Obligation, Reserve};
+use anchor_lang::prelude::*;
 
 #[derive(Debug)]
 pub struct CalculateBorrowResult {
@@ -24,11 +22,11 @@ pub fn calculate_borrow(
     );
 
     const WAD: u128 = 1_000_000_000_000_000_000;
-    
+
     let decimals = 10u128
         .checked_pow(reserve.liquidity_mint_decimals as u32)
         .ok_or(LendingError::MathOverflow)?;
-    
+
     let borrow_value = (liquidity_amount as u128)
         .checked_mul(reserve.liquidity_market_price)
         .and_then(|v| v.checked_div(decimals))
@@ -41,7 +39,7 @@ pub fn calculate_borrow(
     );
 
     let borrow_fee_wad = reserve.config.fees.borrow_fee_wad;
-    
+
     let borrow_fee = (liquidity_amount as u128)
         .checked_mul(borrow_fee_wad as u128)
         .and_then(|v| v.checked_div(WAD))
@@ -64,7 +62,6 @@ pub fn calculate_borrow(
         .checked_mul(WAD)
         .ok_or(LendingError::MathOverflow)?;
 
-
     Ok(CalculateBorrowResult {
         borrow_amount_wads,
         receive_amount,
@@ -73,7 +70,6 @@ pub fn calculate_borrow(
         owner_fee,
     })
 }
-
 
 pub fn refresh_obligation_internal(
     obligation: &mut Obligation,
@@ -114,7 +110,8 @@ pub fn refresh_obligation_internal(
             LendingError::ReserveStale
         );
 
-        let liquidity_amount = deposit_reserve.collateral_to_liquidity(collateral.deposited_amount)?;
+        let liquidity_amount =
+            deposit_reserve.collateral_to_liquidity(collateral.deposited_amount)?;
 
         let decimals = 10u128
             .checked_pow(deposit_reserve.liquidity_mint_decimals as u32)
@@ -179,7 +176,8 @@ pub fn refresh_obligation_internal(
             .checked_pow(borrow_reserve.liquidity_mint_decimals as u32)
             .ok_or(LendingError::MathOverflow)?;
 
-        let market_value = liquidity.borrowed_amount_wads
+        let market_value = liquidity
+            .borrowed_amount_wads
             .checked_mul(borrow_reserve.liquidity_market_price)
             .and_then(|v| v.checked_div(WAD))
             .and_then(|v| v.checked_div(decimals))

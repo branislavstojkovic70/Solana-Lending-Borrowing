@@ -1,13 +1,10 @@
+use crate::errors::LendingError;
+use crate::states::{LendingMarket, Obligation, ObligationLiquidity, Reserve};
+use crate::{calculate_borrow, refresh_obligation_internal};
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount, Transfer};
-use crate::{calculate_borrow, refresh_obligation_internal};
-use crate::states::{LendingMarket, Reserve, Obligation, ObligationLiquidity};
-use crate::errors::LendingError;
 
-pub fn handler(
-    ctx: Context<BorrowObligationLiquidity>,
-    liquidity_amount: u64,
-) -> Result<()> {
+pub fn handler(ctx: Context<BorrowObligationLiquidity>, liquidity_amount: u64) -> Result<()> {
     require!(liquidity_amount > 0, LendingError::InvalidAmount);
 
     let obligation = &mut ctx.accounts.obligation;
@@ -35,16 +32,9 @@ pub fn handler(
     );
 
     let remaining_borrow_value = obligation.remaining_borrow_value()?;
-    require!(
-        remaining_borrow_value > 0,
-        LendingError::BorrowTooLarge
-    );
+    require!(remaining_borrow_value > 0, LendingError::BorrowTooLarge);
 
-    let borrow_result = calculate_borrow(
-        borrow_reserve,
-        liquidity_amount,
-        remaining_borrow_value,
-    )?;
+    let borrow_result = calculate_borrow(borrow_reserve, liquidity_amount, remaining_borrow_value)?;
 
     require!(
         borrow_result.receive_amount > 0,
@@ -70,17 +60,13 @@ pub fn handler(
     let expected_deposits = obligation.deposits_len as usize;
     let expected_borrows = obligation.borrows_len as usize;
     let expected_total = expected_deposits + expected_borrows;
-    
+
     require!(
         ctx.remaining_accounts.len() == expected_total,
         LendingError::InvalidReserveCount
     );
 
-    refresh_obligation_internal(
-        obligation,
-        ctx.remaining_accounts,
-        &clock,
-    )?;
+    refresh_obligation_internal(obligation, ctx.remaining_accounts, &clock)?;
 
     obligation.verify_healthy()?;
 
@@ -88,17 +74,16 @@ pub fn handler(
 
     let lending_market_key = ctx.accounts.lending_market.key();
     let authority_bump = ctx.bumps.lending_market_authority;
-    let authority_seeds = &[
-        b"authority",
-        lending_market_key.as_ref(),
-        &[authority_bump]
-    ];
+    let authority_seeds = &[b"authority", lending_market_key.as_ref(), &[authority_bump]];
     let signer_seeds = &[&authority_seeds[..]];
 
     if borrow_result.owner_fee > 0 {
         let cpi_accounts = Transfer {
             from: ctx.accounts.source_liquidity.to_account_info(),
-            to: ctx.accounts.borrow_reserve_liquidity_fee_receiver.to_account_info(),
+            to: ctx
+                .accounts
+                .borrow_reserve_liquidity_fee_receiver
+                .to_account_info(),
             authority: ctx.accounts.lending_market_authority.to_account_info(),
         };
 
@@ -233,4 +218,3 @@ pub struct LiquidityBorrowed {
     pub owner: Pubkey,
     pub slot: u64,
 }
-

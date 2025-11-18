@@ -2,7 +2,6 @@ use anchor_lang::prelude::*;
 
 use crate::{errors::LendingError, states::Reserve};
 
-
 #[derive(Debug)]
 pub struct CalculateRepayResult {
     pub settle_amount_wads: u128,
@@ -21,7 +20,7 @@ pub fn calculate_repay(
         .ok_or(LendingError::MathOverflow)?
         .checked_div(WAD)
         .ok_or(LendingError::MathOverflow)?;
-    
+
     if liquidity_amount == u64::MAX || (liquidity_amount as u128) >= tokens_needed_for_full_repay {
         let repay_amount = if tokens_needed_for_full_repay > u64::MAX as u128 {
             return Err(LendingError::MathOverflow.into());
@@ -41,14 +40,10 @@ pub fn calculate_repay(
         .checked_mul(WAD)
         .ok_or(LendingError::MathOverflow)?;
 
-
     let settle_amount_wads = settle_amount_wads.min(borrowed_amount_wads);
-    
-    require!(
-        settle_amount_wads > 0,
-        LendingError::InvalidAmount
-    );
-    
+
+    require!(settle_amount_wads > 0, LendingError::InvalidAmount);
+
     require!(
         settle_amount_wads <= borrowed_amount_wads,
         LendingError::InvalidAmount

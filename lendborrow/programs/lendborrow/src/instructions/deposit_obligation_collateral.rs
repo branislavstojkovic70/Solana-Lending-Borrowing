@@ -1,25 +1,21 @@
+use crate::errors::LendingError;
+use crate::states::{LendingMarket, Obligation, ObligationCollateral, Reserve};
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount, Transfer};
 use anchor_spl::token_interface::TokenInterface;
-use crate::states::{Obligation, Reserve, LendingMarket, ObligationCollateral};
-use crate::errors::LendingError;
 
-pub fn handler(
-    ctx: Context<DepositObligationCollateral>,
-    collateral_amount: u64,
-) -> Result<()> {
+pub fn handler(ctx: Context<DepositObligationCollateral>, collateral_amount: u64) -> Result<()> {
     require!(collateral_amount > 0, LendingError::InvalidAmount);
 
     let obligation = &mut ctx.accounts.obligation;
     let reserve = &ctx.accounts.reserve;
     let clock = Clock::get()?;
     const MAX_SLOT_AGE: u64 = 10;
-    
+
     require!(
         clock.slot.saturating_sub(reserve.last_update_slot) <= MAX_SLOT_AGE,
         LendingError::ReserveStale
     );
-
 
     require!(
         obligation.lending_market == ctx.accounts.lending_market.key(),
@@ -60,7 +56,7 @@ pub fn handler(
     }
 
     obligation.last_update_slot = clock.slot;
-    
+
     emit!(CollateralDeposited {
         obligation: obligation.key(),
         reserve: reserve.key(),

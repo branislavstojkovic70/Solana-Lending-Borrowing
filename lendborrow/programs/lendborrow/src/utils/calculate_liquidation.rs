@@ -1,6 +1,6 @@
-use anchor_lang::prelude::*;
 use crate::errors::LendingError;
-use crate::states::{Obligation, Reserve,ObligationLiquidity,ObligationCollateral};
+use crate::states::{Obligation, ObligationCollateral, ObligationLiquidity, Reserve};
+use anchor_lang::prelude::*;
 
 #[derive(Debug)]
 pub struct LiquidationResult {

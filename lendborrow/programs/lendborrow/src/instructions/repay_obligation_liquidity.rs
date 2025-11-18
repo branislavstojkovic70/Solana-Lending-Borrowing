@@ -1,13 +1,10 @@
+use crate::calculate_repay;
+use crate::errors::LendingError;
+use crate::states::{LendingMarket, Obligation, Reserve};
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount, Transfer};
-use crate::calculate_repay;
-use crate::states::{LendingMarket, Reserve, Obligation};
-use crate::errors::LendingError;
 
-pub fn handler(
-    ctx: Context<RepayObligationLiquidity>,
-    liquidity_amount: u64,
-) -> Result<()> {
+pub fn handler(ctx: Context<RepayObligationLiquidity>, liquidity_amount: u64) -> Result<()> {
     require!(liquidity_amount > 0, LendingError::InvalidAmount);
 
     let obligation = &mut ctx.accounts.obligation;
@@ -33,7 +30,6 @@ pub fn handler(
         LendingError::ObligationLiquidityEmpty
     );
 
-
     let repay_result = calculate_repay(
         repay_reserve,
         liquidity_amount,
@@ -42,7 +38,7 @@ pub fn handler(
 
     let actual_repay_amount = if liquidity_amount == u64::MAX {
         let user_balance = ctx.accounts.source_liquidity.amount;
-        let actual_amount = std::cmp::min(repay_result.repay_amount, user_balance);     
+        let actual_amount = std::cmp::min(repay_result.repay_amount, user_balance);
         actual_amount
     } else {
         repay_result.repay_amount
@@ -63,10 +59,7 @@ pub fn handler(
         LendingError::InsufficientLiquidity
     );
 
-    require!(
-        actual_repay_amount > 0,
-        LendingError::RepayTooSmall
-    );
+    require!(actual_repay_amount > 0, LendingError::RepayTooSmall);
 
     repay_reserve.liquidity_borrowed_amount_wads = repay_reserve
         .liquidity_borrowed_amount_wads
@@ -87,10 +80,7 @@ pub fn handler(
         authority: ctx.accounts.user_transfer_authority.to_account_info(),
     };
 
-    let cpi_ctx = CpiContext::new(
-        ctx.accounts.token_program.to_account_info(),
-        cpi_accounts,
-    );
+    let cpi_ctx = CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts);
 
     token::transfer(cpi_ctx, actual_repay_amount)?;
 

@@ -1,6 +1,6 @@
-use anchor_lang::prelude::*;
 use crate::errors::LendingError;
-use crate::states::{Obligation, Reserve, ObligationCollateral, ObligationLiquidity};
+use crate::states::{Obligation, ObligationCollateral, ObligationLiquidity, Reserve};
+use anchor_lang::prelude::*;
 
 const WAD: u128 = 1_000_000_000_000_000_000;
 
@@ -66,7 +66,8 @@ pub fn refresh_liquidity(
     let (mut liquidity, index) = obligation.find_liquidity_by_index(liquidity_index)?;
 
     // Accrue interest if rate has changed
-    if borrow_reserve.liquidity_cumulative_borrow_rate_wads != liquidity.cumulative_borrow_rate_wads {
+    if borrow_reserve.liquidity_cumulative_borrow_rate_wads != liquidity.cumulative_borrow_rate_wads
+    {
         let compounded_interest_rate = borrow_reserve
             .liquidity_cumulative_borrow_rate_wads
             .checked_mul(WAD)
@@ -80,7 +81,8 @@ pub fn refresh_liquidity(
             .ok_or(LendingError::MathOverflow)?;
 
         liquidity.borrowed_amount_wads = accrued_borrow_amount;
-        liquidity.cumulative_borrow_rate_wads = borrow_reserve.liquidity_cumulative_borrow_rate_wads;
+        liquidity.cumulative_borrow_rate_wads =
+            borrow_reserve.liquidity_cumulative_borrow_rate_wads;
     }
 
     // Calculate market value

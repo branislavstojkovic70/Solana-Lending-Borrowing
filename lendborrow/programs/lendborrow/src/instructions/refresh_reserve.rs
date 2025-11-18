@@ -1,7 +1,7 @@
 use crate::errors::LendingError;
 use crate::states::{LendingMarket, Reserve};
-use anchor_lang::prelude::*;
 use crate::utils::oracle::validate_pyth_price;
+use anchor_lang::prelude::*;
 
 pub fn handler(ctx: Context<RefreshReserve>) -> Result<()> {
     let reserve = &mut ctx.accounts.reserve;
@@ -10,16 +10,15 @@ pub fn handler(ctx: Context<RefreshReserve>) -> Result<()> {
     #[cfg(feature = "testing")]
     {
         reserve.liquidity_market_price = 10u128
-        .checked_pow(reserve.liquidity_mint_decimals as u32)
-        .unwrap();
-    
+            .checked_pow(reserve.liquidity_mint_decimals as u32)
+            .unwrap();
+
         reserve.last_update_slot = clock.slot;
         return Ok(());
     }
 
     #[cfg(not(feature = "testing"))]
     {
-
         let current_price = validate_pyth_price(
             &ctx.accounts.pyth_price,
             &ctx.accounts.lending_market,

@@ -70,7 +70,7 @@ impl ReserveConfig {
             crate::errors::LendingError::InvalidReserveConfig
         );
 
-        // ✅ Validate that pyth_price_feed_id is not all zeros
+        // Validate that pyth_price_feed_id is not all zeros
         require!(
             self.pyth_price_feed_id != [0u8; 32],
             crate::errors::LendingError::InvalidOracleConfig

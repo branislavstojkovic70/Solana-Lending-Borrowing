@@ -1,13 +1,10 @@
+use crate::errors::LendingError;
+use crate::states::{LendingMarket, Obligation, Reserve};
+use crate::utils::calculate_liquidation;
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount, Transfer};
-use crate::utils::calculate_liquidation;
-use crate::states::{LendingMarket, Reserve, Obligation};
-use crate::errors::LendingError;
 
-pub fn handler(
-    ctx: Context<LiquidateObligation>,
-    liquidity_amount: u64,
-) -> Result<()> {
+pub fn handler(ctx: Context<LiquidateObligation>, liquidity_amount: u64) -> Result<()> {
     require!(liquidity_amount > 0, LendingError::InvalidAmount);
 
     let obligation = &mut ctx.accounts.obligation;
@@ -100,17 +97,16 @@ pub fn handler(
 
     let lending_market_key = ctx.accounts.lending_market.key();
     let authority_bump = ctx.bumps.lending_market_authority;
-    let authority_seeds = &[
-        b"authority",
-        lending_market_key.as_ref(),
-        &[authority_bump]
-    ];
+    let authority_seeds = &[b"authority", lending_market_key.as_ref(), &[authority_bump]];
 
     token::transfer(
         CpiContext::new_with_signer(
             ctx.accounts.token_program.to_account_info(),
             Transfer {
-                from: ctx.accounts.withdraw_reserve_collateral_supply.to_account_info(),
+                from: ctx
+                    .accounts
+                    .withdraw_reserve_collateral_supply
+                    .to_account_info(),
                 to: ctx.accounts.destination_collateral.to_account_info(),
                 authority: ctx.accounts.lending_market_authority.to_account_info(),
             },
@@ -130,7 +126,6 @@ pub fn handler(
         liquidator: ctx.accounts.user_transfer_authority.key(),
         slot: clock.slot,
     });
-
 
     Ok(())
 }
@@ -209,5 +204,3 @@ pub struct ObligationLiquidated {
     pub liquidator: Pubkey,
     pub slot: u64,
 }
-
-

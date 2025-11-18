@@ -1,5 +1,5 @@
-use anchor_lang::prelude::*;
 use crate::states::{LendingMarket, Obligation};
+use anchor_lang::prelude::*;
 
 pub fn handler(ctx: Context<InitObligation>) -> Result<()> {
     let obligation = &mut ctx.accounts.obligation;

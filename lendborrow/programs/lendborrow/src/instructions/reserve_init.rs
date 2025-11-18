@@ -1,45 +1,41 @@
+use crate::errors::LendingError;
+use crate::states::{LendingMarket, Reserve, ReserveConfig};
+use crate::utils::oracle::validate_pyth_price;
 use anchor_lang::prelude::*;
 use anchor_spl::{
     associated_token::AssociatedToken,
     token::{mint_to, transfer, Mint, MintTo, Token, TokenAccount, Transfer},
 };
-use pyth_solana_receiver_sdk::price_update::PriceUpdateV2;
-use crate::states::{LendingMarket, Reserve, ReserveConfig};
-use crate::errors::LendingError;
-use crate::utils::oracle::validate_pyth_price;
 
 pub fn handler(
     ctx: Context<InitReserve>,
     liquidity_amount: u64,
     config: ReserveConfig,
 ) -> Result<()> {
-    require!(
-        liquidity_amount > 0,
-        LendingError::InvalidLiquidityAmount
-    );
-    
+    require!(liquidity_amount > 0, LendingError::InvalidLiquidityAmount);
+
     require!(
         ctx.accounts.source_liquidity.amount >= liquidity_amount,
         LendingError::InsufficientLiquidity
     );
-    
+
     require!(
         ctx.accounts.source_liquidity.key() != ctx.accounts.liquidity_supply.key(),
         LendingError::InvalidAccountInput
     );
     config.validate()?;
-    
+
     #[cfg(not(feature = "testing"))]
     let initial_price = validate_pyth_price(
         &ctx.accounts.pyth_price,
         &ctx.accounts.lending_market,
-        &config.pyth_price_feed_id, 
+        &config.pyth_price_feed_id,
     )?;
 
     #[cfg(feature = "testing")]
     let initial_price: u128 = {
         msg!("Testing mode: using mock price");
-        1_000_000 
+        1_000_000
     };
 
     let reserve = &mut ctx.accounts.reserve;
@@ -48,7 +44,7 @@ pub fn handler(
     reserve.version = Reserve::PROGRAM_VERSION;
     reserve.last_update_slot = clock.slot;
     reserve.lending_market = ctx.accounts.lending_market.key();
-    
+
     reserve.liquidity_mint = ctx.accounts.liquidity_mint.key();
     reserve.liquidity_mint_decimals = ctx.accounts.liquidity_mint.decimals;
     reserve.liquidity_supply = ctx.accounts.liquidity_supply.key();
@@ -58,11 +54,11 @@ pub fn handler(
     reserve.liquidity_borrowed_amount_wads = 0;
     reserve.liquidity_cumulative_borrow_rate_wads = Reserve::INITIAL_BORROW_RATE;
     reserve.liquidity_market_price = initial_price;
-    
+
     reserve.collateral_mint = ctx.accounts.collateral_mint.key();
     reserve.collateral_supply = ctx.accounts.collateral_supply.key();
     reserve.collateral_mint_total_supply = liquidity_amount;
-    
+
     reserve.config = config;
 
     transfer(
@@ -79,11 +75,7 @@ pub fn handler(
 
     let lending_market_key = ctx.accounts.lending_market.key();
     let authority_bump = ctx.bumps.lending_market_authority;
-    let authority_seeds = &[
-        b"authority",
-        lending_market_key.as_ref(),
-        &[authority_bump]
-    ];
+    let authority_seeds = &[b"authority", lending_market_key.as_ref(), &[authority_bump]];
     let signer_seeds = &[&authority_seeds[..]];
 
     mint_to(
@@ -221,11 +213,11 @@ pub struct InitReserve<'info> {
     pub user_transfer_authority: Signer<'info>,
 
     pub token_program: Program<'info, Token>,
-    
+
     pub associated_token_program: Program<'info, AssociatedToken>,
-    
+
     pub system_program: Program<'info, System>,
-    
+
     pub rent: Sysvar<'info, Rent>,
 }
 

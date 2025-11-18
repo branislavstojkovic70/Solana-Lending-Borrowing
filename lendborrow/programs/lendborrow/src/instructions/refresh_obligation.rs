@@ -1,6 +1,8 @@
 use crate::errors::LendingError;
 use crate::states::Obligation;
-use crate::utils::{deserialize_reserve, verify_reserve_freshness, refresh_collateral, refresh_liquidity};
+use crate::utils::{
+    deserialize_reserve, refresh_collateral, refresh_liquidity, verify_reserve_freshness,
+};
 use anchor_lang::prelude::*;
 
 pub fn handler(ctx: Context<RefreshObligation>) -> Result<()> {
@@ -36,15 +38,15 @@ pub fn handler(ctx: Context<RefreshObligation>) -> Result<()> {
         verify_reserve_freshness(&deposit_reserve, clock.slot)?;
 
         let result = refresh_collateral(obligation, i, &deposit_reserve)?;
-        
+
         total_deposited_value = total_deposited_value
             .checked_add(result.market_value)
             .ok_or(LendingError::MathOverflow)?;
-        
+
         total_allowed_borrow_value = total_allowed_borrow_value
             .checked_add(result.allowed_borrow_value)
             .ok_or(LendingError::MathOverflow)?;
-        
+
         total_unhealthy_borrow_value = total_unhealthy_borrow_value
             .checked_add(result.unhealthy_borrow_value)
             .ok_or(LendingError::MathOverflow)?;
@@ -64,7 +66,7 @@ pub fn handler(ctx: Context<RefreshObligation>) -> Result<()> {
         verify_reserve_freshness(&borrow_reserve, clock.slot)?;
 
         let market_value = refresh_liquidity(obligation, i, &borrow_reserve)?;
-        
+
         total_borrowed_value = total_borrowed_value
             .checked_add(market_value)
             .ok_or(LendingError::MathOverflow)?;
