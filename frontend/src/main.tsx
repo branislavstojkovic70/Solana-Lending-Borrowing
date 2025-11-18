@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter, SolflareWalletAdapter } from "@solana/wallet-adapter-wallets";
+import Navbar from "./components/Navbar/navbar";
 
 const theme = createTheme({
 	palette: {
@@ -39,8 +40,8 @@ const theme = createTheme({
 
 const router = createBrowserRouter([
 	{
-		// path: "/",
-		// element: < />,
+		path: "/",
+		element: < Navbar/>,
 		// children: [
     //   {
     //   }
