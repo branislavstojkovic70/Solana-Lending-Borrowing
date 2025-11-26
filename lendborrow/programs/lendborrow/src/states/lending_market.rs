@@ -4,17 +4,17 @@ use anchor_lang::prelude::*;
 #[derive(InitSpace)]
 pub struct LendingMarket {
     pub owner: Pubkey,
-
-    pub version: u8,
-
+    pub authority: Pubkey,      // ← DODAJ
+    pub authority_bump: u8,      // ← DODAJ
+    pub version: u64,            // ← Promeni u u64
     pub bump_seed: u8,
-
     pub quote_currency: [u8; 32],
-
     pub token_program_id: Pubkey,
 }
 
 impl LendingMarket {
+    pub const AUTHORITY_SEED: &'static [u8] = b"lending-market-auth";
+
     pub const PROGRAM_VERSION: u8 = 1;
 
     pub const SEED_PREFIX: &'static [u8] = b"lending-market";

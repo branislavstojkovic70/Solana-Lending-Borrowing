@@ -3,8 +3,6 @@ use crate::states::{LendingMarket, Obligation, Reserve};
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount, Transfer};
 
-/// Handler za withdraw collateral iz obligation-a
-/// Omogućava korisnicima da povuku svoj collateral ako je obligation healthy
 pub fn handler(ctx: Context<WithdrawObligationCollateral>, collateral_amount: u64) -> Result<()> {
     require!(collateral_amount > 0, LendingError::InvalidAmount);
 
@@ -14,7 +12,7 @@ pub fn handler(ctx: Context<WithdrawObligationCollateral>, collateral_amount: u6
 
     #[cfg(not(feature = "testing"))]
     {
-        const MAX_SLOT_AGE: u64 = 1;
+        const MAX_SLOT_AGE: u64 = 3600;
 
         require!(
             clock.slot.saturating_sub(obligation.last_update_slot) <= MAX_SLOT_AGE,

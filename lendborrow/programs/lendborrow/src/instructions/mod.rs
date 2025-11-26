@@ -9,6 +9,8 @@ pub mod repay_obligation_liquidity;
 pub mod reserve_init;
 pub mod set_lending_market_owner;
 pub mod withdraw_obligation_collateral;
+pub mod deposit_reserve_liquidity;
+pub mod redeem_reserve_collateral;
 
 pub use borrow_obligation_liquidity::*;
 pub use deposit_obligation_collateral::*;
@@ -21,3 +23,5 @@ pub use repay_obligation_liquidity::*;
 pub use reserve_init::*;
 pub use set_lending_market_owner::*;
 pub use withdraw_obligation_collateral::*;
+pub use deposit_reserve_liquidity::*;
+pub use redeem_reserve_collateral::*;

@@ -180,4 +180,17 @@ pub enum LendingError {
 
     #[msg("Invalid market authority")]
     InvalidMarketAuthority,
+
+    #[msg("Invalid Token program")]
+    InvalidTokenProgram,
+
+    #[msg("Insufficient owner balance")]
+    InsufficientOwnerBalance,
+
+    #[msg("Invalid Config")]
+    InvalidConfig,
+
+    #[msg("Invalid market owner")]
+    InvalidMarketOwner,
+
 }

@@ -190,7 +190,7 @@ describe("Lending Protocol", () => {
         lendingMarketPDA
       );
 
-      assert.equal(market.version, 1, "Version should be 1");
+      assert.equal(market.version.toNumber(), 1, "Version should be 1");
       assert.equal(market.bumpSeed, lendingMarketBump, "Bump should match");
       assert.equal(
         market.owner.toBase58(),
@@ -424,7 +424,7 @@ describe("Lending Protocol", () => {
         lendingMarketPDA
       );
 
-      assert.equal(market.version, 1, "Version should be 1");
+      assert.equal(market.version.toNumber(), 1, "Version should be 1");
       console.log(" Version:", market.version);
 
       assert.equal(
@@ -467,7 +467,9 @@ describe("Lending Protocol", () => {
       const expectedSize =
         8 +
         32 +
+        32 +
         1 +
+        8 +
         1 +
         32 +
         32;
@@ -1763,14 +1765,19 @@ describe("Lending Protocol", () => {
 
     let admin: Keypair;
     let user: Keypair;
-    let lendingMarketPDA: PublicKey;
-    let obligationPDA: PublicKey;
-    let reservePDA: PublicKey;
-    let liquidityMint: PublicKey;
-    let collateralMint: PublicKey;
+    let usdcMint: PublicKey;
+    let adminUsdcAccount: PublicKey;
     let userCollateralAccount: PublicKey;
-    let reserveCollateralSupply: PublicKey;
-    let reserveLiquiditySupply: PublicKey;
+    let lendingMarketPDA: PublicKey;
+    let lendingMarketAuthorityPDA: PublicKey;
+    let reservePDA: PublicKey;
+    let obligationPDA: PublicKey;
+    let collateralMintPDA: PublicKey;
+    let collateralSupplyPDA: PublicKey;
+    let liquiditySupplyPDA: PublicKey;
+    let liquidityFeeReceiverPDA: PublicKey;
+    let pythPriceMock: Keypair;
+    let pythProductMock: Keypair;
 
     async function confirmTx(signature: string) {
       const latestBlockhash = await connection.getLatestBlockhash();
@@ -1786,30 +1793,83 @@ describe("Lending Protocol", () => {
       return Array.from(buffer);
     }
 
+    const PYTH_FEED_IDS = {
+      USDC_USD: [
+        0xef, 0xd0, 0x15, 0x1e, 0x0f, 0xdb, 0x77, 0x51, 0x0c, 0x11, 0x3b, 0x3d,
+        0x0d, 0x7c, 0xf2, 0x58, 0x8c, 0x4f, 0x89, 0xc8, 0x1a, 0x8e, 0x5b, 0x7e,
+        0x0f, 0x5f, 0x1a, 0x0f, 0x4c, 0x8d, 0x9d, 0x5e
+      ],
+    };
+
+    function createPythFeedId(): number[] {
+      return PYTH_FEED_IDS.USDC_USD;
+    }
+
     before(async () => {
-      console.log("\n Setting up...");
+      console.log("\n Setting up Deposit Collateral Test Environment...");
 
       admin = Keypair.generate();
       user = Keypair.generate();
+      pythPriceMock = Keypair.generate();
+      pythProductMock = Keypair.generate();
 
       console.log(" Airdropping SOL...");
       const sigs = await Promise.all([
-        connection.requestAirdrop(admin.publicKey, 10 * LAMPORTS_PER_SOL),
-        connection.requestAirdrop(user.publicKey, 10 * LAMPORTS_PER_SOL),
+        connection.requestAirdrop(admin.publicKey, 20 * LAMPORTS_PER_SOL),
+        connection.requestAirdrop(user.publicKey, 20 * LAMPORTS_PER_SOL),
       ]);
       await Promise.all(sigs.map(confirmTx));
       console.log(" Airdrops complete");
 
-      console.log(" Creating lending market...");
+      console.log(" Creating USDC mint...");
+      usdcMint = await createMint(
+        connection,
+        admin,
+        admin.publicKey,
+        null,
+        6,
+        undefined,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+
+      const adminUsdcAcc = await getOrCreateAssociatedTokenAccount(
+        connection,
+        admin,
+        usdcMint,
+        admin.publicKey,
+        false,
+        undefined,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+      adminUsdcAccount = adminUsdcAcc.address;
+
+      await mintTo(
+        connection,
+        admin,
+        usdcMint,
+        adminUsdcAccount,
+        admin,
+        1_000_000_000_000,
+        [],
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+
+      console.log(" Initializing lending market...");
       [lendingMarketPDA] = PublicKey.findProgramAddressSync(
         [Buffer.from("lending-market"), admin.publicKey.toBuffer()],
         program.programId
       );
 
-      const quoteCurrency = createQuoteCurrency("USD");
+      [lendingMarketAuthorityPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("authority"), lendingMarketPDA.toBuffer()],
+        program.programId
+      );
 
       await program.methods
-        .initLendingMarket(quoteCurrency)
+        .initLendingMarket(createQuoteCurrency("USD"))
         .accounts({
           owner: admin.publicKey,
           //@ts-ignore
@@ -1820,71 +1880,85 @@ describe("Lending Protocol", () => {
         .signers([admin])
         .rpc();
 
-      console.log(" Lending market created");
-
-      console.log(" Creating mints...");
-      liquidityMint = await createMint(
-        connection,
-        admin,
-        admin.publicKey,
-        null,
-        9
-      );
-
-      collateralMint = await createMint(
-        connection,
-        admin,
-        admin.publicKey,
-        null,
-        9
-      );
-
-      console.log(" Mints created");
-
       console.log(" Setting up reserve...");
       [reservePDA] = PublicKey.findProgramAddressSync(
-        [
-          Buffer.from("reserve"),
-          lendingMarketPDA.toBuffer(),
-          liquidityMint.toBuffer(),
-        ],
+        [Buffer.from("reserve"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
         program.programId
       );
 
-      const reserveLiquiditySupplyKeypair = Keypair.generate();
-      //@ts-ignore
-      reserveLiquiditySupply = reserveLiquiditySupplyKeypair.publicKey;
-
-      const reserveCollateralSupplyKeypair = Keypair.generate();
-      reserveCollateralSupply = reserveCollateralSupplyKeypair.publicKey;
-
-
-      console.log("  Note: You need to call init_reserve here");
-      console.log("   Reserve PDA:", reservePDA.toBase58());
-
-      console.log(" Creating user collateral account...");
-      const userAccount = await getOrCreateAssociatedTokenAccount(
-        connection,
-        user,
-        collateralMint,
-        user.publicKey
-      );
-      userCollateralAccount = userAccount.address;
-
-      console.log(" Minting collateral tokens to user...");
-      await mintTo(
-        connection,
-        admin,
-        collateralMint,
-        userCollateralAccount,
-        admin,
-        1000 * LAMPORTS_PER_SOL
+      [liquiditySupplyPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("liquidity-supply"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
       );
 
-      const userBalance = await getAccount(connection, userCollateralAccount);
-      console.log("   User collateral balance:", userBalance.amount.toString());
+      [liquidityFeeReceiverPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("fee-receiver"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
 
-      console.log(" Creating obligation...");
+      [collateralMintPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("collateral-mint"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [collateralSupplyPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("collateral-supply"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      const config = {
+        optimalUtilizationRate: 80,
+        loanToValueRatio: 50,
+        liquidationBonus: 5,
+        liquidationThreshold: 55,
+        minBorrowRate: 0,
+        optimalBorrowRate: 4,
+        maxBorrowRate: 30,
+        fees: {
+          borrowFeeWad: new BN("10000000000000000"),
+          flashLoanFeeWad: new BN("9000000000000000"),
+          hostFeePercentage: 20,
+        },
+        pythPriceFeedId: createPythFeedId(),
+      };
+
+      const adminCollateralAddress = await getAssociatedTokenAddress(
+        collateralMintPDA,
+        admin.publicKey,
+        false,
+        TOKEN_PROGRAM_ID
+      );
+
+      console.log(" Initializing reserve with init_reserve...");
+      await program.methods
+        .initReserve(new BN("10000000000"), config)
+        .accounts({
+          sourceLiquidity: adminUsdcAccount,
+          //@ts-ignore
+          destinationCollateral: adminCollateralAddress,
+          reserve: reservePDA,
+          liquidityMint: usdcMint,
+          liquiditySupply: liquiditySupplyPDA,
+          liquidityFeeReceiver: liquidityFeeReceiverPDA,
+          pythProduct: pythProductMock.publicKey,
+          pythPrice: pythPriceMock.publicKey,
+          collateralMint: collateralMintPDA,
+          collateralSupply: collateralSupplyPDA,
+          lendingMarket: lendingMarketPDA,
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          owner: admin.publicKey,
+          userTransferAuthority: admin.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          associatedTokenProgram: anchor.utils.token.ASSOCIATED_PROGRAM_ID,
+          systemProgram: SystemProgram.programId,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        })
+        .signers([admin])
+        .rpc();
+
+      console.log(" Reserve initialized successfully!");
+
+      console.log(" Initializing obligation...");
       [obligationPDA] = PublicKey.findProgramAddressSync(
         [
           Buffer.from("obligation"),
@@ -1907,101 +1981,152 @@ describe("Lending Protocol", () => {
         .signers([user])
         .rpc();
 
-      console.log(" Obligation created");
-      console.log(" Setup complete\n");
+      console.log(" Setting up user collateral...");
+      userCollateralAccount = await getAssociatedTokenAddress(
+        collateralMintPDA,
+        user.publicKey,
+        false,
+        TOKEN_PROGRAM_ID
+      );
+
+      const createUserCollateralIx = createAssociatedTokenAccountInstruction(
+        user.publicKey,
+        userCollateralAccount,
+        user.publicKey,
+        collateralMintPDA,
+        TOKEN_PROGRAM_ID
+      );
+
+      const createAccountTx = new anchor.web3.Transaction().add(createUserCollateralIx);
+      await provider.sendAndConfirm(createAccountTx, [user]);
+
+      // Transfer collateral tokens from admin to user
+      const transferAmount = BigInt(5000 * 1e6); // 5000 lpUSDC
+      await transfer(
+        connection,
+        admin,
+        adminCollateralAddress,
+        userCollateralAccount,
+        admin.publicKey,
+        transferAmount,
+        [],
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+
+      console.log(" Setup complete!\n");
     });
 
     it("Should deposit collateral to obligation", async () => {
-      console.log("\n Test: Deposit collateral");
+      console.log("\n Test: Deposit collateral (with refresh)");
 
-      const depositAmount = new BN(100 * LAMPORTS_PER_SOL);
+      const depositAmount = new BN(2000 * 1e6); // 2000 lpUSDC
 
-      const [lendingMarketAuthority] = PublicKey.findProgramAddressSync(
-        [lendingMarketPDA.toBuffer()],
-        program.programId
+      const obligationBefore = await program.account.obligation.fetch(obligationPDA);
+      const userBalanceBefore = await getAccount(
+        connection,
+        userCollateralAccount,
+        undefined,
+        TOKEN_PROGRAM_ID
       );
 
       console.log(" Before deposit:");
-      const obligationBefore = await program.account.obligation.fetch(
-        obligationPDA
-      );
       console.log("   Deposits length:", obligationBefore.depositsLen);
       console.log("   Deposited value:", obligationBefore.depositedValue.toString());
+      console.log("   User balance:", Number(userBalanceBefore.amount) / 1e6, "lpUSDC");
 
-      const userBalanceBefore = await getAccount(
+      // Build compound transaction: refresh reserve → deposit → refresh obligation
+      const refreshReserveIx = await program.methods
+        .refreshReserve()
+        .accounts({
+          reserve: reservePDA,
+          //@ts-ignore
+          lendingMarket: lendingMarketPDA,
+          pythPrice: pythPriceMock.publicKey,
+        })
+        .instruction();
+
+      const depositIx = await program.methods
+        .depositObligationCollateral(depositAmount)
+        .accounts({
+          sourceCollateral: userCollateralAccount,
+          destinationCollateral: collateralSupplyPDA,
+          reserve: reservePDA,
+          //@ts-ignore
+          obligation: obligationPDA,
+          lendingMarket: lendingMarketPDA,
+          //@ts-ignore
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          obligationOwner: user.publicKey,
+          userTransferAuthority: user.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .instruction();
+
+      const refreshObligationIx = await program.methods
+        .refreshObligation()
+        .accounts({
+          obligation: obligationPDA,
+        })
+        .remainingAccounts([
+          {
+            pubkey: reservePDA,
+            isWritable: false,
+            isSigner: false,
+          },
+        ])
+        .instruction();
+
+      const tx = new anchor.web3.Transaction();
+      tx.add(refreshReserveIx);
+      tx.add(depositIx);
+      tx.add(refreshObligationIx);
+
+      await provider.sendAndConfirm(tx, [user]);
+
+      const obligationAfter = await program.account.obligation.fetch(obligationPDA);
+      const userBalanceAfter = await getAccount(
         connection,
-        userCollateralAccount
+        userCollateralAccount,
+        undefined,
+        TOKEN_PROGRAM_ID
       );
-      console.log("   User balance:", userBalanceBefore.amount.toString());
 
-      console.log("\n Depositing", depositAmount.toString(), "tokens...");
+      console.log("\n After deposit + refresh:");
+      console.log("   Deposits length:", obligationAfter.depositsLen);
+      console.log("   Deposited value:", obligationAfter.depositedValue.toString());
+      console.log("   User balance:", Number(userBalanceAfter.amount) / 1e6, "lpUSDC");
 
-      try {
-        await program.methods
-          .depositObligationCollateral(depositAmount)
-          .accounts({
-            sourceCollateral: userCollateralAccount,
-            destinationCollateral: reserveCollateralSupply,
-            reserve: reservePDA,
-            //@ts-ignore
-            obligation: obligationPDA,
-            lendingMarket: lendingMarketPDA,
-            //@ts-ignore
-            lendingMarketAuthority: lendingMarketAuthority,
-            obligationOwner: user.publicKey,
-            userTransferAuthority: user.publicKey,
-            tokenProgram: TOKEN_PROGRAM_ID,
-          })
-          .signers([user])
-          .rpc();
+      // Verify deposit was successful
+      assert.equal(obligationAfter.depositsLen, 1, "Should have 1 deposit");
+      assert.isTrue(
+        obligationAfter.depositedValue.gt(new BN(0)),
+        "Deposited value should be greater than 0"
+      );
+      assert.equal(
+        Number(userBalanceBefore.amount) - Number(userBalanceAfter.amount),
+        depositAmount.toNumber(),
+        "User balance should decrease by deposit amount"
+      );
 
-        console.log("\n After deposit:");
-        const obligationAfter = await program.account.obligation.fetch(
-          obligationPDA
-        );
-        console.log("   Deposits length:", obligationAfter.depositsLen);
-        console.log(
-          "   Deposited value:",
-          obligationAfter.depositedValue.toString()
-        );
-
-        const userBalanceAfter = await getAccount(
-          connection,
-          userCollateralAccount
-        );
-        console.log("   User balance:", userBalanceAfter.amount.toString());
-
-        console.log("\n Collateral deposited successfully");
-        assert.equal(obligationAfter.depositsLen, 1);
-      } catch (error: any) {
-        console.log("\n  Error:", error.message);
-        console.log(
-          "   This is expected if reserve is not properly initialized"
-        );
-        console.log("   You need to implement and call init_reserve first");
-      }
+      console.log(" ✅ Collateral deposited successfully!");
     });
 
     it("Should fail: deposit zero amount", async () => {
-      console.log("\n Deposit zero amount (should fail)");
-
-      const [lendingMarketAuthority] = PublicKey.findProgramAddressSync(
-        [lendingMarketPDA.toBuffer()],
-        program.programId
-      );
+      console.log("\n Test: Deposit zero amount (should fail)");
 
       try {
         await program.methods
           .depositObligationCollateral(new BN(0))
           .accounts({
             sourceCollateral: userCollateralAccount,
-            destinationCollateral: reserveCollateralSupply,
+            destinationCollateral: collateralSupplyPDA,
             reserve: reservePDA,
             //@ts-ignore
             obligation: obligationPDA,
             lendingMarket: lendingMarketPDA,
             //@ts-ignore
-            lendingMarketAuthority: lendingMarketAuthority,
+            lendingMarketAuthority: lendingMarketAuthorityPDA,
             obligationOwner: user.publicKey,
             userTransferAuthority: user.publicKey,
             tokenProgram: TOKEN_PROGRAM_ID,
@@ -2012,12 +2137,10 @@ describe("Lending Protocol", () => {
         assert.fail("Should have failed with zero amount");
       } catch (error: any) {
         console.log(" Correctly failed");
-        console.log("   Full error:", JSON.stringify(error, null, 2));
-        console.log("   Error code:", error.error?.errorCode);
-        console.log("   Error message:", error.error?.errorMessage);
-        console.log("   Error logs:", error.logs);
-
-        assert.exists(error, "Should have thrown an error");
+        assert.isTrue(
+          error.message.includes("InvalidAmount") || error.message.includes("6003"),
+          "Should fail with InvalidAmount error"
+        );
         console.log(" Zero amount rejected");
       }
     });
@@ -2033,23 +2156,18 @@ describe("Lending Protocol", () => {
       );
       await confirmTx(sig);
 
-      const [lendingMarketAuthority] = PublicKey.findProgramAddressSync(
-        [lendingMarketPDA.toBuffer()],
-        program.programId
-      );
-
       try {
         await program.methods
-          .depositObligationCollateral(new BN(10 * LAMPORTS_PER_SOL))
+          .depositObligationCollateral(new BN(100 * 1e6))
           .accounts({
             sourceCollateral: userCollateralAccount,
-            destinationCollateral: reserveCollateralSupply,
+            destinationCollateral: collateralSupplyPDA,
             reserve: reservePDA,
             //@ts-ignore
             obligation: obligationPDA,
             lendingMarket: lendingMarketPDA,
             //@ts-ignore
-            lendingMarketAuthority: lendingMarketAuthority,
+            lendingMarketAuthority: lendingMarketAuthorityPDA,
             obligationOwner: wrongUser.publicKey,
             userTransferAuthority: user.publicKey,
             tokenProgram: TOKEN_PROGRAM_ID,
@@ -2060,14 +2178,83 @@ describe("Lending Protocol", () => {
         assert.fail("Should have failed with wrong owner");
       } catch (error: any) {
         console.log(" Correctly failed");
-        console.log("   Error code:", error.error?.errorCode);
-        console.log("   Error message:", error.error?.errorMessage);
-        console.log("   Raw message:", error.message);
-
-        assert.exists(error, "Should have thrown an error");
+        assert.isTrue(
+          error.message.includes("InvalidObligationOwner") ||
+          error.message.includes("ConstraintSeeds") ||
+          error.message.includes("6002"),
+          "Should fail with owner validation error"
+        );
         console.log(" Wrong owner rejected");
       }
     });
+
+    it("Should allow multiple deposits from same user", async () => {
+      console.log("\n Test: Multiple deposits");
+
+      const depositAmount = new BN(500 * 1e6);
+
+      const obligationBefore = await program.account.obligation.fetch(obligationPDA);
+
+      // Build compound transaction
+      const refreshReserveIx = await program.methods
+        .refreshReserve()
+        .accounts({
+          reserve: reservePDA,
+          //@ts-ignore
+          lendingMarket: lendingMarketPDA,
+          pythPrice: pythPriceMock.publicKey,
+        })
+        .instruction();
+
+      const depositIx = await program.methods
+        .depositObligationCollateral(depositAmount)
+        .accounts({
+          sourceCollateral: userCollateralAccount,
+          destinationCollateral: collateralSupplyPDA,
+          reserve: reservePDA,
+          //@ts-ignore
+          obligation: obligationPDA,
+          lendingMarket: lendingMarketPDA,
+          //@ts-ignore
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          obligationOwner: user.publicKey,
+          userTransferAuthority: user.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .instruction();
+
+      const refreshObligationIx = await program.methods
+        .refreshObligation()
+        .accounts({
+          obligation: obligationPDA,
+        })
+        .remainingAccounts([
+          {
+            pubkey: reservePDA,
+            isWritable: false,
+            isSigner: false,
+          },
+        ])
+        .instruction();
+
+      const tx = new anchor.web3.Transaction();
+      tx.add(refreshReserveIx);
+      tx.add(depositIx);
+      tx.add(refreshObligationIx);
+
+      await provider.sendAndConfirm(tx, [user]);
+
+      const obligationAfter = await program.account.obligation.fetch(obligationPDA);
+
+      assert.equal(obligationAfter.depositsLen, 1, "Should still have 1 deposit");
+      assert.isTrue(
+        obligationAfter.depositedValue.gt(obligationBefore.depositedValue),
+        "Deposited value should increase"
+      );
+
+      console.log(" Multiple deposits work!");
+    });
+
     it("Should verify obligation state", async () => {
       console.log("\n Test: Verify obligation state");
 
@@ -2091,32 +2278,40 @@ describe("Lending Protocol", () => {
         lendingMarketPDA.toBase58(),
         "Market should match"
       );
+      assert.equal(obligation.depositsLen, 1, "Should have 1 deposit");
+      assert.isTrue(
+        obligation.depositedValue.gt(new BN(0)),
+        "Should have deposited value"
+      );
 
       console.log(" Obligation state verified");
     });
 
     it("Summary: Display all accounts", async () => {
-      console.log("\n" + "=".repeat(70));
-      console.log(" DEPOSIT COLLATERAL TEST SUMMARY");
-      console.log("=".repeat(70));
+      console.log("\n DEPOSIT COLLATERAL TEST SUMMARY");
 
       const obligation = await program.account.obligation.fetch(obligationPDA);
-      const userBalance = await getAccount(connection, userCollateralAccount);
+      const reserve = await program.account.reserve.fetch(reservePDA);
+      const userBalance = await getAccount(
+        connection,
+        userCollateralAccount,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
 
       console.log("\n Lending Market:");
       console.log("   PDA:", lendingMarketPDA.toBase58());
 
-      console.log("\n Collateral Mint:");
-      console.log("   Address:", collateralMint.toBase58());
-
       console.log("\n Reserve:");
       console.log("   PDA:", reservePDA.toBase58());
-      console.log("   Collateral Supply:", reserveCollateralSupply.toBase58());
+      console.log("   Collateral Mint:", collateralMintPDA.toBase58());
+      console.log("   Collateral Supply:", collateralSupplyPDA.toBase58());
+      console.log("   Liquidity available:", Number(reserve.liquidityAvailableAmount) / 1e6, "USDC");
 
       console.log("\n User:");
       console.log("   Address:", user.publicKey.toBase58());
       console.log("   Collateral Account:", userCollateralAccount.toBase58());
-      console.log("   Collateral Balance:", userBalance.amount.toString());
+      console.log("   Collateral Balance:", Number(userBalance.amount) / 1e6, "lpUSDC");
 
       console.log("\n Obligation:");
       console.log("   PDA:", obligationPDA.toBase58());
@@ -2126,9 +2321,8 @@ describe("Lending Protocol", () => {
       console.log("   Deposited Value:", obligation.depositedValue.toString());
       console.log("   Borrowed Value:", obligation.borrowedValue.toString());
 
-      console.log("\n" + "=".repeat(70));
-      console.log(" All tests completed!");
-      console.log("=".repeat(70) + "\n");
+      console.log("\n═══════════════════════════════════════════════════════");
+      console.log(" All deposit collateral tests passed! ✅");
     });
   });
   describe("Withdraw Obligation Collateral", () => {
@@ -2577,8 +2771,6 @@ describe("Lending Protocol", () => {
     });
 
     it("Verify state", async () => {
-      console.log("\n" + "═".repeat(80));
-      console.log("═".repeat(80));
 
       await program.methods
         .withdrawObligationCollateral(new BN("18446744073709551615"))
@@ -2607,8 +2799,6 @@ describe("Lending Protocol", () => {
       console.log(`      User balance: ${Number(userBalance) / 1e6} lpUSDC`);
       console.log(`      Reserve liquidity: ${Number(reserve.liquidityAvailableAmount) / 1e6} USDC`);
 
-      console.log("\n" + "═".repeat(80));
-      console.log("═".repeat(80) + "\n");
 
       assert.equal(obligation.depositsLen, 0);
       assert.equal(obligation.borrowsLen, 0);
@@ -2655,9 +2845,22 @@ describe("Lending Protocol", () => {
       return signature;
     }
 
+    async function checkSlotGap(reserve: PublicKey, name: string) {
+      const reserveData = await program.account.reserve.fetch(reserve);
+      const currentSlot = await connection.getSlot();
+      const gap = currentSlot - Number(reserveData.lastUpdateSlot);
+
+      console.log(`${name} slot gap: ${gap} slots`);
+
+      if (gap > 1000) {
+        console.warn(`WARNING: Large slot gap detected for ${name}!`);
+      }
+    }
+
     async function refreshObligationSmart() {
       console.log("Refreshing reserves and obligation...");
-
+      const currentSlot = await connection.getSlot();
+      console.log(`Current slot: ${currentSlot}`);
       const refreshUsdcIx = await program.methods
         .refreshReserve()
         .accounts({
@@ -3228,6 +3431,8 @@ describe("Lending Protocol", () => {
     });
 
     it("Should refresh reserves and obligation", async () => {
+      await checkSlotGap(usdcReservePDA, "USDC Reserve");
+      await checkSlotGap(solReservePDA, "SOL Reserve");
       console.log("\n Refreshing reserves and obligation...");
       await refreshObligationSmart();
       console.log("Refreshed successfully");
@@ -3466,9 +3671,7 @@ describe("Lending Protocol", () => {
     });
 
     it("Should display final state", async () => {
-      console.log("\n" + "═".repeat(80));
       console.log("FINAL BORROW STATE");
-      console.log("═".repeat(80));
 
       await refreshObligationSmart();
 
@@ -3500,9 +3703,7 @@ describe("Lending Protocol", () => {
       console.log("\n User:");
       console.log("   USDC balance:", Number(userUsdcBalance.amount) / 1e6, "USDC");
 
-      console.log("\n " + "═".repeat(80));
       console.log("All borrow tests completed!");
-      console.log("═".repeat(80) + "\n");
     });
   });
   describe("Repay Obligation Liquidity", () => {
@@ -4365,7 +4566,7 @@ describe("Lending Protocol", () => {
         usdcMint,
         liquidatorUsdcAccount,
         admin,
-        1000 * 1e6 
+        1000 * 1e6
       );
 
       [lendingMarketPDA] = PublicKey.findProgramAddressSync(
@@ -4421,7 +4622,7 @@ describe("Lending Protocol", () => {
       const usdcConfig = {
         optimalUtilizationRate: 80,
         loanToValueRatio: 80,
-        liquidationBonus: 10, 
+        liquidationBonus: 10,
         liquidationThreshold: 85,
         minBorrowRate: 0,
         optimalBorrowRate: 4,
@@ -4650,7 +4851,7 @@ describe("Lending Protocol", () => {
         .instruction();
 
       const borrowIx = await program.methods
-        .borrowObligationLiquidity(new BN(24 * 1e6)) 
+        .borrowObligationLiquidity(new BN(24 * 1e6))
         .accounts({
           sourceLiquidity: usdcLiquiditySupplyPDA,
           destinationLiquidity: borrowerUsdcAccount,
@@ -4792,9 +4993,9 @@ describe("Lending Protocol", () => {
       console.log("   Liquidator collateral balance:", Number(liquidatorCollateralBefore.amount) / 1e9);
 
       let obligation = await program.account.obligation.fetch(obligationPDA);
-      console.log("   Obligation borrowed value:", obligation.borrowedValue.toString());
-      console.log("   Obligation unhealthy threshold:", obligation.unhealthyBorrowValue.toString());
-      console.log("   Obligation deposited value:", obligation.depositedValue.toString());
+      console.log("Obligation borrowed value:", obligation.borrowedValue.toString());
+      console.log("Obligation unhealthy threshold:", obligation.unhealthyBorrowValue.toString());
+      console.log("Obligation deposited value:", obligation.depositedValue.toString());
       console.log("\n Simulating 50% price drop in collateral...");
 
       const refreshUsdcIx = await program.methods
@@ -4843,7 +5044,7 @@ describe("Lending Protocol", () => {
         .instruction();
 
       const maxWithdrawValue = obligation.depositedValue
-        .mul(new BN(100 - 65)) 
+        .mul(new BN(100 - 65))
         .div(new BN(100));
 
       const withdrawAmount = new BN(25 * 1e9);
@@ -4877,21 +5078,21 @@ describe("Lending Protocol", () => {
         return;
 
       } catch (error: any) {
-        console.log("   Withdrawal blocked - position is at liquidation threshold");
+        console.log("Withdrawal blocked - position is at liquidation threshold");
       }
 
       obligation = await program.account.obligation.fetch(obligationPDA);
-      console.log("\n   Current state:");
-      console.log("   Borrowed value:", obligation.borrowedValue.toString());
-      console.log("   Unhealthy threshold:", obligation.unhealthyBorrowValue.toString());
-      console.log("   Is unhealthy?", obligation.borrowedValue.gt(obligation.unhealthyBorrowValue));
+      console.log("\n Current state:");
+      console.log("Borrowed value:", obligation.borrowedValue.toString());
+      console.log("Unhealthy threshold:", obligation.unhealthyBorrowValue.toString());
+      console.log("Is unhealthy?", obligation.borrowedValue.gt(obligation.unhealthyBorrowValue));
 
       if (obligation.borrowedValue.lte(obligation.unhealthyBorrowValue)) {
-        console.log("\n   Position is still healthy. For proper liquidation testing:");
-        console.log("      1. Need oracle price feed manipulation");
-        console.log("      2. Or accumulate interest over time");
-        console.log("      3. Or use lower LTV ratios in reserve config");
-        console.log("\n   Skipping liquidation test...");
+        console.log("\n Position is still healthy. For proper liquidation testing:");
+        console.log("1. Need oracle price feed manipulation");
+        console.log("2. Or accumulate interest over time");
+        console.log("3. Or use lower LTV ratios in reserve config");
+        console.log("\n Skipping liquidation test...");
         return;
       }
 
@@ -5012,4 +5213,864 @@ describe("Lending Protocol", () => {
       }
     });
   });
+  describe("Deposit Reserve Liquidity", () => {
+    anchor.setProvider(anchor.AnchorProvider.env());
+
+    const program = anchor.workspace.lendborrow as Program<Lendborrow>;
+    const provider = anchor.getProvider();
+    const connection = provider.connection;
+
+    let admin: Keypair;
+    let user1: Keypair;
+    let user2: Keypair;
+    let usdcMint: PublicKey;
+    let adminUsdcAccount: PublicKey;
+    let user1UsdcAccount: PublicKey;
+    let user2UsdcAccount: PublicKey;
+    let user1CollateralAccount: PublicKey;
+    let user2CollateralAccount: PublicKey;
+    let lendingMarketPDA: PublicKey;
+    let lendingMarketAuthorityPDA: PublicKey;
+    let reservePDA: PublicKey;
+    let liquiditySupplyPDA: PublicKey;
+    let liquidityFeeReceiverPDA: PublicKey;
+    let collateralMintPDA: PublicKey;
+    let collateralSupplyPDA: PublicKey;
+    let pythProductMock: Keypair;
+    let pythPriceMock: Keypair;
+
+    async function confirmTx(signature: string) {
+      const latestBlockhash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction({
+        signature,
+        ...latestBlockhash,
+      });
+      return signature;
+    }
+
+    function createQuoteCurrency(currency: string): number[] {
+      const buffer = Buffer.alloc(32);
+      buffer.write(currency);
+      return Array.from(buffer);
+    }
+
+    const PYTH_FEED_IDS = {
+      USDC_USD: [
+        0xef, 0xd0, 0x15, 0x1e, 0x0f, 0xdb, 0x77, 0x51, 0x0c, 0x11, 0x3b, 0x3d,
+        0x0d, 0x7c, 0xf2, 0x58, 0x8c, 0x4f, 0x89, 0xc8, 0x1a, 0x8e, 0x5b, 0x7e,
+        0x0f, 0x5f, 0x1a, 0x0f, 0x4c, 0x8d, 0x9d, 0x5e
+      ],
+    };
+
+    function createPythFeedId(): number[] {
+      return PYTH_FEED_IDS.USDC_USD;
+    }
+
+    before(async () => {
+      console.log("\n Setting up Deposit Liquidity Test Environment...");
+
+      admin = Keypair.generate();
+      user1 = Keypair.generate();
+      user2 = Keypair.generate();
+      pythPriceMock = Keypair.generate();
+      pythProductMock = Keypair.generate();
+
+      console.log("Airdropping SOL...");
+      const sigs = await Promise.all([
+        connection.requestAirdrop(admin.publicKey, 20 * LAMPORTS_PER_SOL),
+        connection.requestAirdrop(user1.publicKey, 20 * LAMPORTS_PER_SOL),
+        connection.requestAirdrop(user2.publicKey, 20 * LAMPORTS_PER_SOL),
+      ]);
+      await Promise.all(sigs.map(confirmTx));
+
+      console.log("Creating USDC mint...");
+      usdcMint = await createMint(
+        connection,
+        admin,
+        admin.publicKey,
+        null,
+        6,
+        undefined,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+
+      const adminUsdcAcc = await getOrCreateAssociatedTokenAccount(
+        connection,
+        admin,
+        usdcMint,
+        admin.publicKey,
+        false,
+        undefined,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+      adminUsdcAccount = adminUsdcAcc.address;
+
+      const user1UsdcAcc = await getOrCreateAssociatedTokenAccount(
+        connection,
+        user1,
+        usdcMint,
+        user1.publicKey,
+        false,
+        undefined,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+      user1UsdcAccount = user1UsdcAcc.address;
+
+      const user2UsdcAcc = await getOrCreateAssociatedTokenAccount(
+        connection,
+        user2,
+        usdcMint,
+        user2.publicKey,
+        false,
+        undefined,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+      user2UsdcAccount = user2UsdcAcc.address;
+
+      await mintTo(
+        connection,
+        admin,
+        usdcMint,
+        adminUsdcAccount,
+        admin,
+        10_000_000_000_000,
+        [],
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+
+      await mintTo(
+        connection,
+        admin,
+        usdcMint,
+        user1UsdcAccount,
+        admin,
+        100_000 * 1e6,
+        [],
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+
+      await mintTo(
+        connection,
+        admin,
+        usdcMint,
+        user2UsdcAccount,
+        admin,
+        100_000 * 1e6,
+        [],
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+
+      console.log("Initializing lending market...");
+      [lendingMarketPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("lending-market"), admin.publicKey.toBuffer()],
+        program.programId
+      );
+
+      [lendingMarketAuthorityPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("authority"), lendingMarketPDA.toBuffer()],
+        program.programId
+      );
+
+      await program.methods
+        .initLendingMarket(createQuoteCurrency("USD"))
+        .accounts({
+          owner: admin.publicKey,
+          //@ts-ignore
+          lendingMarket: lendingMarketPDA,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          systemProgram: SystemProgram.programId,
+        })
+        .signers([admin])
+        .rpc();
+
+      console.log("Setting up reserve...");
+      [reservePDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("reserve"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [liquiditySupplyPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("liquidity-supply"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [liquidityFeeReceiverPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("fee-receiver"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [collateralMintPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("collateral-mint"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [collateralSupplyPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("collateral-supply"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      const config = {
+        optimalUtilizationRate: 80,
+        loanToValueRatio: 50,
+        liquidationBonus: 5,
+        liquidationThreshold: 55,
+        minBorrowRate: 0,
+        optimalBorrowRate: 4,
+        maxBorrowRate: 30,
+        fees: {
+          borrowFeeWad: new BN("10000000000000000"),
+          flashLoanFeeWad: new BN("9000000000000000"),
+          hostFeePercentage: 20,
+        },
+        pythPriceFeedId: createPythFeedId(),
+      };
+
+      const adminCollateralAddress = await getAssociatedTokenAddress(
+        collateralMintPDA,
+        admin.publicKey,
+        false,
+        TOKEN_PROGRAM_ID
+      );
+
+      await program.methods
+        .initReserve(new BN("10000000000"), config)
+        .accounts({
+          sourceLiquidity: adminUsdcAccount,
+          //@ts-ignore
+          destinationCollateral: adminCollateralAddress,
+          reserve: reservePDA,
+          liquidityMint: usdcMint,
+          liquiditySupply: liquiditySupplyPDA,
+          liquidityFeeReceiver: liquidityFeeReceiverPDA,
+          pythProduct: pythProductMock.publicKey,
+          pythPrice: pythPriceMock.publicKey,
+          collateralMint: collateralMintPDA,
+          collateralSupply: collateralSupplyPDA,
+          lendingMarket: lendingMarketPDA,
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          owner: admin.publicKey,
+          userTransferAuthority: admin.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          associatedTokenProgram: anchor.utils.token.ASSOCIATED_PROGRAM_ID,
+          systemProgram: SystemProgram.programId,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        })
+        .signers([admin])
+        .rpc();
+
+      user1CollateralAccount = await getAssociatedTokenAddress(
+        collateralMintPDA,
+        user1.publicKey,
+        false,
+        TOKEN_PROGRAM_ID
+      );
+
+      user2CollateralAccount = await getAssociatedTokenAddress(
+        collateralMintPDA,
+        user2.publicKey,
+        false,
+        TOKEN_PROGRAM_ID
+      );
+
+      const createUser1CollateralIx = createAssociatedTokenAccountInstruction(
+        user1.publicKey,
+        user1CollateralAccount,
+        user1.publicKey,
+        collateralMintPDA,
+        TOKEN_PROGRAM_ID
+      );
+
+      const createUser2CollateralIx = createAssociatedTokenAccountInstruction(
+        user2.publicKey,
+        user2CollateralAccount,
+        user2.publicKey,
+        collateralMintPDA,
+        TOKEN_PROGRAM_ID
+      );
+
+      await provider.sendAndConfirm(
+        new anchor.web3.Transaction().add(createUser1CollateralIx),
+        [user1]
+      );
+
+      await provider.sendAndConfirm(
+        new anchor.web3.Transaction().add(createUser2CollateralIx),
+        [user2]
+      );
+
+      console.log("Setup complete!\n");
+    });
+
+    it("Should deposit liquidity and mint collateral tokens", async () => {
+      console.log("\n Test: Deposit liquidity");
+
+      const depositAmount = new BN(1000 * 1e6);
+
+      const reserveBefore = await program.account.reserve.fetch(reservePDA);
+      const user1BalanceBefore = await getAccount(connection, user1UsdcAccount, undefined, TOKEN_PROGRAM_ID);
+      const liquiditySupplyBefore = await getAccount(connection, liquiditySupplyPDA, undefined, TOKEN_PROGRAM_ID);
+
+      console.log("   Before deposit:");
+      console.log("   User USDC:", Number(user1BalanceBefore.amount) / 1e6);
+      console.log("   Reserve liquidity:", Number(reserveBefore.liquidityAvailableAmount) / 1e6);
+
+      await program.methods
+        .depositReserveLiquidity(depositAmount)
+        .accounts({
+          sourceLiquidity: user1UsdcAccount,
+          destinationCollateral: user1CollateralAccount,
+          reserve: reservePDA,
+          reserveLiquiditySupply: liquiditySupplyPDA,
+          reserveCollateralMint: collateralMintPDA,
+          //@ts-ignore
+          lendingMarket: lendingMarketPDA,
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          userTransferAuthority: user1.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([user1])
+        .rpc();
+
+      const reserveAfter = await program.account.reserve.fetch(reservePDA);
+      const user1BalanceAfter = await getAccount(connection, user1UsdcAccount, undefined, TOKEN_PROGRAM_ID);
+      const user1CollateralBalance = await getAccount(connection, user1CollateralAccount, undefined, TOKEN_PROGRAM_ID);
+
+      console.log("   After deposit:");
+      console.log("   User USDC:", Number(user1BalanceAfter.amount) / 1e6);
+      console.log("   User collateral:", Number(user1CollateralBalance.amount) / 1e6);
+
+      assert.equal(
+        Number(user1BalanceBefore.amount) - Number(user1BalanceAfter.amount),
+        depositAmount.toNumber()
+      );
+
+      assert.isTrue(Number(user1CollateralBalance.amount) > 0);
+      console.log("Deposit successful!");
+    });
+
+    it("Should fail: deposit zero amount", async () => {
+      console.log("\n Test: Zero amount");
+
+      try {
+        await program.methods
+          .depositReserveLiquidity(new BN(0))
+          .accounts({
+            sourceLiquidity: user1UsdcAccount,
+            destinationCollateral: user1CollateralAccount,
+            reserve: reservePDA,
+            reserveLiquiditySupply: liquiditySupplyPDA,
+            reserveCollateralMint: collateralMintPDA,
+            //@ts-ignore
+            lendingMarket: lendingMarketPDA,
+            lendingMarketAuthority: lendingMarketAuthorityPDA,
+            userTransferAuthority: user1.publicKey,
+            tokenProgram: TOKEN_PROGRAM_ID,
+          })
+          .signers([user1])
+          .rpc();
+
+        assert.fail("Should have failed");
+      } catch (error: any) {
+        console.log("Correctly failed");
+        assert.exists(error);
+      }
+    });
+
+    it("Should allow multiple deposits from same user", async () => {
+      console.log("\n Test: Multiple deposits");
+
+      const depositAmount = new BN(500 * 1e6);
+
+      await program.methods
+        .depositReserveLiquidity(depositAmount)
+        .accounts({
+          sourceLiquidity: user1UsdcAccount,
+          destinationCollateral: user1CollateralAccount,
+          reserve: reservePDA,
+          reserveLiquiditySupply: liquiditySupplyPDA,
+          reserveCollateralMint: collateralMintPDA,
+          //@ts-ignore
+          lendingMarket: lendingMarketPDA,
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          userTransferAuthority: user1.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([user1])
+        .rpc();
+
+      const collateralMiddle = await getAccount(connection, user1CollateralAccount, undefined, TOKEN_PROGRAM_ID);
+
+      await program.methods
+        .depositReserveLiquidity(depositAmount)
+        .accounts({
+          sourceLiquidity: user1UsdcAccount,
+          destinationCollateral: user1CollateralAccount,
+          reserve: reservePDA,
+          reserveLiquiditySupply: liquiditySupplyPDA,
+          reserveCollateralMint: collateralMintPDA,
+          //@ts-ignore
+          lendingMarket: lendingMarketPDA,
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          userTransferAuthority: user1.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([user1])
+        .rpc();
+
+      const collateralAfter = await getAccount(connection, user1CollateralAccount, undefined, TOKEN_PROGRAM_ID);
+
+      assert.isTrue(Number(collateralAfter.amount) > Number(collateralMiddle.amount));
+      console.log("Multiple deposits work!");
+    });
+
+    it("Should allow deposits from multiple users", async () => {
+      console.log("\n Test: Multiple users");
+
+      const depositAmount = new BN(2000 * 1e6);
+
+      await program.methods
+        .depositReserveLiquidity(depositAmount)
+        .accounts({
+          sourceLiquidity: user2UsdcAccount,
+          destinationCollateral: user2CollateralAccount,
+          reserve: reservePDA,
+          reserveLiquiditySupply: liquiditySupplyPDA,
+          reserveCollateralMint: collateralMintPDA,
+          //@ts-ignore
+          lendingMarket: lendingMarketPDA,
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          userTransferAuthority: user2.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([user2])
+        .rpc();
+
+      const user2Collateral = await getAccount(connection, user2CollateralAccount, undefined, TOKEN_PROGRAM_ID);
+
+      assert.isTrue(Number(user2Collateral.amount) > 0);
+      console.log("User2 deposited successfully!");
+    });
+
+    it("Should display final state", async () => {
+      console.log("FINAL STATE");
+
+      const reserve = await program.account.reserve.fetch(reservePDA);
+      const user1Collateral = await getAccount(connection, user1CollateralAccount, undefined, TOKEN_PROGRAM_ID);
+      const user2Collateral = await getAccount(connection, user2CollateralAccount, undefined, TOKEN_PROGRAM_ID);
+
+      console.log("\n Reserve:");
+      console.log("   Liquidity:", Number(reserve.liquidityAvailableAmount) / 1e6, "USDC");
+      console.log("   Collateral supply:", Number(reserve.collateralMintTotalSupply) / 1e6, "lpUSDC");
+
+      console.log("\n User1 collateral:", Number(user1Collateral.amount) / 1e6);
+      console.log("User2 collateral:", Number(user2Collateral.amount) / 1e6);
+
+      console.log("═══════════════════════════════════════════════════════");
+      console.log("All tests passed!");
+    });
+  });
+
+  describe("Redeem Reserve Collateral", () => {
+    anchor.setProvider(anchor.AnchorProvider.env());
+
+    const program = anchor.workspace.Lendborrow as Program<Lendborrow>;
+    const provider = anchor.getProvider();
+    const connection = provider.connection;
+
+    let admin: Keypair;
+    let user1: Keypair;
+    let user2: Keypair;
+    let usdcMint: PublicKey;
+    let adminUsdcAccount: PublicKey;
+    let user1UsdcAccount: PublicKey;
+    let user1CollateralAccount: PublicKey;
+    let lendingMarketPDA: PublicKey;
+    let lendingMarketAuthorityPDA: PublicKey;
+    let reservePDA: PublicKey;
+    let liquiditySupplyPDA: PublicKey;
+    let collateralMintPDA: PublicKey;
+
+    async function confirmTx(signature: string) {
+      const latestBlockhash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction({
+        signature,
+        ...latestBlockhash,
+      });
+      return signature;
+    }
+
+    before(async () => {
+      console.log("\n Setting up Redeem Test Environment...");
+
+      admin = Keypair.generate();
+      user1 = Keypair.generate();
+      user2 = Keypair.generate();
+
+      const sigs = await Promise.all([
+        connection.requestAirdrop(admin.publicKey, 20 * LAMPORTS_PER_SOL),
+        connection.requestAirdrop(user1.publicKey, 20 * LAMPORTS_PER_SOL),
+        connection.requestAirdrop(user2.publicKey, 20 * LAMPORTS_PER_SOL),
+      ]);
+      await Promise.all(sigs.map(confirmTx));
+
+      usdcMint = await createMint(
+        connection,
+        admin,
+        admin.publicKey,
+        null,
+        6,
+        undefined,
+        undefined,
+        TOKEN_PROGRAM_ID
+      );
+
+      const adminUsdcAcc = await getOrCreateAssociatedTokenAccount(
+        connection,
+        admin,
+        usdcMint,
+        admin.publicKey
+      );
+      adminUsdcAccount = adminUsdcAcc.address;
+
+      const user1UsdcAcc = await getOrCreateAssociatedTokenAccount(
+        connection,
+        user1,
+        usdcMint,
+        user1.publicKey
+      );
+      user1UsdcAccount = user1UsdcAcc.address;
+
+      await mintTo(
+        connection,
+        admin,
+        usdcMint,
+        adminUsdcAccount,
+        admin,
+        10_000_000_000_000
+      );
+
+      await mintTo(
+        connection,
+        admin,
+        usdcMint,
+        user1UsdcAccount,
+        admin,
+        100_000 * 1e6
+      );
+
+      [lendingMarketPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("lending-market"), admin.publicKey.toBuffer()],
+        program.programId
+      );
+
+      [lendingMarketAuthorityPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("authority"), lendingMarketPDA.toBuffer()],
+        program.programId
+      );
+
+      const quoteCurrency = Buffer.alloc(32);
+      quoteCurrency.write("USD");
+
+      await program.methods
+        .initLendingMarket(Array.from(quoteCurrency))
+        .accounts({
+          owner: admin.publicKey,
+          //@ts-ignore
+          lendingMarket: lendingMarketPDA,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          systemProgram: SystemProgram.programId,
+        })
+        .signers([admin])
+        .rpc();
+
+      [reservePDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("reserve"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [liquiditySupplyPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("liquidity-supply"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      [collateralMintPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("collateral-mint"), lendingMarketPDA.toBuffer(), usdcMint.toBuffer()],
+        program.programId
+      );
+
+      const config = {
+        optimalUtilizationRate: 80,
+        loanToValueRatio: 50,
+        liquidationBonus: 5,
+        liquidationThreshold: 55,
+        minBorrowRate: 0,
+        optimalBorrowRate: 4,
+        maxBorrowRate: 30,
+        fees: {
+          borrowFeeWad: new BN("10000000000000000"),
+          flashLoanFeeWad: new BN("9000000000000000"),
+          hostFeePercentage: 20,
+        },
+        pythPriceFeedId: Array(32).fill(1),
+      };
+
+      const adminCollateralAddress = await getAssociatedTokenAddress(
+        collateralMintPDA,
+        admin.publicKey
+      );
+
+      await program.methods
+        .initReserve(new BN("10000000000"), config)
+        .accounts({
+          sourceLiquidity: adminUsdcAccount,
+          //@ts-ignore
+          destinationCollateral: adminCollateralAddress,
+          reserve: reservePDA,
+          liquidityMint: usdcMint,
+          liquiditySupply: liquiditySupplyPDA,
+          pythProduct: Keypair.generate().publicKey,
+          pythPrice: Keypair.generate().publicKey,
+          collateralMint: collateralMintPDA,
+          lendingMarket: lendingMarketPDA,
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          owner: admin.publicKey,
+          userTransferAuthority: admin.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          associatedTokenProgram: anchor.utils.token.ASSOCIATED_PROGRAM_ID,
+          systemProgram: SystemProgram.programId,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        })
+        .signers([admin])
+        .rpc();
+
+      user1CollateralAccount = await getAssociatedTokenAddress(
+        collateralMintPDA,
+        user1.publicKey
+      );
+
+      const createCollateralIx = createAssociatedTokenAccountInstruction(
+        user1.publicKey,
+        user1CollateralAccount,
+        user1.publicKey,
+        collateralMintPDA
+      );
+
+      await provider.sendAndConfirm(
+        new anchor.web3.Transaction().add(createCollateralIx),
+        [user1]
+      );
+
+      await program.methods
+        .depositReserveLiquidity(new BN(10_000 * 1e6))
+        .accounts({
+          sourceLiquidity: user1UsdcAccount,
+          destinationCollateral: user1CollateralAccount,
+          reserve: reservePDA,
+          reserveLiquiditySupply: liquiditySupplyPDA,
+          reserveCollateralMint: collateralMintPDA,
+          //@ts-ignore
+          lendingMarket: lendingMarketPDA,
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          userTransferAuthority: user1.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([user1])
+        .rpc();
+
+      console.log("Setup complete!\n");
+    });
+
+    it("Should redeem collateral for liquidity", async () => {
+      console.log("\n Test: Redeem collateral");
+
+      const redeemAmount = new BN(5_000 * 1e6);
+
+      const user1UsdcBefore = await getAccount(connection, user1UsdcAccount);
+      const user1CollateralBefore = await getAccount(connection, user1CollateralAccount);
+      const reserveBefore = await program.account.reserve.fetch(reservePDA);
+
+      console.log("Before redeem:");
+      console.log("  User USDC:", Number(user1UsdcBefore.amount) / 1e6);
+      console.log("  User collateral:", Number(user1CollateralBefore.amount) / 1e6);
+      console.log("  Reserve liquidity:", Number(reserveBefore.liquidityAvailableAmount) / 1e6);
+
+      const tx = await program.methods
+        .redeemReserveCollateral(redeemAmount)
+        .accounts({
+          sourceCollateral: user1CollateralAccount,
+          destinationLiquidity: user1UsdcAccount,
+          reserve: reservePDA,
+          reserveLiquiditySupply: liquiditySupplyPDA,
+          reserveCollateralMint: collateralMintPDA,
+          //@ts-ignore
+          liquidityMint: usdcMint,
+          collateralMint: collateralMintPDA,
+          lendingMarket: lendingMarketPDA,
+          lendingMarketAuthority: lendingMarketAuthorityPDA,
+          userTransferAuthority: user1.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .signers([user1])
+        .rpc();
+
+      await confirmTx(tx);
+
+      const user1UsdcAfter = await getAccount(connection, user1UsdcAccount);
+      const user1CollateralAfter = await getAccount(connection, user1CollateralAccount);
+      const reserveAfter = await program.account.reserve.fetch(reservePDA);
+
+      console.log("\nAfter redeem:");
+      console.log("  User USDC:", Number(user1UsdcAfter.amount) / 1e6);
+      console.log("  User collateral:", Number(user1CollateralAfter.amount) / 1e6);
+      console.log("  Reserve liquidity:", Number(reserveAfter.liquidityAvailableAmount) / 1e6);
+
+      const usdcReceived = Number(user1UsdcAfter.amount - user1UsdcBefore.amount);
+      const collateralBurned = Number(user1CollateralBefore.amount - user1CollateralAfter.amount);
+
+      console.log("\nChanges:");
+      console.log("  USDC received:", usdcReceived / 1e6);
+      console.log("  Collateral burned:", collateralBurned / 1e6);
+
+      assert.equal(collateralBurned, redeemAmount.toNumber());
+      assert.isTrue(usdcReceived > 0);
+
+      console.log("Redeem successful!");
+    });
+
+    it("Should fail: redeem zero amount", async () => {
+      console.log("\n Test: Zero amount");
+
+      try {
+        await program.methods
+          .redeemReserveCollateral(new BN(0))
+          .accounts({
+            sourceCollateral: user1CollateralAccount,
+            destinationLiquidity: user1UsdcAccount,
+            reserve: reservePDA,
+            reserveLiquiditySupply: liquiditySupplyPDA,
+            reserveCollateralMint: collateralMintPDA,
+            //@ts-ignore
+            liquidityMint: usdcMint,
+            collateralMint: collateralMintPDA,
+            lendingMarket: lendingMarketPDA,
+            lendingMarketAuthority: lendingMarketAuthorityPDA,
+            userTransferAuthority: user1.publicKey,
+            tokenProgram: TOKEN_PROGRAM_ID,
+          })
+          .signers([user1])
+          .rpc();
+
+        assert.fail("Should have failed");
+      } catch (error: any) {
+        console.log("Correctly failed");
+        assert.exists(error);
+      }
+    });
+
+    it("Should fail: redeem more than balance", async () => {
+      console.log("\n Test: Exceed balance");
+
+      const balance = await getAccount(connection, user1CollateralAccount);
+      const excessAmount = new BN(Number(balance.amount) + 1000);
+
+      try {
+        await program.methods
+          .redeemReserveCollateral(excessAmount)
+          .accounts({
+            sourceCollateral: user1CollateralAccount,
+            destinationLiquidity: user1UsdcAccount,
+            reserve: reservePDA,
+            reserveLiquiditySupply: liquiditySupplyPDA,
+            reserveCollateralMint: collateralMintPDA,
+            //@ts-ignore
+            liquidityMint: usdcMint,
+            collateralMint: collateralMintPDA,
+            lendingMarket: lendingMarketPDA,
+            lendingMarketAuthority: lendingMarketAuthorityPDA,
+            userTransferAuthority: user1.publicKey,
+            tokenProgram: TOKEN_PROGRAM_ID,
+          })
+          .signers([user1])
+          .rpc();
+
+        assert.fail("Should have failed");
+      } catch (error: any) {
+        console.log("Correctly failed - insufficient balance");
+        assert.exists(error);
+      }
+    });
+
+    it("Should handle multiple redeems", async () => {
+      console.log("\n Test: Multiple redeems");
+
+      const redeemAmount = new BN(1_000 * 1e6);
+
+      for (let i = 0; i < 3; i++) {
+        await program.methods
+          .redeemReserveCollateral(redeemAmount)
+          .accounts({
+            sourceCollateral: user1CollateralAccount,
+            destinationLiquidity: user1UsdcAccount,
+            reserve: reservePDA,
+            reserveLiquiditySupply: liquiditySupplyPDA,
+            reserveCollateralMint: collateralMintPDA,
+            //@ts-ignore
+            liquidityMint: usdcMint,
+            collateralMint: collateralMintPDA,
+            lendingMarket: lendingMarketPDA,
+            lendingMarketAuthority: lendingMarketAuthorityPDA,
+            userTransferAuthority: user1.publicKey,
+            tokenProgram: TOKEN_PROGRAM_ID,
+          })
+          .signers([user1])
+          .rpc();
+
+        console.log(`  Redeem ${i + 1} successful`);
+      }
+
+      console.log("Multiple redeems successful!");
+    });
+
+    it("Should verify exchange rate stays consistent", async () => {
+      console.log("\n Test: Exchange rate consistency");
+
+      const reserve = await program.account.reserve.fetch(reservePDA);
+
+      // Calculate exchange rate manually
+      const totalLiquidity = Number(reserve.liquidityAvailableAmount) +
+        Number(reserve.liquidityBorrowedAmountWads) / 1e18;
+
+      const exchangeRate = totalLiquidity / Number(reserve.collateralMintTotalSupply);
+
+      console.log("Exchange rate:", exchangeRate.toFixed(6));
+      console.log("Total liquidity:", (totalLiquidity / 1e6).toFixed(2), "USDC");
+      console.log("Collateral supply:", (Number(reserve.collateralMintTotalSupply) / 1e6).toFixed(2), "lpUSDC");
+
+      assert.isTrue(exchangeRate >= 1.0);
+      console.log("Exchange rate valid!");
+    });
+
+    it("Display final state", async () => {
+      console.log("FINAL STATE");
+      const reserve = await program.account.reserve.fetch(reservePDA);
+      const user1Usdc = await getAccount(connection, user1UsdcAccount);
+      const user1Collateral = await getAccount(connection, user1CollateralAccount);
+
+      console.log("\nReserve:");
+      console.log("  Liquidity available:", Number(reserve.liquidityAvailableAmount) / 1e6, "USDC");
+      console.log("  Collateral supply:", Number(reserve.collateralMintTotalSupply) / 1e6, "lpUSDC");
+
+      console.log("\nUser1:");
+      console.log("  USDC balance:", Number(user1Usdc.amount) / 1e6);
+      console.log("  Collateral balance:", Number(user1Collateral.amount) / 1e6);
+    });
+  });
+
 });

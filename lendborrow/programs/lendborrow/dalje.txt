@@ -1,0 +1,9 @@
+Lending market ima samo 1 reserve
+
+1 vlasnik moze da ima vise lending marketa samo dodamo pri initu da se salje mint token acc
+
+Proveriti gde stavljati box gde ne (performanse)
+
+Eventovi u zaseban file events.rs
+
+

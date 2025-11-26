@@ -13,25 +13,30 @@ pub fn lending_market_init(
         LendingError::InvalidQuoteCurrency
     );
 
-    require!(
-        ctx.accounts.owner.key() != Pubkey::default(),
-        LendingError::InvalidOwner
+    let lending_market = &mut ctx.accounts.lending_market;
+    
+    let (authority, authority_bump) = Pubkey::find_program_address(
+        &[
+            LendingMarket::AUTHORITY_SEED,
+            lending_market.key().as_ref()
+        ],
+        ctx.program_id
     );
 
-    let lending_market = &mut ctx.accounts.lending_market;
-    let bump = ctx.bumps.lending_market;
-
+    lending_market.version = LendingMarket::PROGRAM_VERSION as u64;
+    lending_market.bump_seed = ctx.bumps.lending_market;
     lending_market.owner = ctx.accounts.owner.key();
-    lending_market.version = LendingMarket::PROGRAM_VERSION;
-    lending_market.bump_seed = bump;
+    lending_market.authority = authority;
+    lending_market.authority_bump = authority_bump;
     lending_market.quote_currency = quote_currency;
     lending_market.token_program_id = ctx.accounts.token_program.key();
 
     emit!(LendingMarketInitialized {
         lending_market: lending_market.key(),
         owner: lending_market.owner,
+        authority,
         quote_currency,
-        bump,
+        bump: lending_market.bump_seed,
     });
 
     Ok(())
@@ -50,6 +55,7 @@ pub struct InitLendingMarket<'info> {
         bump
     )]
     pub lending_market: Account<'info, LendingMarket>,
+    
     pub token_program: Interface<'info, TokenInterface>,
     pub system_program: Program<'info, System>,
 }
@@ -58,6 +64,7 @@ pub struct InitLendingMarket<'info> {
 pub struct LendingMarketInitialized {
     pub lending_market: Pubkey,
     pub owner: Pubkey,
+    pub authority:Pubkey,
     pub quote_currency: [u8; 32],
     pub bump: u8,
 }

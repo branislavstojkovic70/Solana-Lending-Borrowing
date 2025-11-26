@@ -1,5 +1,6 @@
 use crate::errors::LendingError;
 use crate::states::{LendingMarket, Reserve, ReserveConfig};
+#[cfg(not(feature = "testing"))]
 use crate::utils::oracle::validate_pyth_price;
 use anchor_lang::prelude::*;
 use anchor_spl::{

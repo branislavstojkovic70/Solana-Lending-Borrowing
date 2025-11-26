@@ -8,7 +8,7 @@ pub fn handler(ctx: Context<LiquidateObligation>, liquidity_amount: u64) -> Resu
     require!(liquidity_amount > 0, LendingError::InvalidAmount);
 
     let obligation = &mut ctx.accounts.obligation;
-    let repay_reserve = &ctx.accounts.repay_reserve;
+    let repay_reserve = &mut ctx.accounts.repay_reserve;  
     let withdraw_reserve = &ctx.accounts.withdraw_reserve;
     let clock = Clock::get()?;
 
@@ -69,17 +69,17 @@ pub fn handler(ctx: Context<LiquidateObligation>, liquidity_amount: u64) -> Resu
         LendingError::LiquidationTooSmall
     );
 
-    let mut repay_reserve_mut = ctx.accounts.repay_reserve.clone();
-    repay_reserve_mut.liquidity_borrowed_amount_wads = repay_reserve_mut
+    repay_reserve.liquidity_borrowed_amount_wads = repay_reserve
         .liquidity_borrowed_amount_wads
         .checked_sub(liquidation_result.settle_amount_wads)
         .ok_or(LendingError::MathOverflow)?;
 
-    repay_reserve_mut.liquidity_available_amount = repay_reserve_mut
+    repay_reserve.liquidity_available_amount = repay_reserve
         .liquidity_available_amount
         .checked_add(liquidation_result.repay_amount)
         .ok_or(LendingError::MathOverflow)?;
 
+    
     obligation.repay(liquidity_index, liquidation_result.settle_amount_wads)?;
     obligation.withdraw(collateral_index, liquidation_result.withdraw_collateral)?;
 
@@ -132,10 +132,18 @@ pub fn handler(ctx: Context<LiquidateObligation>, liquidity_amount: u64) -> Resu
 
 #[derive(Accounts)]
 pub struct LiquidateObligation<'info> {
-    #[account(mut)]
+    #[account(
+        mut,
+        constraint = source_liquidity.key() != repay_reserve.liquidity_supply 
+            @ LendingError::InvalidAccountInput,
+    )]
     pub source_liquidity: Box<Account<'info, TokenAccount>>,
 
-    #[account(mut)]
+    #[account(
+        mut,
+        constraint = destination_collateral.key() != withdraw_reserve.collateral_supply 
+            @ LendingError::InvalidAccountInput,
+    )]
     pub destination_collateral: Box<Account<'info, TokenAccount>>,
 
     #[account(
