@@ -10,13 +10,11 @@ pub fn handler(ctx: Context<RefreshReserve>) -> Result<()> {
     let reserve = &mut ctx.accounts.reserve;
     let clock = Clock::get()?;
 
-    // Early return if already updated in this slot
     if reserve.last_update_slot == clock.slot {
         msg!("Reserve already fresh for slot {}", clock.slot);
         return Ok(());
     }
 
-    // Calculate slots elapsed and warn if very stale
     let slots_elapsed = clock.slot
         .checked_sub(reserve.last_update_slot)
         .ok_or(LendingError::MathOverflow)?;
@@ -25,7 +23,6 @@ pub fn handler(ctx: Context<RefreshReserve>) -> Result<()> {
         msg!("WARNING: Reserve was stale for {} slots", slots_elapsed);
     }
 
-    // 1. UPDATE PRICE (testing vs production)
     #[cfg(feature = "testing")]
     {
         reserve.liquidity_market_price = 1_000_000u128;
