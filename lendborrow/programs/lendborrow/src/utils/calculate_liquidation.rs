@@ -18,7 +18,7 @@ pub fn calculate_liquidation(
     obligation: &Obligation,
 ) -> Result<LiquidationResult> {
     const WAD: u128 = 1_000_000_000_000_000_000;
-    const LIQUIDATION_CLOSE_FACTOR_PCT: u128 = 50; // 50% max liquidation
+    const LIQUIDATION_CLOSE_FACTOR_PCT: u128 = 50; 
 
     let max_liquidation_value = obligation
         .borrowed_value
