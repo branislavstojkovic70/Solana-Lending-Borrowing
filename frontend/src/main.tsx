@@ -7,8 +7,9 @@ import { useMemo } from "react";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter, SolflareWalletAdapter } from "@solana/wallet-adapter-wallets";
-import Navbar from "./components/navbar/navbar";
-import InitLendingMarket from "./components/admin/InitLendingMarket/InitLendingMarket";
+import InitLendingMarket from "./components/Admin/InitLendingMarket/InitLendingMarket";
+import Navbar from "./components/Navbar/navbar";
+import AddLiquidity from "./components/Supply/AddLiquidity";
 
 const theme = createTheme({
 	palette: {
@@ -45,8 +46,12 @@ const router = createBrowserRouter([
 		element: < Navbar/>,
 		children: [
       {
-		path: "/initLendingMarket",
+		path: "/market/init",
 		element: <InitLendingMarket />,
+      },
+	        {
+		path: "/market/reserve/addliquidity",
+		element: <AddLiquidity />,
       }
 		],
 	},

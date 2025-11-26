@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/lendborrow.json`.
  */
 export type Lendborrow = {
-  "address": "HUiEdjMzMgLtNsqnz6VW8HogCMMSojNLSf5gHLmV7N9b",
+  "address": "9usNowCmVFT37UkUoseUDhpcZqkedVYoFi4KG9aAcWsk",
   "metadata": {
     "name": "lendborrow",
     "version": "0.1.0",

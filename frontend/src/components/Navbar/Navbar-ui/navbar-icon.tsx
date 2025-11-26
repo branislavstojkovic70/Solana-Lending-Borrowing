@@ -33,7 +33,7 @@ export const NavbarIcon: React.FC<NavbarIconProps> = ({
       }}
     >
       <img
-        src={iconUrl}  // 👈 Ažuriraj i ovde
+        src={iconUrl}  
         alt={alt}
         style={{
           width: '100%',

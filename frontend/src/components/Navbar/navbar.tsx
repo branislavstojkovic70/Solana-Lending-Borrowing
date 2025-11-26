@@ -3,10 +3,10 @@ import { Outlet } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
 import "@solana/wallet-adapter-react-ui/styles.css";
-import { HamburgerMenu } from "./navbar-ui/navbar-hamburger-menu";
-import { NavbarLogo } from "./navbar-ui/navbar-logo";
 import { NavigationMenu } from "./navbar-menu";
-import { NavbarWallet } from "./navbar-ui/navbar-wallet";
+import { NavbarLogo } from "./Navbar-ui/navbar-logo";
+import { HamburgerMenu } from "./Navbar-ui/navbar-hamburger-menu";
+import { NavbarWallet } from "./Navbar-ui/navbar-wallet";
 
 export const Navbar = () => {
   const theme = useTheme();
