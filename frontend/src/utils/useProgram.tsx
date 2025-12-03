@@ -5,7 +5,7 @@ import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { useMemo } from "react";
 
-const programId = new PublicKey("BEu3NGWrqp2HX98HMSqSHgmr2d2A8gXHzrJgPtanvK1M");
+const programId = new PublicKey("9usNowCmVFT37UkUoseUDhpcZqkedVYoFi4KG9aAcWsk");
 
 export const useProgram = () => {
   const wallet = useAnchorWallet();

@@ -95,6 +95,11 @@ pub fn handler(ctx: Context<RepayObligationLiquidity>, liquidity_amount: u64) ->
     });
     Ok(())
 }
+
+/// Accounts context for repaying borrowed liquidity.
+///
+/// User is paying SPL liquidity back into the reserve's liquidity vault.
+/// No PDA signing is needed because repayment always comes from user's tokens.
 #[derive(Accounts)]
 pub struct RepayObligationLiquidity<'info> {
     #[account(mut)]

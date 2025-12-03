@@ -30,7 +30,7 @@ pub fn handler(
     let initial_price = validate_pyth_price(
         &ctx.accounts.pyth_price,
         &ctx.accounts.lending_market,
-        &config.pyth_price_feed_id,
+        config.pyth_price_feed_id, // Now passing [u8; 32] directly
     )?;
 
     #[cfg(feature = "testing")]
@@ -60,6 +60,8 @@ pub fn handler(
     reserve.collateral_supply = ctx.accounts.collateral_supply.key();
     reserve.collateral_mint_total_supply = liquidity_amount;
 
+    // Kloniramo config pre nego što ga dodelimo
+    let config_clone = config.clone();
     reserve.config = config;
 
     transfer(
@@ -99,12 +101,25 @@ pub fn handler(
         collateral_mint: ctx.accounts.collateral_mint.key(),
         liquidity_amount,
         initial_price,
-        config: config.clone(),
+        config: config_clone, 
     });
 
     Ok(())
 }
 
+/// Account context for initializing a new Reserve.
+///
+/// Creates a complete reserve setup:
+/// - Reserve state
+/// - Liquidity supply vault
+/// - Liquidity fee receiver
+/// - Collateral mint
+/// - Collateral supply vault
+/// - User's ATAs if needed
+///
+/// All key accounts are PDAs derived from:
+/// `("lending-market", market, mint)`
+/// ensuring uniqueness for each asset within each market.
 #[derive(Accounts)]
 pub struct InitReserve<'info> {
     #[account(

@@ -35,7 +35,7 @@ pub fn handler(ctx: Context<RefreshReserve>) -> Result<()> {
         let current_price = validate_pyth_price(
             &ctx.accounts.pyth_price,
             &ctx.accounts.lending_market,
-            &reserve.config.pyth_price_feed_id,
+            reserve.config.pyth_price_feed_id.clone(),
         )?;
         
         reserve.liquidity_market_price = current_price;

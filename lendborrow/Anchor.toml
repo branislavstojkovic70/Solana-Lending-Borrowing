@@ -6,7 +6,10 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-lendborrow = "HUiEdjMzMgLtNsqnz6VW8HogCMMSojNLSf5gHLmV7N9b"
+lendborrow = "9usNowCmVFT37UkUoseUDhpcZqkedVYoFi4KG9aAcWsk"
+
+[programs.devnet]
+lendborrow = "9usNowCmVFT37UkUoseUDhpcZqkedVYoFi4KG9aAcWsk"
 
 [registry]
 url = "https://api.apr.dev"

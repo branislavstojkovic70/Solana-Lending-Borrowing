@@ -1,11 +1,5 @@
-/**
- * Program IDL in camelCase format in order to be used in JS/TS.
- *
- * Note that this is only a type helper and is not the actual IDL. The original
- * IDL can be found at `target/idl/lendborrow.json`.
- */
-export type Lendborrow = {
-  "address": "9usNowCmVFT37UkUoseUDhpcZqkedVYoFi4KG9aAcWsk",
+{
+  "address": "HUiEdjMzMgLtNsqnz6VW8HogCMMSojNLSf5gHLmV7N9b",
   "metadata": {
     "name": "lendborrow",
     "version": "0.1.0",
@@ -14,7 +8,7 @@ export type Lendborrow = {
   },
   "instructions": [
     {
-      "name": "borrowObligationLiquidity",
+      "name": "borrow_obligation_liquidity",
       "discriminator": [
         121,
         127,
@@ -27,19 +21,19 @@ export type Lendborrow = {
       ],
       "accounts": [
         {
-          "name": "sourceLiquidity",
+          "name": "source_liquidity",
           "writable": true
         },
         {
-          "name": "destinationLiquidity",
+          "name": "destination_liquidity",
           "writable": true
         },
         {
-          "name": "borrowReserve",
+          "name": "borrow_reserve",
           "writable": true
         },
         {
-          "name": "borrowReserveLiquidityFeeReceiver",
+          "name": "borrow_reserve_liquidity_fee_receiver",
           "writable": true
         },
         {
@@ -64,20 +58,20 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               },
               {
                 "kind": "account",
-                "path": "obligationOwner"
+                "path": "obligation_owner"
               }
             ]
           }
         },
         {
-          "name": "lendingMarket"
+          "name": "lending_market"
         },
         {
-          "name": "lendingMarketAuthority",
+          "name": "lending_market_authority",
           "pda": {
             "seeds": [
               {
@@ -96,33 +90,33 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               }
             ]
           }
         },
         {
-          "name": "obligationOwner",
+          "name": "obligation_owner",
           "signer": true
         },
         {
-          "name": "hostFeeReceiver",
+          "name": "host_fee_receiver",
           "optional": true
         },
         {
-          "name": "tokenProgram",
+          "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         }
       ],
       "args": [
         {
-          "name": "liquidityAmount",
+          "name": "liquidity_amount",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "depositObligationCollateral",
+      "name": "deposit_obligation_collateral",
       "discriminator": [
         108,
         209,
@@ -135,11 +129,11 @@ export type Lendborrow = {
       ],
       "accounts": [
         {
-          "name": "sourceCollateral",
+          "name": "source_collateral",
           "writable": true
         },
         {
-          "name": "destinationCollateral",
+          "name": "destination_collateral",
           "writable": true
         },
         {
@@ -167,20 +161,20 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               },
               {
                 "kind": "account",
-                "path": "obligationOwner"
+                "path": "obligation_owner"
               }
             ]
           }
         },
         {
-          "name": "lendingMarket"
+          "name": "lending_market"
         },
         {
-          "name": "lendingMarketAuthority",
+          "name": "lending_market_authority",
           "pda": {
             "seeds": [
               {
@@ -199,33 +193,33 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               }
             ]
           }
         },
         {
-          "name": "obligationOwner",
+          "name": "obligation_owner",
           "writable": true,
           "signer": true
         },
         {
-          "name": "userTransferAuthority",
+          "name": "user_transfer_authority",
           "signer": true
         },
         {
-          "name": "tokenProgram"
+          "name": "token_program"
         }
       ],
       "args": [
         {
-          "name": "collateralAmount",
+          "name": "collateral_amount",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "depositReserveLiquidity",
+      "name": "deposit_reserve_liquidity",
       "discriminator": [
         169,
         201,
@@ -238,11 +232,11 @@ export type Lendborrow = {
       ],
       "accounts": [
         {
-          "name": "sourceLiquidity",
+          "name": "source_liquidity",
           "writable": true
         },
         {
-          "name": "destinationCollateral",
+          "name": "destination_collateral",
           "writable": true
         },
         {
@@ -250,21 +244,21 @@ export type Lendborrow = {
           "writable": true
         },
         {
-          "name": "reserveLiquiditySupply",
+          "name": "reserve_liquidity_supply",
           "writable": true
         },
         {
-          "name": "reserveCollateralMint",
+          "name": "reserve_collateral_mint",
           "writable": true
         },
         {
-          "name": "lendingMarket",
+          "name": "lending_market",
           "relations": [
             "reserve"
           ]
         },
         {
-          "name": "lendingMarketAuthority",
+          "name": "lending_market_authority",
           "pda": {
             "seeds": [
               {
@@ -283,29 +277,29 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               }
             ]
           }
         },
         {
-          "name": "userTransferAuthority",
+          "name": "user_transfer_authority",
           "signer": true
         },
         {
-          "name": "tokenProgram",
+          "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         }
       ],
       "args": [
         {
-          "name": "liquidityAmount",
+          "name": "liquidity_amount",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "initLendingMarket",
+      "name": "init_lending_market",
       "discriminator": [
         34,
         162,
@@ -323,7 +317,7 @@ export type Lendborrow = {
           "signer": true
         },
         {
-          "name": "lendingMarket",
+          "name": "lending_market",
           "writable": true,
           "pda": {
             "seeds": [
@@ -354,16 +348,16 @@ export type Lendborrow = {
           }
         },
         {
-          "name": "tokenProgram"
+          "name": "token_program"
         },
         {
-          "name": "systemProgram",
+          "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "quoteCurrency",
+          "name": "quote_currency",
           "type": {
             "array": [
               "u8",
@@ -374,7 +368,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "initObligation",
+      "name": "init_obligation",
       "discriminator": [
         251,
         10,
@@ -408,7 +402,7 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               },
               {
                 "kind": "account",
@@ -418,7 +412,7 @@ export type Lendborrow = {
           }
         },
         {
-          "name": "lendingMarket"
+          "name": "lending_market"
         },
         {
           "name": "owner",
@@ -426,7 +420,7 @@ export type Lendborrow = {
           "signer": true
         },
         {
-          "name": "systemProgram",
+          "name": "system_program",
           "address": "11111111111111111111111111111111"
         },
         {
@@ -437,7 +431,7 @@ export type Lendborrow = {
       "args": []
     },
     {
-      "name": "initReserve",
+      "name": "init_reserve",
       "discriminator": [
         138,
         245,
@@ -450,17 +444,17 @@ export type Lendborrow = {
       ],
       "accounts": [
         {
-          "name": "sourceLiquidity",
+          "name": "source_liquidity",
           "writable": true
         },
         {
-          "name": "liquidityMint"
+          "name": "liquidity_mint"
         },
         {
-          "name": "lendingMarket"
+          "name": "lending_market"
         },
         {
-          "name": "lendingMarketAuthority",
+          "name": "lending_market_authority",
           "pda": {
             "seeds": [
               {
@@ -479,7 +473,7 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               }
             ]
           }
@@ -503,17 +497,17 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               },
               {
                 "kind": "account",
-                "path": "liquidityMint"
+                "path": "liquidity_mint"
               }
             ]
           }
         },
         {
-          "name": "liquiditySupply",
+          "name": "liquidity_supply",
           "writable": true,
           "pda": {
             "seeds": [
@@ -540,17 +534,17 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               },
               {
                 "kind": "account",
-                "path": "liquidityMint"
+                "path": "liquidity_mint"
               }
             ]
           }
         },
         {
-          "name": "liquidityFeeReceiver",
+          "name": "liquidity_fee_receiver",
           "writable": true,
           "pda": {
             "seeds": [
@@ -573,20 +567,20 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               },
               {
                 "kind": "account",
-                "path": "liquidityMint"
+                "path": "liquidity_mint"
               }
             ]
           }
         },
         {
-          "name": "pythPrice"
+          "name": "pyth_price"
         },
         {
-          "name": "collateralMint",
+          "name": "collateral_mint",
           "writable": true,
           "pda": {
             "seeds": [
@@ -612,17 +606,17 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               },
               {
                 "kind": "account",
-                "path": "liquidityMint"
+                "path": "liquidity_mint"
               }
             ]
           }
         },
         {
-          "name": "destinationCollateral",
+          "name": "destination_collateral",
           "writable": true,
           "pda": {
             "seeds": [
@@ -669,7 +663,7 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "collateralMint"
+                "path": "collateral_mint"
               }
             ],
             "program": {
@@ -712,7 +706,7 @@ export type Lendborrow = {
           }
         },
         {
-          "name": "collateralSupply",
+          "name": "collateral_supply",
           "writable": true,
           "pda": {
             "seeds": [
@@ -740,11 +734,11 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               },
               {
                 "kind": "account",
-                "path": "liquidityMint"
+                "path": "liquidity_mint"
               }
             ]
           }
@@ -754,23 +748,23 @@ export type Lendborrow = {
           "writable": true,
           "signer": true,
           "relations": [
-            "lendingMarket"
+            "lending_market"
           ]
         },
         {
-          "name": "userTransferAuthority",
+          "name": "user_transfer_authority",
           "signer": true
         },
         {
-          "name": "tokenProgram",
+          "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         },
         {
-          "name": "associatedTokenProgram",
+          "name": "associated_token_program",
           "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
-          "name": "systemProgram",
+          "name": "system_program",
           "address": "11111111111111111111111111111111"
         },
         {
@@ -780,21 +774,21 @@ export type Lendborrow = {
       ],
       "args": [
         {
-          "name": "liquidityAmount",
+          "name": "liquidity_amount",
           "type": "u64"
         },
         {
           "name": "config",
           "type": {
             "defined": {
-              "name": "reserveConfig"
+              "name": "ReserveConfig"
             }
           }
         }
       ]
     },
     {
-      "name": "liquidateObligation",
+      "name": "liquidate_obligation",
       "discriminator": [
         174,
         105,
@@ -807,26 +801,26 @@ export type Lendborrow = {
       ],
       "accounts": [
         {
-          "name": "sourceLiquidity",
+          "name": "source_liquidity",
           "writable": true
         },
         {
-          "name": "destinationCollateral",
+          "name": "destination_collateral",
           "writable": true
         },
         {
-          "name": "repayReserve",
+          "name": "repay_reserve",
           "writable": true
         },
         {
-          "name": "destinationLiquidity",
+          "name": "destination_liquidity",
           "writable": true
         },
         {
-          "name": "withdrawReserve"
+          "name": "withdraw_reserve"
         },
         {
-          "name": "withdrawReserveCollateralSupply",
+          "name": "withdraw_reserve_collateral_supply",
           "writable": true
         },
         {
@@ -851,21 +845,21 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               },
               {
                 "kind": "account",
                 "path": "obligation.owner",
-                "account": "obligation"
+                "account": "Obligation"
               }
             ]
           }
         },
         {
-          "name": "lendingMarket"
+          "name": "lending_market"
         },
         {
-          "name": "lendingMarketAuthority",
+          "name": "lending_market_authority",
           "pda": {
             "seeds": [
               {
@@ -884,29 +878,29 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               }
             ]
           }
         },
         {
-          "name": "userTransferAuthority",
+          "name": "user_transfer_authority",
           "signer": true
         },
         {
-          "name": "tokenProgram",
+          "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         }
       ],
       "args": [
         {
-          "name": "liquidityAmount",
+          "name": "liquidity_amount",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "redeemReserveCollateral",
+      "name": "redeem_reserve_collateral",
       "discriminator": [
         234,
         117,
@@ -919,11 +913,11 @@ export type Lendborrow = {
       ],
       "accounts": [
         {
-          "name": "sourceCollateral",
+          "name": "source_collateral",
           "writable": true
         },
         {
-          "name": "destinationLiquidity",
+          "name": "destination_liquidity",
           "writable": true
         },
         {
@@ -931,33 +925,33 @@ export type Lendborrow = {
           "writable": true
         },
         {
-          "name": "reserveLiquiditySupply",
+          "name": "reserve_liquidity_supply",
           "writable": true
         },
         {
-          "name": "reserveCollateralMint",
+          "name": "reserve_collateral_mint",
           "writable": true
         },
         {
-          "name": "liquidityMint",
+          "name": "liquidity_mint",
           "relations": [
             "reserve"
           ]
         },
         {
-          "name": "collateralMint",
+          "name": "collateral_mint",
           "relations": [
             "reserve"
           ]
         },
         {
-          "name": "lendingMarket",
+          "name": "lending_market",
           "relations": [
             "reserve"
           ]
         },
         {
-          "name": "lendingMarketAuthority",
+          "name": "lending_market_authority",
           "pda": {
             "seeds": [
               {
@@ -976,29 +970,29 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               }
             ]
           }
         },
         {
-          "name": "userTransferAuthority",
+          "name": "user_transfer_authority",
           "signer": true
         },
         {
-          "name": "tokenProgram",
+          "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         }
       ],
       "args": [
         {
-          "name": "collateralAmount",
+          "name": "collateral_amount",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "refreshObligation",
+      "name": "refresh_obligation",
       "discriminator": [
         33,
         132,
@@ -1018,7 +1012,7 @@ export type Lendborrow = {
       "args": []
     },
     {
-      "name": "refreshReserve",
+      "name": "refresh_reserve",
       "discriminator": [
         2,
         218,
@@ -1035,19 +1029,19 @@ export type Lendborrow = {
           "writable": true
         },
         {
-          "name": "lendingMarket",
+          "name": "lending_market",
           "relations": [
             "reserve"
           ]
         },
         {
-          "name": "pythPrice"
+          "name": "pyth_price"
         }
       ],
       "args": []
     },
     {
-      "name": "repayObligationLiquidity",
+      "name": "repay_obligation_liquidity",
       "discriminator": [
         145,
         178,
@@ -1060,15 +1054,15 @@ export type Lendborrow = {
       ],
       "accounts": [
         {
-          "name": "sourceLiquidity",
+          "name": "source_liquidity",
           "writable": true
         },
         {
-          "name": "destinationLiquidity",
+          "name": "destination_liquidity",
           "writable": true
         },
         {
-          "name": "repayReserve",
+          "name": "repay_reserve",
           "writable": true
         },
         {
@@ -1093,40 +1087,40 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               },
               {
                 "kind": "account",
-                "path": "obligationOwner"
+                "path": "obligation_owner"
               }
             ]
           }
         },
         {
-          "name": "lendingMarket"
+          "name": "lending_market"
         },
         {
-          "name": "obligationOwner",
+          "name": "obligation_owner",
           "signer": true
         },
         {
-          "name": "userTransferAuthority",
+          "name": "user_transfer_authority",
           "signer": true
         },
         {
-          "name": "tokenProgram",
+          "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         }
       ],
       "args": [
         {
-          "name": "liquidityAmount",
+          "name": "liquidity_amount",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "setLendingMarketOwner",
+      "name": "set_lending_market_owner",
       "discriminator": [
         195,
         167,
@@ -1139,26 +1133,26 @@ export type Lendborrow = {
       ],
       "accounts": [
         {
-          "name": "lendingMarket",
+          "name": "lending_market",
           "writable": true
         },
         {
           "name": "owner",
           "signer": true,
           "relations": [
-            "lendingMarket"
+            "lending_market"
           ]
         }
       ],
       "args": [
         {
-          "name": "newOwner",
+          "name": "new_owner",
           "type": "pubkey"
         }
       ]
     },
     {
-      "name": "withdrawObligationCollateral",
+      "name": "withdraw_obligation_collateral",
       "discriminator": [
         37,
         116,
@@ -1171,15 +1165,15 @@ export type Lendborrow = {
       ],
       "accounts": [
         {
-          "name": "sourceCollateral",
+          "name": "source_collateral",
           "writable": true
         },
         {
-          "name": "destinationCollateral",
+          "name": "destination_collateral",
           "writable": true
         },
         {
-          "name": "withdrawReserve"
+          "name": "withdraw_reserve"
         },
         {
           "name": "obligation",
@@ -1203,20 +1197,20 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               },
               {
                 "kind": "account",
-                "path": "obligationOwner"
+                "path": "obligation_owner"
               }
             ]
           }
         },
         {
-          "name": "lendingMarket"
+          "name": "lending_market"
         },
         {
-          "name": "lendingMarketAuthority",
+          "name": "lending_market_authority",
           "pda": {
             "seeds": [
               {
@@ -1235,23 +1229,23 @@ export type Lendborrow = {
               },
               {
                 "kind": "account",
-                "path": "lendingMarket"
+                "path": "lending_market"
               }
             ]
           }
         },
         {
-          "name": "obligationOwner",
+          "name": "obligation_owner",
           "signer": true
         },
         {
-          "name": "tokenProgram",
+          "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         }
       ],
       "args": [
         {
-          "name": "collateralAmount",
+          "name": "collateral_amount",
           "type": "u64"
         }
       ]
@@ -1259,7 +1253,7 @@ export type Lendborrow = {
   ],
   "accounts": [
     {
-      "name": "lendingMarket",
+      "name": "LendingMarket",
       "discriminator": [
         246,
         114,
@@ -1272,7 +1266,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "obligation",
+      "name": "Obligation",
       "discriminator": [
         168,
         206,
@@ -1285,7 +1279,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "reserve",
+      "name": "Reserve",
       "discriminator": [
         43,
         242,
@@ -1300,7 +1294,7 @@ export type Lendborrow = {
   ],
   "events": [
     {
-      "name": "collateralDeposited",
+      "name": "CollateralDeposited",
       "discriminator": [
         244,
         62,
@@ -1313,7 +1307,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "collateralRedeemed",
+      "name": "CollateralRedeemed",
       "discriminator": [
         247,
         125,
@@ -1326,7 +1320,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "collateralWithdrawn",
+      "name": "CollateralWithdrawn",
       "discriminator": [
         51,
         224,
@@ -1339,7 +1333,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "lendingMarketInitialized",
+      "name": "LendingMarketInitialized",
       "discriminator": [
         244,
         242,
@@ -1352,7 +1346,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "lendingMarketOwnerChanged",
+      "name": "LendingMarketOwnerChanged",
       "discriminator": [
         119,
         192,
@@ -1365,7 +1359,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "liquidityBorrowed",
+      "name": "LiquidityBorrowed",
       "discriminator": [
         244,
         147,
@@ -1378,7 +1372,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "liquidityDeposited",
+      "name": "LiquidityDeposited",
       "discriminator": [
         218,
         155,
@@ -1391,7 +1385,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "liquidityRepaid",
+      "name": "LiquidityRepaid",
       "discriminator": [
         36,
         45,
@@ -1404,7 +1398,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "obligationInitialized",
+      "name": "ObligationInitialized",
       "discriminator": [
         243,
         123,
@@ -1417,7 +1411,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "obligationLiquidated",
+      "name": "ObligationLiquidated",
       "discriminator": [
         164,
         115,
@@ -1430,7 +1424,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "obligationRefreshed",
+      "name": "ObligationRefreshed",
       "discriminator": [
         242,
         192,
@@ -1443,7 +1437,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "reserveInitialized",
+      "name": "ReserveInitialized",
       "discriminator": [
         22,
         27,
@@ -1456,7 +1450,7 @@ export type Lendborrow = {
       ]
     },
     {
-      "name": "reserveRefreshed",
+      "name": "ReserveRefreshed",
       "discriminator": [
         126,
         73,
@@ -1472,328 +1466,328 @@ export type Lendborrow = {
   "errors": [
     {
       "code": 6000,
-      "name": "invalidQuoteCurrency",
+      "name": "InvalidQuoteCurrency",
       "msg": "Invalid quote currency format. Must be valid UTF-8 string or non-zero pubkey"
     },
     {
       "code": 6001,
-      "name": "invalidOwner",
+      "name": "InvalidOwner",
       "msg": "Invalid owner. Only the market owner can perform this action"
     },
     {
       "code": 6002,
-      "name": "marketAlreadyInitialized",
+      "name": "MarketAlreadyInitialized",
       "msg": "Market already initialized"
     },
     {
       "code": 6003,
-      "name": "invalidAmount",
+      "name": "InvalidAmount",
       "msg": "Invalid amount"
     },
     {
       "code": 6004,
-      "name": "sameOwner",
+      "name": "SameOwner",
       "msg": "New owner must be different from current owner"
     },
     {
       "code": 6005,
-      "name": "invalidNewOwner",
+      "name": "InvalidNewOwner",
       "msg": "Invalid new owner. Cannot be default pubkey"
     },
     {
       "code": 6006,
-      "name": "invalidReserveConfig",
+      "name": "InvalidReserveConfig",
       "msg": "Invalid reserve configuration"
     },
     {
       "code": 6007,
-      "name": "invalidLiquidityAmount",
+      "name": "InvalidLiquidityAmount",
       "msg": "Invalid liquidity amount"
     },
     {
       "code": 6008,
-      "name": "invalidLendingMarket",
+      "name": "InvalidLendingMarket",
       "msg": "Invalid lending market"
     },
     {
       "code": 6009,
-      "name": "invalidLiquidityMint",
+      "name": "InvalidLiquidityMint",
       "msg": "Invalid liquidity mint"
     },
     {
       "code": 6010,
-      "name": "invalidLiquiditySupply",
+      "name": "InvalidLiquiditySupply",
       "msg": "Invalid liquidity supply"
     },
     {
       "code": 6011,
-      "name": "invalidCollateralMint",
+      "name": "InvalidCollateralMint",
       "msg": "Invalid collateral mint"
     },
     {
       "code": 6012,
-      "name": "mathOverflow",
+      "name": "MathOverflow",
       "msg": "Math overflow"
     },
     {
       "code": 6013,
-      "name": "reserveStale",
+      "name": "ReserveStale",
       "msg": "Reserve is stale and must be refreshed"
     },
     {
       "code": 6014,
-      "name": "insufficientLiquidity",
+      "name": "InsufficientLiquidity",
       "msg": "Insufficient liquidity"
     },
     {
       "code": 6015,
-      "name": "obligationReserveLimit",
+      "name": "ObligationReserveLimit",
       "msg": "Obligation cannot have more than 10 deposits and borrows combined"
     },
     {
       "code": 6016,
-      "name": "obligationDepositsEmpty",
+      "name": "ObligationDepositsEmpty",
       "msg": "Obligation has no deposits"
     },
     {
       "code": 6017,
-      "name": "obligationBorrowsEmpty",
+      "name": "ObligationBorrowsEmpty",
       "msg": "Obligation has no borrows"
     },
     {
       "code": 6018,
-      "name": "obligationDepositsZero",
+      "name": "ObligationDepositsZero",
       "msg": "Obligation deposits have zero value"
     },
     {
       "code": 6019,
-      "name": "obligationBorrowsZero",
+      "name": "ObligationBorrowsZero",
       "msg": "Obligation borrows have zero value"
     },
     {
       "code": 6020,
-      "name": "obligationHealthy",
+      "name": "ObligationHealthy",
       "msg": "Obligation is healthy and cannot be liquidated"
     },
     {
       "code": 6021,
-      "name": "obligationStale",
+      "name": "ObligationStale",
       "msg": "Obligation is stale and must be refreshed"
     },
     {
       "code": 6022,
-      "name": "invalidObligationOwner",
+      "name": "InvalidObligationOwner",
       "msg": "Invalid obligation owner"
     },
     {
       "code": 6023,
-      "name": "invalidObligationCollateral",
+      "name": "InvalidObligationCollateral",
       "msg": "Invalid obligation collateral"
     },
     {
       "code": 6024,
-      "name": "invalidObligationLiquidity",
+      "name": "InvalidObligationLiquidity",
       "msg": "Invalid obligation liquidity"
     },
     {
       "code": 6025,
-      "name": "invalidObligationIndex",
+      "name": "InvalidObligationIndex",
       "msg": "Invalid obligation index"
     },
     {
       "code": 6026,
-      "name": "invalidObligationData",
+      "name": "InvalidObligationData",
       "msg": "Invalid obligation data"
     },
     {
       "code": 6027,
-      "name": "invalidReserveCount",
+      "name": "InvalidReserveCount",
       "msg": "Invalid reserve count"
     },
     {
       "code": 6028,
-      "name": "noReservesToRefresh",
+      "name": "NoReservesToRefresh",
       "msg": "No reserves to refresh"
     },
     {
       "code": 6029,
-      "name": "invalidReserveForObligation",
+      "name": "InvalidReserveForObligation",
       "msg": "Invalid reserve for obligation"
     },
     {
       "code": 6030,
-      "name": "invalidMarket",
+      "name": "InvalidMarket",
       "msg": "Invalid market"
     },
     {
       "code": 6031,
-      "name": "invalidCollateralSupply",
+      "name": "InvalidCollateralSupply",
       "msg": "Invalid collateral supply"
     },
     {
       "code": 6032,
-      "name": "withdrawTooLarge",
+      "name": "WithdrawTooLarge",
       "msg": "Withdraw amount is too large"
     },
     {
       "code": 6033,
-      "name": "withdrawTooSmall",
+      "name": "WithdrawTooSmall",
       "msg": "Withdraw amount is too small"
     },
     {
       "code": 6034,
-      "name": "obligationCollateralEmpty",
+      "name": "ObligationCollateralEmpty",
       "msg": "Obligation collateral is empty"
     },
     {
       "code": 6035,
-      "name": "reserveCollateralDisabled",
+      "name": "ReserveCollateralDisabled",
       "msg": "Reserve collateral is disabled"
     },
     {
       "code": 6036,
-      "name": "negativeInterestRate",
+      "name": "NegativeInterestRate",
       "msg": "Negative interest rate"
     },
     {
       "code": 6037,
-      "name": "obligationUnhealthy",
+      "name": "ObligationUnhealthy",
       "msg": "Obligation is unhealthy"
     },
     {
       "code": 6038,
-      "name": "liquidationTooSmall",
+      "name": "LiquidationTooSmall",
       "msg": "Liquidation amount is too small"
     },
     {
       "code": 6039,
-      "name": "liquidationTooLarge",
+      "name": "LiquidationTooLarge",
       "msg": "Liquidation amount is too large"
     },
     {
       "code": 6040,
-      "name": "cannotLiquidateOwnObligation",
+      "name": "CannotLiquidateOwnObligation",
       "msg": "Cannot liquidate own obligation"
     },
     {
       "code": 6041,
-      "name": "marketNotInitialized",
+      "name": "MarketNotInitialized",
       "msg": "Market not initialized"
     },
     {
       "code": 6042,
-      "name": "invalidOracleConfig",
+      "name": "InvalidOracleConfig",
       "msg": "Invalid oracle configuration"
     },
     {
       "code": 6043,
-      "name": "oraclePriceStale",
+      "name": "OraclePriceStale",
       "msg": "Oracle price is stale"
     },
     {
       "code": 6044,
-      "name": "oraclePriceInvalid",
+      "name": "OraclePriceInvalid",
       "msg": "Oracle price is invalid or negative"
     },
     {
       "code": 6045,
-      "name": "oraclePriceConfidenceTooWide",
+      "name": "OraclePriceConfidenceTooWide",
       "msg": "Oracle price confidence interval too wide"
     },
     {
       "code": 6046,
-      "name": "invalidAccountInput",
+      "name": "InvalidAccountInput",
       "msg": "Invalid account input"
     },
     {
       "code": 6047,
-      "name": "invalidMint",
+      "name": "InvalidMint",
       "msg": "Invalid mint"
     },
     {
       "code": 6048,
-      "name": "insufficientCollateral",
+      "name": "InsufficientCollateral",
       "msg": "Insufficient collateral to borrow the requested amount"
     },
     {
       "code": 6049,
-      "name": "borrowExceedsLiquidity",
+      "name": "BorrowExceedsLiquidity",
       "msg": "Borrow amount exceeds reserve liquidity"
     },
     {
       "code": 6050,
-      "name": "borrowExceedsUserLimit",
+      "name": "BorrowExceedsUserLimit",
       "msg": "Borrow amount exceeds user borrow limit"
     },
     {
       "code": 6051,
-      "name": "repayExceedsUserBalance",
+      "name": "RepayExceedsUserBalance",
       "msg": "Repay amount exceeds user borrow balance"
     },
     {
       "code": 6052,
-      "name": "borrowTooLarge",
+      "name": "BorrowTooLarge",
       "msg": "Borrow amount is too large"
     },
     {
       "code": 6053,
-      "name": "borrowTooSmall",
+      "name": "BorrowTooSmall",
       "msg": "Borrow amount is too small"
     },
     {
       "code": 6054,
-      "name": "invalidFeeReceiver",
+      "name": "InvalidFeeReceiver",
       "msg": "Invalid fee receiver"
     },
     {
       "code": 6055,
-      "name": "invalidDestinationAccount",
+      "name": "InvalidDestinationAccount",
       "msg": "Invalid destination account"
     },
     {
       "code": 6056,
-      "name": "repayTooSmall",
+      "name": "RepayTooSmall",
       "msg": "Repay amount is too small"
     },
     {
       "code": 6057,
-      "name": "obligationLiquidityNotFound",
+      "name": "ObligationLiquidityNotFound",
       "msg": "Obligation liquidity not found"
     },
     {
       "code": 6058,
-      "name": "obligationLiquidityEmpty",
+      "name": "ObligationLiquidityEmpty",
       "msg": "Obligation liquidity is empty"
     },
     {
       "code": 6059,
-      "name": "invalidMarketAuthority",
+      "name": "InvalidMarketAuthority",
       "msg": "Invalid market authority"
     },
     {
       "code": 6060,
-      "name": "invalidTokenProgram",
+      "name": "InvalidTokenProgram",
       "msg": "Invalid Token program"
     },
     {
       "code": 6061,
-      "name": "insufficientOwnerBalance",
+      "name": "InsufficientOwnerBalance",
       "msg": "Insufficient owner balance"
     },
     {
       "code": 6062,
-      "name": "invalidConfig",
+      "name": "InvalidConfig",
       "msg": "Invalid Config"
     },
     {
       "code": 6063,
-      "name": "invalidMarketOwner",
+      "name": "InvalidMarketOwner",
       "msg": "Invalid market owner"
     }
   ],
   "types": [
     {
-      "name": "collateralDeposited",
+      "name": "CollateralDeposited",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1817,7 +1811,7 @@ export type Lendborrow = {
       }
     },
     {
-      "name": "collateralRedeemed",
+      "name": "CollateralRedeemed",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1826,11 +1820,11 @@ export type Lendborrow = {
             "type": "pubkey"
           },
           {
-            "name": "collateralAmount",
+            "name": "collateral_amount",
             "type": "u64"
           },
           {
-            "name": "liquidityAmount",
+            "name": "liquidity_amount",
             "type": "u64"
           },
           {
@@ -1845,7 +1839,7 @@ export type Lendborrow = {
       }
     },
     {
-      "name": "collateralWithdrawn",
+      "name": "CollateralWithdrawn",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1858,7 +1852,7 @@ export type Lendborrow = {
             "type": "pubkey"
           },
           {
-            "name": "collateralAmount",
+            "name": "collateral_amount",
             "type": "u64"
           },
           {
@@ -1869,17 +1863,7 @@ export type Lendborrow = {
       }
     },
     {
-      "name": "lendingMarket",
-      "docs": [
-        "Global configuration account for a lending market.",
-        "",
-        "`LendingMarket` represents a single lending protocol instance on Solana:",
-        "- defines who controls the market (`owner`),",
-        "- defines the PDA authority that owns all vaults and mints (`authority`),",
-        "- stores the program/version metadata,",
-        "- defines the quote currency (e.g. \"USD\", \"USDC\") used for pricing,",
-        "- stores which token program is used (classic SPL or Token-2022)."
-      ],
+      "name": "LendingMarket",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1892,7 +1876,7 @@ export type Lendborrow = {
             "type": "pubkey"
           },
           {
-            "name": "authorityBump",
+            "name": "authority_bump",
             "type": "u8"
           },
           {
@@ -1900,11 +1884,11 @@ export type Lendborrow = {
             "type": "u64"
           },
           {
-            "name": "bumpSeed",
+            "name": "bump_seed",
             "type": "u8"
           },
           {
-            "name": "quoteCurrency",
+            "name": "quote_currency",
             "type": {
               "array": [
                 "u8",
@@ -1913,19 +1897,19 @@ export type Lendborrow = {
             }
           },
           {
-            "name": "tokenProgramId",
+            "name": "token_program_id",
             "type": "pubkey"
           }
         ]
       }
     },
     {
-      "name": "lendingMarketInitialized",
+      "name": "LendingMarketInitialized",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "lendingMarket",
+            "name": "lending_market",
             "type": "pubkey"
           },
           {
@@ -1937,7 +1921,7 @@ export type Lendborrow = {
             "type": "pubkey"
           },
           {
-            "name": "quoteCurrency",
+            "name": "quote_currency",
             "type": {
               "array": [
                 "u8",
@@ -1953,27 +1937,27 @@ export type Lendborrow = {
       }
     },
     {
-      "name": "lendingMarketOwnerChanged",
+      "name": "LendingMarketOwnerChanged",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "lendingMarket",
+            "name": "lending_market",
             "type": "pubkey"
           },
           {
-            "name": "oldOwner",
+            "name": "old_owner",
             "type": "pubkey"
           },
           {
-            "name": "newOwner",
+            "name": "new_owner",
             "type": "pubkey"
           }
         ]
       }
     },
     {
-      "name": "liquidityBorrowed",
+      "name": "LiquidityBorrowed",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1986,27 +1970,27 @@ export type Lendborrow = {
             "type": "pubkey"
           },
           {
-            "name": "liquidityAmount",
+            "name": "liquidity_amount",
             "type": "u64"
           },
           {
-            "name": "borrowAmountWads",
+            "name": "borrow_amount_wads",
             "type": "u128"
           },
           {
-            "name": "receiveAmount",
+            "name": "receive_amount",
             "type": "u64"
           },
           {
-            "name": "borrowFee",
+            "name": "borrow_fee",
             "type": "u64"
           },
           {
-            "name": "hostFee",
+            "name": "host_fee",
             "type": "u64"
           },
           {
-            "name": "ownerFee",
+            "name": "owner_fee",
             "type": "u64"
           },
           {
@@ -2021,7 +2005,7 @@ export type Lendborrow = {
       }
     },
     {
-      "name": "liquidityDeposited",
+      "name": "LiquidityDeposited",
       "type": {
         "kind": "struct",
         "fields": [
@@ -2030,11 +2014,11 @@ export type Lendborrow = {
             "type": "pubkey"
           },
           {
-            "name": "liquidityAmount",
+            "name": "liquidity_amount",
             "type": "u64"
           },
           {
-            "name": "collateralAmount",
+            "name": "collateral_amount",
             "type": "u64"
           },
           {
@@ -2049,7 +2033,7 @@ export type Lendborrow = {
       }
     },
     {
-      "name": "liquidityRepaid",
+      "name": "LiquidityRepaid",
       "type": {
         "kind": "struct",
         "fields": [
@@ -2062,15 +2046,15 @@ export type Lendborrow = {
             "type": "pubkey"
           },
           {
-            "name": "liquidityAmount",
+            "name": "liquidity_amount",
             "type": "u64"
           },
           {
-            "name": "settleAmountWads",
+            "name": "settle_amount_wads",
             "type": "u128"
           },
           {
-            "name": "repayAmount",
+            "name": "repay_amount",
             "type": "u64"
           },
           {
@@ -2085,17 +2069,7 @@ export type Lendborrow = {
       }
     },
     {
-      "name": "obligation",
-      "docs": [
-        "User position in the lending market.",
-        "",
-        "An `Obligation` tracks a single user's full position in a given `LendingMarket`:",
-        "- total **collateral value** (in quote currency),",
-        "- total **borrowed value**,",
-        "- how much the user is **allowed to borrow**,",
-        "- when the position becomes **unhealthy** (liquidatable),",
-        "- per-reserve collateral and borrow positions stored in a compact, flat buffer."
-      ],
+      "name": "Obligation",
       "type": {
         "kind": "struct",
         "fields": [
@@ -2104,11 +2078,11 @@ export type Lendborrow = {
             "type": "u8"
           },
           {
-            "name": "lastUpdateSlot",
+            "name": "last_update_slot",
             "type": "u64"
           },
           {
-            "name": "lendingMarket",
+            "name": "lending_market",
             "type": "pubkey"
           },
           {
@@ -2116,38 +2090,38 @@ export type Lendborrow = {
             "type": "pubkey"
           },
           {
-            "name": "depositedValue",
+            "name": "deposited_value",
             "type": "u128"
           },
           {
-            "name": "borrowedValue",
+            "name": "borrowed_value",
             "type": "u128"
           },
           {
-            "name": "allowedBorrowValue",
+            "name": "allowed_borrow_value",
             "type": "u128"
           },
           {
-            "name": "unhealthyBorrowValue",
+            "name": "unhealthy_borrow_value",
             "type": "u128"
           },
           {
-            "name": "depositsLen",
+            "name": "deposits_len",
             "type": "u8"
           },
           {
-            "name": "borrowsLen",
+            "name": "borrows_len",
             "type": "u8"
           },
           {
-            "name": "dataFlat",
+            "name": "data_flat",
             "type": "bytes"
           }
         ]
       }
     },
     {
-      "name": "obligationInitialized",
+      "name": "ObligationInitialized",
       "type": {
         "kind": "struct",
         "fields": [
@@ -2156,7 +2130,7 @@ export type Lendborrow = {
             "type": "pubkey"
           },
           {
-            "name": "lendingMarket",
+            "name": "lending_market",
             "type": "pubkey"
           },
           {
@@ -2171,7 +2145,7 @@ export type Lendborrow = {
       }
     },
     {
-      "name": "obligationLiquidated",
+      "name": "ObligationLiquidated",
       "type": {
         "kind": "struct",
         "fields": [
@@ -2180,27 +2154,27 @@ export type Lendborrow = {
             "type": "pubkey"
           },
           {
-            "name": "repayReserve",
+            "name": "repay_reserve",
             "type": "pubkey"
           },
           {
-            "name": "withdrawReserve",
+            "name": "withdraw_reserve",
             "type": "pubkey"
           },
           {
-            "name": "liquidityAmount",
+            "name": "liquidity_amount",
             "type": "u64"
           },
           {
-            "name": "repayAmount",
+            "name": "repay_amount",
             "type": "u64"
           },
           {
-            "name": "settleAmountWads",
+            "name": "settle_amount_wads",
             "type": "u128"
           },
           {
-            "name": "withdrawCollateral",
+            "name": "withdraw_collateral",
             "type": "u64"
           },
           {
@@ -2215,7 +2189,7 @@ export type Lendborrow = {
       }
     },
     {
-      "name": "obligationRefreshed",
+      "name": "ObligationRefreshed",
       "type": {
         "kind": "struct",
         "fields": [
@@ -2228,155 +2202,94 @@ export type Lendborrow = {
             "type": "u64"
           },
           {
-            "name": "depositedValue",
+            "name": "deposited_value",
             "type": "u128"
           },
           {
-            "name": "borrowedValue",
+            "name": "borrowed_value",
             "type": "u128"
           },
           {
-            "name": "allowedBorrowValue",
+            "name": "allowed_borrow_value",
             "type": "u128"
           },
           {
-            "name": "unhealthyBorrowValue",
+            "name": "unhealthy_borrow_value",
             "type": "u128"
           }
         ]
       }
     },
     {
-      "name": "reserve",
-      "docs": [
-        "A Reserve represents a liquidity pool inside a lending market.",
-        "",
-        "It tracks:",
-        "- available liquidity",
-        "- borrowed liquidity (in WAD precision)",
-        "- interest rates",
-        "- cumulative borrow rate",
-        "- collateral mint and total supply",
-        "",
-        "Each Reserve is associated with a single liquidity mint (e.g., USDC),",
-        "and has its own oracle, fees, and configuration parameters."
-      ],
+      "name": "Reserve",
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "version",
-            "docs": [
-              "Program version for migration compatibility."
-            ],
             "type": "u8"
           },
           {
-            "name": "lastUpdateSlot",
-            "docs": [
-              "Last slot when the reserve was updated (interest + price)."
-            ],
+            "name": "last_update_slot",
             "type": "u64"
           },
           {
-            "name": "lendingMarket",
-            "docs": [
-              "Lending market the reserve belongs to."
-            ],
+            "name": "lending_market",
             "type": "pubkey"
           },
           {
-            "name": "liquidityMint",
-            "docs": [
-              "SPL mint of the underlying liquidity token."
-            ],
+            "name": "liquidity_mint",
             "type": "pubkey"
           },
           {
-            "name": "liquidityMintDecimals",
-            "docs": [
-              "Number of decimals of liquidity mint."
-            ],
+            "name": "liquidity_mint_decimals",
             "type": "u8"
           },
           {
-            "name": "liquiditySupply",
-            "docs": [
-              "PDA account holding deposited liquidity (supply vault)."
-            ],
+            "name": "liquidity_supply",
             "type": "pubkey"
           },
           {
-            "name": "liquidityFeeReceiver",
-            "docs": [
-              "PDA account receiving protocol/host fees."
-            ],
+            "name": "liquidity_fee_receiver",
             "type": "pubkey"
           },
           {
-            "name": "liquidityOracle",
-            "docs": [
-              "Oracle account providing market price for liquidity token."
-            ],
+            "name": "liquidity_oracle",
             "type": "pubkey"
           },
           {
-            "name": "liquidityAvailableAmount",
-            "docs": [
-              "Amount of liquidity currently available for withdrawal/borrowing."
-            ],
+            "name": "liquidity_available_amount",
             "type": "u64"
           },
           {
-            "name": "liquidityBorrowedAmountWads",
-            "docs": [
-              "Borrowed liquidity tracked in WAD for precision."
-            ],
+            "name": "liquidity_borrowed_amount_wads",
             "type": "u128"
           },
           {
-            "name": "liquidityCumulativeBorrowRateWads",
-            "docs": [
-              "Cumulative borrow interest rate (WAD precision)."
-            ],
+            "name": "liquidity_cumulative_borrow_rate_wads",
             "type": "u128"
           },
           {
-            "name": "liquidityMarketPrice",
-            "docs": [
-              "Current oracle market price for the liquidity token (WAD precision)."
-            ],
+            "name": "liquidity_market_price",
             "type": "u128"
           },
           {
-            "name": "collateralMint",
-            "docs": [
-              "Mint of the collateral token representing deposit shares."
-            ],
+            "name": "collateral_mint",
             "type": "pubkey"
           },
           {
-            "name": "collateralSupply",
-            "docs": [
-              "PDA holding all minted collateral tokens."
-            ],
+            "name": "collateral_supply",
             "type": "pubkey"
           },
           {
-            "name": "collateralMintTotalSupply",
-            "docs": [
-              "Total supply of collateral tokens (scaled by exchange rate)."
-            ],
+            "name": "collateral_mint_total_supply",
             "type": "u64"
           },
           {
             "name": "config",
-            "docs": [
-              "Reserve configuration (rates, LTV, liquidation, fees)."
-            ],
             "type": {
               "defined": {
-                "name": "reserveConfig"
+                "name": "ReserveConfig"
               }
             }
           }
@@ -2384,68 +2297,48 @@ export type Lendborrow = {
       }
     },
     {
-      "name": "reserveConfig",
-      "docs": [
-        "Configuration parameters that define how a reserve behaves.",
-        "",
-        "A `ReserveConfig` represents the full risk, interest-rate, and oracle behavior",
-        "for a given Reserve. These values are immutable after initialization and define:",
-        "",
-        "- **Interest Rate Curve**",
-        "`optimal_utilization_rate`, `min_borrow_rate`, `optimal_borrow_rate`, `max_borrow_rate`",
-        "determine how interest increases as the reserve becomes more utilized.",
-        "",
-        "- **Risk Parameters**",
-        "`loan_to_value_ratio`, `liquidation_threshold`, and `liquidation_bonus` control",
-        "collateralization and liquidation safety rules.",
-        "",
-        "- **Protocol Fees**",
-        "Stored inside `ReserveFees`, defining borrow fees and fee splits.",
-        "",
-        "- **Oracle Configuration**",
-        "`pyth_price_feed_id` points to the Pyth price feed used to value this asset."
-      ],
+      "name": "ReserveConfig",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "optimalUtilizationRate",
+            "name": "optimal_utilization_rate",
             "type": "u8"
           },
           {
-            "name": "loanToValueRatio",
+            "name": "loan_to_value_ratio",
             "type": "u8"
           },
           {
-            "name": "liquidationBonus",
+            "name": "liquidation_bonus",
             "type": "u8"
           },
           {
-            "name": "liquidationThreshold",
+            "name": "liquidation_threshold",
             "type": "u8"
           },
           {
-            "name": "minBorrowRate",
+            "name": "min_borrow_rate",
             "type": "u8"
           },
           {
-            "name": "optimalBorrowRate",
+            "name": "optimal_borrow_rate",
             "type": "u8"
           },
           {
-            "name": "maxBorrowRate",
+            "name": "max_borrow_rate",
             "type": "u8"
           },
           {
             "name": "fees",
             "type": {
               "defined": {
-                "name": "reserveFees"
+                "name": "ReserveFees"
               }
             }
           },
           {
-            "name": "pythPriceFeedId",
+            "name": "pyth_price_feed_id",
             "type": {
               "array": [
                 "u8",
@@ -2457,32 +2350,27 @@ export type Lendborrow = {
       }
     },
     {
-      "name": "reserveFees",
-      "docs": [
-        "Configuration of fees applied to borrow and flash-loan operations.",
-        "",
-        "All fees are expressed in WAD (1e18 fixed-point), except for host fee percentage."
-      ],
+      "name": "ReserveFees",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "borrowFeeWad",
+            "name": "borrow_fee_wad",
             "type": "u64"
           },
           {
-            "name": "flashLoanFeeWad",
+            "name": "flash_loan_fee_wad",
             "type": "u64"
           },
           {
-            "name": "hostFeePercentage",
+            "name": "host_fee_percentage",
             "type": "u8"
           }
         ]
       }
     },
     {
-      "name": "reserveInitialized",
+      "name": "ReserveInitialized",
       "type": {
         "kind": "struct",
         "fields": [
@@ -2491,30 +2379,30 @@ export type Lendborrow = {
             "type": "pubkey"
           },
           {
-            "name": "lendingMarket",
+            "name": "lending_market",
             "type": "pubkey"
           },
           {
-            "name": "liquidityMint",
+            "name": "liquidity_mint",
             "type": "pubkey"
           },
           {
-            "name": "collateralMint",
+            "name": "collateral_mint",
             "type": "pubkey"
           },
           {
-            "name": "liquidityAmount",
+            "name": "liquidity_amount",
             "type": "u64"
           },
           {
-            "name": "initialPrice",
+            "name": "initial_price",
             "type": "u128"
           },
           {
             "name": "config",
             "type": {
               "defined": {
-                "name": "reserveConfig"
+                "name": "ReserveConfig"
               }
             }
           }
@@ -2522,7 +2410,7 @@ export type Lendborrow = {
       }
     },
     {
-      "name": "reserveRefreshed",
+      "name": "ReserveRefreshed",
       "type": {
         "kind": "struct",
         "fields": [
@@ -2535,27 +2423,27 @@ export type Lendborrow = {
             "type": "u64"
           },
           {
-            "name": "marketPrice",
+            "name": "market_price",
             "type": "u128"
           },
           {
-            "name": "cumulativeBorrowRate",
+            "name": "cumulative_borrow_rate",
             "type": "u128"
           },
           {
-            "name": "utilizationRate",
+            "name": "utilization_rate",
             "type": "u128"
           },
           {
-            "name": "borrowedAmount",
+            "name": "borrowed_amount",
             "type": "u128"
           },
           {
-            "name": "availableAmount",
+            "name": "available_amount",
             "type": "u64"
           }
         ]
       }
     }
   ]
-};
+}

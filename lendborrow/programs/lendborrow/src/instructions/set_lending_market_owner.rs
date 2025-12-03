@@ -25,6 +25,10 @@ pub fn handler(ctx: Context<SetLendingMarketOwner>, new_owner: Pubkey) -> Result
     Ok(())
 }
 
+/// Accounts context for updating the owner of a `LendingMarket`.
+///
+/// - `lending_market` must currently be owned by `owner`.
+/// - `owner` must sign the transaction.
 #[derive(Accounts)]
 pub struct SetLendingMarketOwner<'info> {
     #[account(

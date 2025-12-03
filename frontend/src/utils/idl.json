@@ -219,6 +219,86 @@
       ]
     },
     {
+      "name": "deposit_reserve_liquidity",
+      "discriminator": [
+        169,
+        201,
+        30,
+        126,
+        6,
+        205,
+        102,
+        68
+      ],
+      "accounts": [
+        {
+          "name": "source_liquidity",
+          "writable": true
+        },
+        {
+          "name": "destination_collateral",
+          "writable": true
+        },
+        {
+          "name": "reserve",
+          "writable": true
+        },
+        {
+          "name": "reserve_liquidity_supply",
+          "writable": true
+        },
+        {
+          "name": "reserve_collateral_mint",
+          "writable": true
+        },
+        {
+          "name": "lending_market",
+          "relations": [
+            "reserve"
+          ]
+        },
+        {
+          "name": "lending_market_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "lending_market"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user_transfer_authority",
+          "signer": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "liquidity_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "init_lending_market",
       "discriminator": [
         34,
@@ -820,6 +900,98 @@
       ]
     },
     {
+      "name": "redeem_reserve_collateral",
+      "discriminator": [
+        234,
+        117,
+        181,
+        125,
+        185,
+        142,
+        220,
+        29
+      ],
+      "accounts": [
+        {
+          "name": "source_collateral",
+          "writable": true
+        },
+        {
+          "name": "destination_liquidity",
+          "writable": true
+        },
+        {
+          "name": "reserve",
+          "writable": true
+        },
+        {
+          "name": "reserve_liquidity_supply",
+          "writable": true
+        },
+        {
+          "name": "reserve_collateral_mint",
+          "writable": true
+        },
+        {
+          "name": "liquidity_mint",
+          "relations": [
+            "reserve"
+          ]
+        },
+        {
+          "name": "collateral_mint",
+          "relations": [
+            "reserve"
+          ]
+        },
+        {
+          "name": "lending_market",
+          "relations": [
+            "reserve"
+          ]
+        },
+        {
+          "name": "lending_market_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "lending_market"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user_transfer_authority",
+          "signer": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "collateral_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "refresh_obligation",
       "discriminator": [
         33,
@@ -1135,6 +1307,19 @@
       ]
     },
     {
+      "name": "CollateralRedeemed",
+      "discriminator": [
+        247,
+        125,
+        175,
+        32,
+        74,
+        19,
+        85,
+        113
+      ]
+    },
+    {
       "name": "CollateralWithdrawn",
       "discriminator": [
         51,
@@ -1184,6 +1369,19 @@
         50,
         111,
         27
+      ]
+    },
+    {
+      "name": "LiquidityDeposited",
+      "discriminator": [
+        218,
+        155,
+        74,
+        193,
+        59,
+        66,
+        94,
+        122
       ]
     },
     {
@@ -1249,6 +1447,19 @@
         120,
         20,
         49
+      ]
+    },
+    {
+      "name": "ReserveRefreshed",
+      "discriminator": [
+        126,
+        73,
+        26,
+        34,
+        238,
+        71,
+        15,
+        176
       ]
     }
   ],
@@ -1552,6 +1763,26 @@
       "code": 6059,
       "name": "InvalidMarketAuthority",
       "msg": "Invalid market authority"
+    },
+    {
+      "code": 6060,
+      "name": "InvalidTokenProgram",
+      "msg": "Invalid Token program"
+    },
+    {
+      "code": 6061,
+      "name": "InsufficientOwnerBalance",
+      "msg": "Insufficient owner balance"
+    },
+    {
+      "code": 6062,
+      "name": "InvalidConfig",
+      "msg": "Invalid Config"
+    },
+    {
+      "code": 6063,
+      "name": "InvalidMarketOwner",
+      "msg": "Invalid market owner"
     }
   ],
   "types": [
@@ -1571,6 +1802,34 @@
           {
             "name": "amount",
             "type": "u64"
+          },
+          {
+            "name": "slot",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CollateralRedeemed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "reserve",
+            "type": "pubkey"
+          },
+          {
+            "name": "collateral_amount",
+            "type": "u64"
+          },
+          {
+            "name": "liquidity_amount",
+            "type": "u64"
+          },
+          {
+            "name": "redeemer",
+            "type": "pubkey"
           },
           {
             "name": "slot",
@@ -1605,6 +1864,16 @@
     },
     {
       "name": "LendingMarket",
+      "docs": [
+        "Global configuration account for a lending market.",
+        "",
+        "`LendingMarket` represents a single lending protocol instance on Solana:",
+        "- defines who controls the market (`owner`),",
+        "- defines the PDA authority that owns all vaults and mints (`authority`),",
+        "- stores the program/version metadata,",
+        "- defines the quote currency (e.g. \"USD\", \"USDC\") used for pricing,",
+        "- stores which token program is used (classic SPL or Token-2022)."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -1613,8 +1882,16 @@
             "type": "pubkey"
           },
           {
-            "name": "version",
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "authority_bump",
             "type": "u8"
+          },
+          {
+            "name": "version",
+            "type": "u64"
           },
           {
             "name": "bump_seed",
@@ -1647,6 +1924,10 @@
           },
           {
             "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
             "type": "pubkey"
           },
           {
@@ -1719,7 +2000,39 @@
             "type": "u64"
           },
           {
+            "name": "owner_fee",
+            "type": "u64"
+          },
+          {
             "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "slot",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LiquidityDeposited",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "reserve",
+            "type": "pubkey"
+          },
+          {
+            "name": "liquidity_amount",
+            "type": "u64"
+          },
+          {
+            "name": "collateral_amount",
+            "type": "u64"
+          },
+          {
+            "name": "depositor",
             "type": "pubkey"
           },
           {
@@ -1767,6 +2080,16 @@
     },
     {
       "name": "Obligation",
+      "docs": [
+        "User position in the lending market.",
+        "",
+        "An `Obligation` tracks a single user's full position in a given `LendingMarket`:",
+        "- total **collateral value** (in quote currency),",
+        "- total **borrowed value**,",
+        "- how much the user is **allowed to borrow**,",
+        "- when the position becomes **unhealthy** (liquidatable),",
+        "- per-reserve collateral and borrow positions stored in a compact, flat buffer."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -1919,71 +2242,132 @@
     },
     {
       "name": "Reserve",
+      "docs": [
+        "A Reserve represents a liquidity pool inside a lending market.",
+        "",
+        "It tracks:",
+        "- available liquidity",
+        "- borrowed liquidity (in WAD precision)",
+        "- interest rates",
+        "- cumulative borrow rate",
+        "- collateral mint and total supply",
+        "",
+        "Each Reserve is associated with a single liquidity mint (e.g., USDC),",
+        "and has its own oracle, fees, and configuration parameters."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "version",
+            "docs": [
+              "Program version for migration compatibility."
+            ],
             "type": "u8"
           },
           {
             "name": "last_update_slot",
+            "docs": [
+              "Last slot when the reserve was updated (interest + price)."
+            ],
             "type": "u64"
           },
           {
             "name": "lending_market",
+            "docs": [
+              "Lending market the reserve belongs to."
+            ],
             "type": "pubkey"
           },
           {
             "name": "liquidity_mint",
+            "docs": [
+              "SPL mint of the underlying liquidity token."
+            ],
             "type": "pubkey"
           },
           {
             "name": "liquidity_mint_decimals",
+            "docs": [
+              "Number of decimals of liquidity mint."
+            ],
             "type": "u8"
           },
           {
             "name": "liquidity_supply",
+            "docs": [
+              "PDA account holding deposited liquidity (supply vault)."
+            ],
             "type": "pubkey"
           },
           {
             "name": "liquidity_fee_receiver",
+            "docs": [
+              "PDA account receiving protocol/host fees."
+            ],
             "type": "pubkey"
           },
           {
             "name": "liquidity_oracle",
+            "docs": [
+              "Oracle account providing market price for liquidity token."
+            ],
             "type": "pubkey"
           },
           {
             "name": "liquidity_available_amount",
+            "docs": [
+              "Amount of liquidity currently available for withdrawal/borrowing."
+            ],
             "type": "u64"
           },
           {
             "name": "liquidity_borrowed_amount_wads",
+            "docs": [
+              "Borrowed liquidity tracked in WAD for precision."
+            ],
             "type": "u128"
           },
           {
             "name": "liquidity_cumulative_borrow_rate_wads",
+            "docs": [
+              "Cumulative borrow interest rate (WAD precision)."
+            ],
             "type": "u128"
           },
           {
             "name": "liquidity_market_price",
+            "docs": [
+              "Current oracle market price for the liquidity token (WAD precision)."
+            ],
             "type": "u128"
           },
           {
             "name": "collateral_mint",
+            "docs": [
+              "Mint of the collateral token representing deposit shares."
+            ],
             "type": "pubkey"
           },
           {
             "name": "collateral_supply",
+            "docs": [
+              "PDA holding all minted collateral tokens."
+            ],
             "type": "pubkey"
           },
           {
             "name": "collateral_mint_total_supply",
+            "docs": [
+              "Total supply of collateral tokens (scaled by exchange rate)."
+            ],
             "type": "u64"
           },
           {
             "name": "config",
+            "docs": [
+              "Reserve configuration (rates, LTV, liquidation, fees)."
+            ],
             "type": {
               "defined": {
                 "name": "ReserveConfig"
@@ -1995,6 +2379,26 @@
     },
     {
       "name": "ReserveConfig",
+      "docs": [
+        "Configuration parameters that define how a reserve behaves.",
+        "",
+        "A `ReserveConfig` represents the full risk, interest-rate, and oracle behavior",
+        "for a given Reserve. These values are immutable after initialization and define:",
+        "",
+        "- **Interest Rate Curve**",
+        "`optimal_utilization_rate`, `min_borrow_rate`, `optimal_borrow_rate`, `max_borrow_rate`",
+        "determine how interest increases as the reserve becomes more utilized.",
+        "",
+        "- **Risk Parameters**",
+        "`loan_to_value_ratio`, `liquidation_threshold`, and `liquidation_bonus` control",
+        "collateralization and liquidation safety rules.",
+        "",
+        "- **Protocol Fees**",
+        "Stored inside `ReserveFees`, defining borrow fees and fee splits.",
+        "",
+        "- **Oracle Configuration**",
+        "`pyth_price_feed_id` points to the Pyth price feed used to value this asset."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -2048,6 +2452,11 @@
     },
     {
       "name": "ReserveFees",
+      "docs": [
+        "Configuration of fees applied to borrow and flash-loan operations.",
+        "",
+        "All fees are expressed in WAD (1e18 fixed-point), except for host fee percentage."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -2102,6 +2511,42 @@
                 "name": "ReserveConfig"
               }
             }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ReserveRefreshed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "reserve",
+            "type": "pubkey"
+          },
+          {
+            "name": "slot",
+            "type": "u64"
+          },
+          {
+            "name": "market_price",
+            "type": "u128"
+          },
+          {
+            "name": "cumulative_borrow_rate",
+            "type": "u128"
+          },
+          {
+            "name": "utilization_rate",
+            "type": "u128"
+          },
+          {
+            "name": "borrowed_amount",
+            "type": "u128"
+          },
+          {
+            "name": "available_amount",
+            "type": "u64"
           }
         ]
       }

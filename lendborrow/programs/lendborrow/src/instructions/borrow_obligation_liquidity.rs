@@ -11,12 +11,12 @@ pub fn handler(ctx: Context<BorrowObligationLiquidity>, liquidity_amount: u64) -
     let clock = Clock::get()?;
 
     require!(
-        !obligation.last_update_slot != clock.slot, // ✅ FIXED: Logic was inverted
+        !obligation.last_update_slot != clock.slot, 
         LendingError::ObligationStale
     );
 
     require!(
-        !borrow_reserve.is_stale(clock.slot)?, // ✅ FIXED: Use is_stale() helper
+        !borrow_reserve.is_stale(clock.slot)?, 
         LendingError::ReserveStale
     );
 
@@ -182,7 +182,6 @@ fn calculate_borrow(
 
     const WAD: u128 = 1_000_000_000_000_000_000;
 
-    // Calculate decimals
     let decimals = 10u128
         .checked_pow(reserve.liquidity_mint_decimals as u32)
         .ok_or(LendingError::MathOverflow)?;

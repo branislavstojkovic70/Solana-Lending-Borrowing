@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/lendborrow.json`.
  */
 export type Lendborrow = {
-  "address": "9usNowCmVFT37UkUoseUDhpcZqkedVYoFi4KG9aAcWsk",
+  "address": "HUiEdjMzMgLtNsqnz6VW8HogCMMSojNLSf5gHLmV7N9b",
   "metadata": {
     "name": "lendborrow",
     "version": "0.1.0",
@@ -1870,16 +1870,6 @@ export type Lendborrow = {
     },
     {
       "name": "lendingMarket",
-      "docs": [
-        "Global configuration account for a lending market.",
-        "",
-        "`LendingMarket` represents a single lending protocol instance on Solana:",
-        "- defines who controls the market (`owner`),",
-        "- defines the PDA authority that owns all vaults and mints (`authority`),",
-        "- stores the program/version metadata,",
-        "- defines the quote currency (e.g. \"USD\", \"USDC\") used for pricing,",
-        "- stores which token program is used (classic SPL or Token-2022)."
-      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -2086,16 +2076,6 @@ export type Lendborrow = {
     },
     {
       "name": "obligation",
-      "docs": [
-        "User position in the lending market.",
-        "",
-        "An `Obligation` tracks a single user's full position in a given `LendingMarket`:",
-        "- total **collateral value** (in quote currency),",
-        "- total **borrowed value**,",
-        "- how much the user is **allowed to borrow**,",
-        "- when the position becomes **unhealthy** (liquidatable),",
-        "- per-reserve collateral and borrow positions stored in a compact, flat buffer."
-      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -2248,132 +2228,71 @@ export type Lendborrow = {
     },
     {
       "name": "reserve",
-      "docs": [
-        "A Reserve represents a liquidity pool inside a lending market.",
-        "",
-        "It tracks:",
-        "- available liquidity",
-        "- borrowed liquidity (in WAD precision)",
-        "- interest rates",
-        "- cumulative borrow rate",
-        "- collateral mint and total supply",
-        "",
-        "Each Reserve is associated with a single liquidity mint (e.g., USDC),",
-        "and has its own oracle, fees, and configuration parameters."
-      ],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "version",
-            "docs": [
-              "Program version for migration compatibility."
-            ],
             "type": "u8"
           },
           {
             "name": "lastUpdateSlot",
-            "docs": [
-              "Last slot when the reserve was updated (interest + price)."
-            ],
             "type": "u64"
           },
           {
             "name": "lendingMarket",
-            "docs": [
-              "Lending market the reserve belongs to."
-            ],
             "type": "pubkey"
           },
           {
             "name": "liquidityMint",
-            "docs": [
-              "SPL mint of the underlying liquidity token."
-            ],
             "type": "pubkey"
           },
           {
             "name": "liquidityMintDecimals",
-            "docs": [
-              "Number of decimals of liquidity mint."
-            ],
             "type": "u8"
           },
           {
             "name": "liquiditySupply",
-            "docs": [
-              "PDA account holding deposited liquidity (supply vault)."
-            ],
             "type": "pubkey"
           },
           {
             "name": "liquidityFeeReceiver",
-            "docs": [
-              "PDA account receiving protocol/host fees."
-            ],
             "type": "pubkey"
           },
           {
             "name": "liquidityOracle",
-            "docs": [
-              "Oracle account providing market price for liquidity token."
-            ],
             "type": "pubkey"
           },
           {
             "name": "liquidityAvailableAmount",
-            "docs": [
-              "Amount of liquidity currently available for withdrawal/borrowing."
-            ],
             "type": "u64"
           },
           {
             "name": "liquidityBorrowedAmountWads",
-            "docs": [
-              "Borrowed liquidity tracked in WAD for precision."
-            ],
             "type": "u128"
           },
           {
             "name": "liquidityCumulativeBorrowRateWads",
-            "docs": [
-              "Cumulative borrow interest rate (WAD precision)."
-            ],
             "type": "u128"
           },
           {
             "name": "liquidityMarketPrice",
-            "docs": [
-              "Current oracle market price for the liquidity token (WAD precision)."
-            ],
             "type": "u128"
           },
           {
             "name": "collateralMint",
-            "docs": [
-              "Mint of the collateral token representing deposit shares."
-            ],
             "type": "pubkey"
           },
           {
             "name": "collateralSupply",
-            "docs": [
-              "PDA holding all minted collateral tokens."
-            ],
             "type": "pubkey"
           },
           {
             "name": "collateralMintTotalSupply",
-            "docs": [
-              "Total supply of collateral tokens (scaled by exchange rate)."
-            ],
             "type": "u64"
           },
           {
             "name": "config",
-            "docs": [
-              "Reserve configuration (rates, LTV, liquidation, fees)."
-            ],
             "type": {
               "defined": {
                 "name": "reserveConfig"
@@ -2385,26 +2304,6 @@ export type Lendborrow = {
     },
     {
       "name": "reserveConfig",
-      "docs": [
-        "Configuration parameters that define how a reserve behaves.",
-        "",
-        "A `ReserveConfig` represents the full risk, interest-rate, and oracle behavior",
-        "for a given Reserve. These values are immutable after initialization and define:",
-        "",
-        "- **Interest Rate Curve**",
-        "`optimal_utilization_rate`, `min_borrow_rate`, `optimal_borrow_rate`, `max_borrow_rate`",
-        "determine how interest increases as the reserve becomes more utilized.",
-        "",
-        "- **Risk Parameters**",
-        "`loan_to_value_ratio`, `liquidation_threshold`, and `liquidation_bonus` control",
-        "collateralization and liquidation safety rules.",
-        "",
-        "- **Protocol Fees**",
-        "Stored inside `ReserveFees`, defining borrow fees and fee splits.",
-        "",
-        "- **Oracle Configuration**",
-        "`pyth_price_feed_id` points to the Pyth price feed used to value this asset."
-      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -2458,11 +2357,6 @@ export type Lendborrow = {
     },
     {
       "name": "reserveFees",
-      "docs": [
-        "Configuration of fees applied to borrow and flash-loan operations.",
-        "",
-        "All fees are expressed in WAD (1e18 fixed-point), except for host fee percentage."
-      ],
       "type": {
         "kind": "struct",
         "fields": [

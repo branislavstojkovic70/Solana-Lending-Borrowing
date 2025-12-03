@@ -2,6 +2,14 @@ use anchor_lang::prelude::*;
 
 #[account]
 #[derive(InitSpace)]
+/// Global configuration account for a lending market.
+///
+/// `LendingMarket` represents a single lending protocol instance on Solana:
+/// - defines who controls the market (`owner`),
+/// - defines the PDA authority that owns all vaults and mints (`authority`),
+/// - stores the program/version metadata,
+/// - defines the quote currency (e.g. "USD", "USDC") used for pricing,
+/// - stores which token program is used (classic SPL or Token-2022).
 pub struct LendingMarket {
     pub owner: Pubkey,
     pub authority: Pubkey,      
@@ -18,7 +26,25 @@ impl LendingMarket {
     pub const PROGRAM_VERSION: u8 = 1;
 
     pub const SEED_PREFIX: &'static [u8] = b"lending-market";
-
+    
+    /// Validates the `quote_currency` field.
+    ///
+    /// The function tries two strategies:
+    ///
+    /// 1. Interpret the bytes as UTF-8:
+    ///    - trim trailing `\0` characters,
+    ///    - require:
+    ///        - non-empty string,
+    ///        - all characters are ASCII alphanumeric (A–Z, a–z, 0–9).
+    ///
+    /// 2. Fallback if UTF-8 fails:
+    ///    - count how many bytes are non-zero,
+    ///    - consider valid if there are at least 20 non-zero bytes.
+    ///
+    /// The goal is:
+    /// - in the common case, accept clean ASCII identifiers like "USD" / "USDC",
+    /// - but still allow a more opaque binary ID if needed, as long as it is
+    ///   clearly not "mostly zeroes".
     pub fn validate_quote_currency(currency: &[u8; 32]) -> bool {
         if let Ok(s) = std::str::from_utf8(currency) {
             let trimmed = s.trim_end_matches('\0');

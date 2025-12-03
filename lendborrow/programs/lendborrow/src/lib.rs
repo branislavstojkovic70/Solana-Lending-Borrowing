@@ -9,7 +9,7 @@ use instructions::*;
 use states::*;
 pub use utils::*;
 
-declare_id!("HUiEdjMzMgLtNsqnz6VW8HogCMMSojNLSf5gHLmV7N9b");
+declare_id!("9usNowCmVFT37UkUoseUDhpcZqkedVYoFi4KG9aAcWsk");
 
 #[program]
 pub mod lendborrow {

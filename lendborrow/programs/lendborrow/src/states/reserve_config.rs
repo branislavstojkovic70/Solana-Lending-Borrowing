@@ -1,6 +1,24 @@
 use anchor_lang::prelude::*;
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, PartialEq, InitSpace)]
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug, PartialEq, InitSpace)]
+/// Configuration parameters that define how a reserve behaves.
+///
+/// A `ReserveConfig` represents the full risk, interest-rate, and oracle behavior
+/// for a given Reserve. These values are immutable after initialization and define:
+///
+/// - **Interest Rate Curve**
+///   `optimal_utilization_rate`, `min_borrow_rate`, `optimal_borrow_rate`, `max_borrow_rate`
+///   determine how interest increases as the reserve becomes more utilized.
+///
+/// - **Risk Parameters**
+///   `loan_to_value_ratio`, `liquidation_threshold`, and `liquidation_bonus` control
+///   collateralization and liquidation safety rules.
+///
+/// - **Protocol Fees**
+///   Stored inside `ReserveFees`, defining borrow fees and fee splits.
+///
+/// - **Oracle Configuration**
+///   `pyth_price_feed_id` points to the Pyth price feed used to value this asset.
 pub struct ReserveConfig {
     pub optimal_utilization_rate: u8,
     pub loan_to_value_ratio: u8,
@@ -10,10 +28,13 @@ pub struct ReserveConfig {
     pub optimal_borrow_rate: u8,
     pub max_borrow_rate: u8,
     pub fees: ReserveFees,
-    pub pyth_price_feed_id: [u8; 32],
+    pub pyth_price_feed_id:[u8; 32],
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, PartialEq, InitSpace)]
+/// Configuration of fees applied to borrow and flash-loan operations.
+///
+/// All fees are expressed in WAD (1e18 fixed-point), except for host fee percentage.
 pub struct ReserveFees {
     pub borrow_fee_wad: u64,
     pub flash_loan_fee_wad: u64,
@@ -21,6 +42,11 @@ pub struct ReserveFees {
 }
 
 impl ReserveConfig {
+    /// Validates the reserve configuration and ensures all parameters fall within
+    /// acceptable risk and economic bounds.
+    ///
+    /// This must be called during reserve initialization to protect the protocol
+    /// from misconfigured assets that could cause insolvency or poor economic outcomes.
     pub fn validate(&self) -> Result<()> {
         // Optimal utilization rate must be between 0-100% (e.g., 80 means 80%)
         require!(
@@ -35,10 +61,7 @@ impl ReserveConfig {
         );
 
         // Liquidation bonus must be between 0-100% (e.g., 5 means liquidator gets 5% discount)
-        require!(
-            self.liquidation_bonus <= 100,
-            crate::errors::LendingError::InvalidReserveConfig
-        );
+        require!(self.liquidation_bonus <= 100, crate::errors::LendingError::InvalidReserveConfig);
 
         // Liquidation threshold must be between 0-100% (e.g., 55 means liquidation starts at 55% collateral ratio)
         require!(

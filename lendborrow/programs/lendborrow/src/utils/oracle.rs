@@ -1,13 +1,13 @@
 use anchor_lang::prelude::*;
 use crate::errors::LendingError;
 use crate::states::LendingMarket;
-use pyth_solana_receiver_sdk::price_update::PriceUpdateV2;
+use pyth_solana_receiver_sdk::price_update::{get_feed_id_from_hex,PriceUpdateV2};
 
 #[cfg(not(feature = "testing"))]
 pub fn validate_pyth_price(
     pyth_price_account: &UncheckedAccount,
     _lending_market: &LendingMarket,
-    feed_id: &[u8; 32],
+    feed_hex: [u8; 32],
 ) -> Result<u128> {
     let price_data = pyth_price_account.try_borrow_data()?;
     
@@ -16,9 +16,9 @@ pub fn validate_pyth_price(
 
     let clock = Clock::get()?;
     const MAX_STALENESS: u64 = 60;
-
+    let feed_id = get_feed_id_from_hex(&hex::encode(&feed_hex))?;
     let price = price_update
-        .get_price_no_older_than(&clock, MAX_STALENESS, feed_id)
+        .get_price_no_older_than(&clock, MAX_STALENESS, &feed_id)
         .map_err(|_| LendingError::OraclePriceStale)?;
 
     require!(price.price > 0, LendingError::OraclePriceInvalid);
@@ -27,7 +27,6 @@ pub fn validate_pyth_price(
         .checked_mul(100)
         .and_then(|v| v.checked_div(price.price.abs() as u128))
         .ok_or(LendingError::MathOverflow)?;
-
     require!(
         confidence_pct < 5,
         LendingError::OraclePriceConfidenceTooWide

@@ -137,6 +137,14 @@ pub fn handler(ctx: Context<WithdrawObligationCollateral>, collateral_amount: u6
     Ok(())
 }
 
+/// Accounts required for withdrawing collateral from an obligation.
+///
+/// Conceptually:
+/// - `withdraw_reserve` defines **which reserve** the collateral comes from.
+/// - `source_collateral` is the **protocol's collateral vault** for this reserve.
+/// - `destination_collateral` is the **user's ATA** that will receive the tokens.
+/// - `obligation` is the user's borrowing position using that collateral.
+/// - `lending_market_authority` is the PDA allowed to move tokens out of the vault.
 #[derive(Accounts)]
 pub struct WithdrawObligationCollateral<'info> {
     #[account(mut)]
