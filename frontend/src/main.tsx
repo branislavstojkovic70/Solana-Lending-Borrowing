@@ -21,6 +21,8 @@ import InitReserve from "./components/Admin/initReserves/initReserves";
 
 // Import wallet adapter CSS
 import "@solana/wallet-adapter-react-ui/styles.css";
+import MarketOverview from './components/Admin/reservesLists/marketOverview';
+import DepositLiquidity from './components/DepositLiquidity/depositLiquidity';
 
 const theme = createTheme({
 	palette: {
@@ -67,13 +69,21 @@ const router = createBrowserRouter([
 			{
 				path: "/market/reserve/init",
 				element: <InitReserve />,
+			},
+			{
+				path: "/market/overview",
+				element: <MarketOverview />
+			},
+			{
+				path: "/reserve/deposit/liquidity",
+				element: <DepositLiquidity />
 			}
 		],
 	},
 ]);
 
 // LOCALNET RPC ENDPOINT
-const RPC_ENDPOINT = "http://127.0.0.1:8899"; 
+const RPC_ENDPOINT = "http://127.0.0.1:8899";
 
 function App() {
 	const wallets = useMemo(
