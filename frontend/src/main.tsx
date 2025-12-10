@@ -77,6 +77,10 @@ const router = createBrowserRouter([
 			{
 				path: "/reserve/deposit/liquidity",
 				element: <DepositLiquidity />
+			},
+			{
+				path: "/deposit/:reserveAddress",
+				element: <DepositLiquidity />
 			}
 		],
 	},

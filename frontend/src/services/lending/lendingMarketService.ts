@@ -1,7 +1,4 @@
-// src/services/lending/lendingMarketService.ts
-
-import { web3 } from "@coral-xyz/anchor";
-import { PublicKey, SystemProgram } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import type { Program } from "@coral-xyz/anchor";
 import type { CreateMarketResult, LendingMarketConfig } from "./types";
@@ -38,12 +35,6 @@ export async function createLendingMarket(
     );
 
     try {
-        console.log("🏗️ Creating lending market...");
-        console.log("📍 Market PDA:", lendingMarketPDA.toBase58());
-        console.log("🔢 Bump:", bump);
-        console.log("👤 Owner:", config.owner.toBase58());
-        console.log("💵 Quote currency:", config.quoteCurrency);
-
         const tx = await program.methods
             .initLendingMarket(quoteCurrencyBytes)
             .accounts({
@@ -53,18 +44,11 @@ export async function createLendingMarket(
                 tokenProgram: TOKEN_PROGRAM_ID,
             })
             .rpc();
-
-        console.log("✅ Lending market created!");
-        console.log("📝 Transaction:", tx);
-
         return {
             marketAddress: lendingMarketPDA.toBase58(),
             signature: tx,
         };
     } catch (error: any) {
-        console.error("❌ Error creating lending market:", error);
-
-        // Parse Anchor errors
         if (error.message?.includes("0x0")) {
             throw new Error("Market already exists for this owner");
         } else if (error.message?.includes("0x1")) {
@@ -74,7 +58,6 @@ export async function createLendingMarket(
         } else if (error.message?.includes("already in use")) {
             throw new Error("Market PDA already in use");
         }
-
         throw new Error(error.message || "Failed to create lending market");
     }
 }
@@ -89,7 +72,6 @@ export async function getLendingMarket(
         const market = await program.account.lendingMarket.fetch(marketPubkey);
         return market;
     } catch (error: any) {
-        console.error("❌ Error fetching market:", error);
         throw new Error("Market not found or invalid");
     }
 }
@@ -99,7 +81,6 @@ export async function getLendingMarketForOwner(
     owner: PublicKey
 ) {
     const [marketPDA] = getLendingMarketPDA(program.programId, owner);
-
     try {
         const market = await program.account.lendingMarket.fetch(marketPDA);
         return {
@@ -107,8 +88,7 @@ export async function getLendingMarketForOwner(
             data: market,
         };
     } catch (error: any) {
-        console.error("❌ Error fetching market:", error);
-        return null; // Market doesn't exist yet
+        return null; 
     }
 }
 

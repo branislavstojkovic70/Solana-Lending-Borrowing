@@ -1,5 +1,3 @@
-// src/services/dashboard/dashboardService.ts
-
 import { PublicKey } from "@solana/web3.js";
 import { BN } from "@coral-xyz/anchor";
 import type { Program } from "@coral-xyz/anchor";
@@ -14,16 +12,12 @@ import type { Lendborrow } from "../../utils/idltype";
 
 const SCALE_FACTOR = 1e18;
 
-/**
- * Calculate user's total stats
- */
 export async function getUserStats(
   program: Program<Lendborrow>,
   userPubkey: PublicKey,
   lendingMarket: PublicKey
 ): Promise<UserStats> {
   try {
-    // Find user's obligation
     const [obligationPDA] = PublicKey.findProgramAddressSync(
       [
         Buffer.from("obligation"),
@@ -37,7 +31,6 @@ export async function getUserStats(
     try {
       obligation = await program.account.obligation.fetch(obligationPDA);
     } catch {
-      // No obligation yet
       return {
         totalSupplied: 0,
         totalBorrowed: 0,
@@ -49,24 +42,20 @@ export async function getUserStats(
       };
     }
 
-    // Parse deposited value (in USD)
     const totalSuppliedUSD = parseFloat(
       obligation.depositedValue.toString()
     ) / 1e6;
 
-    // Parse borrowed value (in USD)
     const totalBorrowedUSD = parseFloat(
       obligation.borrowedValue.toString()
     ) / 1e6;
 
-    // Calculate health factor
     const healthFactor = calculateHealthFactor(
       obligation.depositedValue,
       obligation.borrowedValue,
       obligation.unhealthyBorrowValue
     );
 
-    // Available to borrow
     const allowedBorrowValue = parseFloat(
       obligation.allowedBorrowValue.toString()
     ) / 1e6;
@@ -90,9 +79,6 @@ export async function getUserStats(
   }
 }
 
-/**
- * Get user's supply positions
- */
 export async function getUserSupplyPositions(
   program: Program<Lendborrow>,
   userPubkey: PublicKey,
@@ -115,6 +101,7 @@ export async function getUserSupplyPositions(
         [
           Buffer.from("collateral-mint"),
           lendingMarket.toBuffer(),
+          //@ts-ignore
           reserve.liquidity.mintPubkey.toBuffer(),
         ],
         program.programId
@@ -139,10 +126,8 @@ export async function getUserSupplyPositions(
 
         if (!collateralAccount) continue;
 
-        // Parse token amount
-        const collateralAmount =
-          Number(new BN(collateralAccount.data.slice(64, 72), "le")) /
-          Math.pow(10, reserve.liquidity.mintDecimals);
+        //@ts-ignore
+        const collateralAmount = Number(new BN(collateralAccount.data.slice(64, 72), "le")) / Math.pow(10, reserve.liquidity.mintDecimals);
 
         if (collateralAmount === 0) continue;
 
@@ -153,7 +138,6 @@ export async function getUserSupplyPositions(
         const priceUSD = 1; 
         const amountUSD = amount * priceUSD;
 
-        // Calculate APY
         const utilization = calculateUtilization(reserve);
         const borrowRate = calculateBorrowRate(reserve, utilization);
         const apy = calculateSupplyAPY(
@@ -162,7 +146,7 @@ export async function getUserSupplyPositions(
           reserve.config.protocolTakeRate
         );
 
-        // Get asset info
+        //@ts-ignore
         const assetInfo = getAssetInfo(reserve.liquidity.mintPubkey.toBase58());
 
         positions.push({
@@ -176,21 +160,16 @@ export async function getUserSupplyPositions(
           exchangeRate,
         });
       } catch (err) {
-        console.error(`Error processing reserve ${reserveKey.toBase58()}:`, err);
         continue;
       }
     }
 
     return positions;
   } catch (error) {
-    console.error("Error fetching supply positions:", error);
     return [];
   }
 }
 
-/**
- * Get user's borrow positions
- */
 export async function getUserBorrowPositions(
   program: Program<Lendborrow>,
   userPubkey: PublicKey,
@@ -222,7 +201,6 @@ export async function getUserBorrowPositions(
     for (let i = 0; i < obligation.borrowsLen; i++) {
       const offset = depositOffset + i * 80;
 
-      // Parse borrow data
       const reserveBytes = borrowsData.slice(offset, offset + 32);
       const borrowedAmountWadsBytes = borrowsData.slice(offset + 48, offset + 64);
 
@@ -233,20 +211,17 @@ export async function getUserBorrowPositions(
 
       if (amount === 0) continue;
 
-      // Get reserve info
       const reserve = await program.account.reserve.fetch(reserveKey);
 
-      // Get asset info
+      //@ts-ignore
       const assetInfo = getAssetInfo(reserve.liquidity.mintPubkey.toBase58());
 
-      // Calculate APY
       const utilization = calculateUtilization(reserve);
       const apy = calculateBorrowRate(reserve, utilization);
 
       // TODO: Calculate accrued interest
       const accruedInterest = 0;
 
-      // Get price
       const priceUSD = 1; // TODO: Get real price
       const amountUSD = amount * priceUSD;
 
@@ -268,9 +243,6 @@ export async function getUserBorrowPositions(
   }
 }
 
-/**
- * Get user's collateral positions
- */
 export async function getUserCollateralPositions(
   program: Program<Lendborrow>,
   userPubkey: PublicKey,
@@ -312,13 +284,10 @@ export async function getUserCollateralPositions(
 
       if (amount === 0) continue;
 
-      // Get reserve info
       const reserve = await program.account.reserve.fetch(reserveKey);
-
-      // Get asset info
+      //@ts-ignore
       const assetInfo = getAssetInfo(reserve.liquidity.mintPubkey.toBase58());
 
-      // Get price
       const priceUSD = 1; // TODO: Get real price
       const amountUSD = amount * priceUSD;
 
@@ -338,8 +307,6 @@ export async function getUserCollateralPositions(
     return [];
   }
 }
-
-// ===== HELPER FUNCTIONS =====
 
 function calculateHealthFactor(
   depositedValue: BN,

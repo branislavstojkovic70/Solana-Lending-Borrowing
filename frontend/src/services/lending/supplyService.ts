@@ -1,4 +1,3 @@
-
 import { PublicKey } from "@solana/web3.js";
 import { BN } from "@coral-xyz/anchor";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
@@ -7,7 +6,7 @@ import type { Lendborrow } from "../../utils/idltype";
 
 export interface SupplyConfig {
   reserve: PublicKey;
-  amount: number; // In UI units (e.g., 100.5 USDC)
+  amount: number; 
   userAuthority: PublicKey;
 }
 
@@ -17,9 +16,6 @@ export interface SupplyResult {
   exchangeRate: string;
 }
 
-/**
- * Get all necessary PDAs for supply operation
- */
 export function getSupplyPDAs(
   programId: PublicKey,
   lendingMarket: PublicKey,
@@ -65,9 +61,6 @@ export function getSupplyPDAs(
   };
 }
 
-/**
- * Supply liquidity to a reserve
- */
 export async function supplyLiquidity(
   program: Program<Lendborrow>,
   config: SupplyConfig,
@@ -77,31 +70,20 @@ export async function supplyLiquidity(
   liquidityMint: PublicKey
 ): Promise<SupplyResult> {
   try {
-    console.log("🏦 Supplying liquidity...");
-    console.log("   Amount:", config.amount);
-    console.log("   Reserve:", config.reserve.toBase58());
-
-    // Get reserve info for decimals
     const reserve = await program.account.reserve.fetch(config.reserve);
     //@ts-ignore
     const decimals = reserve.liquidity.mintDecimals;
-
-    // Convert UI amount to blockchain amount
     const amount = new BN(config.amount * Math.pow(10, decimals));
-
-    console.log("   Amount (with decimals):", amount.toString());
-
-    // Get PDAs
     const pdas = getSupplyPDAs(
       program.programId,
       lendingMarket,
       liquidityMint
     );
 
-    // Execute supply
     const tx = await program.methods
       .depositReserveLiquidity(amount)
       .accounts({
+        //@ts-ignore
         userAuthority: config.userAuthority,
         reserve: config.reserve,
         userSourceLiquidity: userSourceLiquidity,
@@ -114,10 +96,6 @@ export async function supplyLiquidity(
       })
       .rpc();
 
-    console.log("✅ Supply successful!");
-    console.log("   Transaction:", tx);
-
-    // Get updated reserve for exchange rate
     const updatedReserve = await program.account.reserve.fetch(config.reserve);
     const exchangeRate = calculateExchangeRate(updatedReserve);
     const collateralAmount = (
@@ -130,9 +108,8 @@ export async function supplyLiquidity(
       exchangeRate,
     };
   } catch (error: any) {
-    console.error("❌ Error supplying liquidity:", error);
+    console.error("Error supplying liquidity:", error);
 
-    // Parse common errors
     if (error.message?.includes("0x1")) {
       throw new Error("Insufficient balance");
     } else if (error.message?.includes("0x3")) {
@@ -145,9 +122,6 @@ export async function supplyLiquidity(
   }
 }
 
-/**
- * Calculate exchange rate from reserve data
- */
 function calculateExchangeRate(reserve: any): string {
   const totalLiquidity =
     Number(reserve.liquidity.availableAmount) +
@@ -163,9 +137,6 @@ function calculateExchangeRate(reserve: any): string {
   return rate.toFixed(6);
 }
 
-/**
- * Get user's supply position
- */
 export async function getUserSupplyPosition(
   program: Program<Lendborrow>,
   reserve: PublicKey,
@@ -189,10 +160,10 @@ export async function getUserSupplyPosition(
       };
     }
 
-    // Parse token account data
     const collateralAmount = Number(
       new BN(collateralAccount.data.slice(64, 72), "le")
     );
+    //@ts-ignore
     const decimals = reserveData.liquidity.mintDecimals;
     const collateralUI = collateralAmount / Math.pow(10, decimals);
 
@@ -205,7 +176,6 @@ export async function getUserSupplyPosition(
       exchangeRate,
     };
   } catch (error) {
-    console.error("Error fetching supply position:", error);
     return {
       collateralAmount: 0,
       liquidityValue: 0,
