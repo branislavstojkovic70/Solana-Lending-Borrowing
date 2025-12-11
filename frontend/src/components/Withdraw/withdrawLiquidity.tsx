@@ -19,14 +19,18 @@ import { useProgram } from "../../utils/useProgram";
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import toast from "react-hot-toast";
+
+
 import { refreshReserve } from "../../services/reserves/refreshService";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import { depositReserveLiquidity, getUserCollateralBalance, getUserLiquidityBalance } from "../../services/deposit/depositService";
+import MoneyOffIcon from "@mui/icons-material/MoneyOff";
+import { getUserCollateralBalance, getUserLiquidityBalance } from "../../services/deposit/depositService";
+import { calculateExpectedLiquidity, redeemReserveCollateral } from "../../services/withdraw/withdrawService";
 
-const DepositLiquidity: React.FC = () => {
+const WithdrawLiquidity: React.FC = () => {
   const { reserveAddress } = useParams<{ reserveAddress: string }>();
   const { program } = useProgram();
   const { publicKey, connected } = useWallet();
@@ -36,9 +40,10 @@ const DepositLiquidity: React.FC = () => {
   const [loadingData, setLoadingData] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [amount, setAmount] = useState("");
-  const [reserveData, setReserveData] = useState<any>(null);
-  const [userBalance, setUserBalance] = useState<number>(0);
+  const [setReserveData] = useState<any>(null);
+  const [userLiquidityBalance, setUserLiquidityBalance] = useState<number>(0);
   const [userCollateral, setUserCollateral] = useState<number>(0);
+  const [expectedLiquidity, setExpectedLiquidity] = useState<number>(0);
   const [apy, setApy] = useState<number>(0);
 
   useEffect(() => {
@@ -48,13 +53,21 @@ const DepositLiquidity: React.FC = () => {
     }
   }, [program, reserveAddress, publicKey]);
 
+  useEffect(() => {
+    if (program && reserveAddress && amount && parseFloat(amount) > 0) {
+      calculateExpected();
+    } else {
+      setExpectedLiquidity(0);
+    }
+  }, [amount, program, reserveAddress]);
+
   const loadReserveData = async () => {
     if (!program || !reserveAddress) return;
 
     try {
       setLoadingData(true);
       const reservePubkey = new PublicKey(reserveAddress);
-
+      
       //@ts-ignore
       const reserve = await program.account.reserve.fetch(reservePubkey);
       setReserveData(reserve);
@@ -63,6 +76,7 @@ const DepositLiquidity: React.FC = () => {
       setApy(calculatedAPY);
 
     } catch (error) {
+      console.error("Error loading reserve:", error);
       toast.error("Failed to load reserve data");
     } finally {
       setLoadingData(false);
@@ -74,15 +88,15 @@ const DepositLiquidity: React.FC = () => {
 
     try {
       const reservePubkey = new PublicKey(reserveAddress);
-
-      const balance = await getUserLiquidityBalance(
+      
+      const liquidityBalance = await getUserLiquidityBalance(
         //@ts-ignore
         program,
         reservePubkey,
         publicKey
       );
-      setUserBalance(balance);
-      
+      setUserLiquidityBalance(liquidityBalance);
+
       const collateral = await getUserCollateralBalance(
         //@ts-ignore
         program,
@@ -96,6 +110,23 @@ const DepositLiquidity: React.FC = () => {
     }
   };
 
+  const calculateExpected = async () => {
+    if (!program || !reserveAddress || !amount) return;
+
+    try {
+      const reservePubkey = new PublicKey(reserveAddress);
+      const expected = await calculateExpectedLiquidity(
+        //@ts-ignore
+        program,
+        reservePubkey,
+        parseFloat(amount)
+      );
+      setExpectedLiquidity(expected);
+    } catch (error) {
+      console.error("Error calculating expected liquidity:", error);
+    }
+  };
+
   const handleRefreshReserve = async () => {
     if (!program || !reserveAddress) return;
 
@@ -105,11 +136,11 @@ const DepositLiquidity: React.FC = () => {
       //@ts-ignore
       await refreshReserve(program, reservePubkey);
       toast.success("Reserve refreshed successfully!");
-
+      
       await loadReserveData();
       await loadUserBalances();
     } catch (error: any) {
-      console.error("Error refreshing reserve:", error);
+      console.error("❌ Error refreshing reserve:", error);
       toast.error(error.message || "Failed to refresh reserve");
     } finally {
       setRefreshing(false);
@@ -121,22 +152,22 @@ const DepositLiquidity: React.FC = () => {
       const optimalBorrowRate = reserve.config?.optimalBorrowRate || 0;
       const availableAmount = reserve.liquidityAvailableAmount?.toNumber() || 0;
       const borrowedAmountWads = reserve.liquidityBorrowedAmountWads?.toString() || "0";
-
+      
       const borrowedAmount = parseFloat(borrowedAmountWads) / Math.pow(10, 18);
       const totalAmount = availableAmount + borrowedAmount;
-
+      
       if (totalAmount === 0) return 5.5;
-
+      
       const utilizationRate = (borrowedAmount / totalAmount) * 100;
       const supplyAPY = (optimalBorrowRate / 100) * (utilizationRate / 100) * 0.8;
-
+      
       return Math.max(5.5, supplyAPY * 100);
     } catch (error) {
       return 5.5;
     }
   };
 
-  const handleDeposit = async () => {
+  const handleWithdraw = async () => {
     if (!program || !reserveAddress || !publicKey || !connected) {
       toast.error("Please connect your wallet");
       return;
@@ -147,8 +178,8 @@ const DepositLiquidity: React.FC = () => {
       return;
     }
 
-    if (parseFloat(amount) > userBalance) {
-      toast.error("Insufficient balance");
+    if (parseFloat(amount) > userCollateral) {
+      toast.error("Insufficient collateral balance");
       return;
     }
 
@@ -157,25 +188,26 @@ const DepositLiquidity: React.FC = () => {
     try {
       const reservePubkey = new PublicKey(reserveAddress);
       //@ts-ignore
-      const result = await depositReserveLiquidity(program, {
+      const result = await redeemReserveCollateral(program, {
         reserve: reservePubkey,
-        liquidityAmount: parseFloat(amount),
+        collateralAmount: parseFloat(amount),
         userPublicKey: publicKey,
       });
 
-      toast.success(`Successfully deposited ${amount} tokens!`);
+      toast.success(`Successfully withdrew ${expectedLiquidity.toFixed(2)} tokens!`);
 
       await loadUserBalances();
       setAmount("");
+      setExpectedLiquidity(0);
     } catch (error: any) {
-      toast.error(error.message || "Failed to deposit liquidity");
+      toast.error(error.message || "Failed to withdraw liquidity");
     } finally {
       setLoading(false);
     }
   };
 
   const handleMaxClick = () => {
-    setAmount(userBalance.toString());
+    setAmount(userCollateral.toString());
   };
 
   const formatAddress = (address: string) => {
@@ -191,7 +223,7 @@ const DepositLiquidity: React.FC = () => {
             Wallet Not Connected
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Please connect your wallet to deposit liquidity
+            Please connect your wallet to withdraw liquidity
           </Typography>
         </Paper>
       </Container>
@@ -213,6 +245,35 @@ const DepositLiquidity: React.FC = () => {
     );
   }
 
+  if (userCollateral === 0) {
+    return (
+      <Container maxWidth="md" sx={{ py: 6 }}>
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={() => navigate("/market/overview")}
+          sx={{ mb: 3 }}
+        >
+          Back to Markets
+        </Button>
+        <Paper elevation={3} sx={{ p: 4, textAlign: "center" }}>
+          <MoneyOffIcon sx={{ fontSize: 64, color: "text.disabled", mb: 2 }} />
+          <Typography variant="h5" gutterBottom>
+            No Deposits Found
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+            You don't have any supplied liquidity in this reserve to withdraw.
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={() => navigate(`/deposit/${reserveAddress}`)}
+          >
+            Supply Liquidity
+          </Button>
+        </Paper>
+      </Container>
+    );
+  }
+
   return (
     <Container maxWidth="md" sx={{ py: 6 }}>
       <Button
@@ -225,6 +286,9 @@ const DepositLiquidity: React.FC = () => {
 
       <Paper elevation={3} sx={{ p: 4 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+          <Typography variant="h4" fontWeight="bold">
+            💸 Withdraw Liquidity
+          </Typography>
           <Button
             startIcon={<RefreshIcon />}
             onClick={handleRefreshReserve}
@@ -235,7 +299,7 @@ const DepositLiquidity: React.FC = () => {
             {refreshing ? "Refreshing..." : "Refresh"}
           </Button>
         </Box>
-
+        
         <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
           Reserve: {formatAddress(reserveAddress || "")}
         </Typography>
@@ -243,21 +307,6 @@ const DepositLiquidity: React.FC = () => {
         <Divider sx={{ my: 3 }} />
 
         <Grid container spacing={2} sx={{ mb: 4 }}>
-          <Grid item xs={12} md={4}>
-            <Card variant="outlined">
-              <CardContent>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Your Balance
-                </Typography>
-                <Typography variant="h5" fontWeight="bold">
-                  {userBalance.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
           <Grid item xs={12} md={4}>
             <Card variant="outlined">
               <CardContent>
@@ -270,6 +319,27 @@ const DepositLiquidity: React.FC = () => {
                     maximumFractionDigits: 2,
                   })}
                 </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Collateral tokens
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Card variant="outlined">
+              <CardContent>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  Wallet Balance
+                </Typography>
+                <Typography variant="h5" fontWeight="bold">
+                  {userLiquidityBalance.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Liquidity tokens
+                </Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -277,13 +347,16 @@ const DepositLiquidity: React.FC = () => {
             <Card variant="outlined" sx={{ bgcolor: "success.light" }}>
               <CardContent>
                 <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
-                  <TrendingUpIcon sx={{ fontSize: 16, mr: 0.5 }} />
-                  <Typography variant="body2" color="text.secondary">
-                    Supply APY
+                  <TrendingDownIcon sx={{ fontSize: 16, mr: 0.5, color: "success.dark" }} />
+                  <Typography variant="body2" color="success.dark">
+                    Current APY
                   </Typography>
                 </Box>
                 <Typography variant="h5" fontWeight="bold" color="success.dark">
                   {apy.toFixed(2)}%
+                </Typography>
+                <Typography variant="caption" color="success.dark">
+                  You're earning
                 </Typography>
               </CardContent>
             </Card>
@@ -292,7 +365,7 @@ const DepositLiquidity: React.FC = () => {
 
         <Box sx={{ mb: 3 }}>
           <Typography variant="body1" gutterBottom fontWeight="500">
-            Amount to Supply
+            Amount to Withdraw (Collateral Tokens)
           </Typography>
           <TextField
             fullWidth
@@ -300,42 +373,37 @@ const DepositLiquidity: React.FC = () => {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="0.00"
-            inputProps={{
-              step: "0.01",
-              min: "0",
-            }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <Button size="small" onClick={handleMaxClick} disabled={loading}>
+                  <Button size="small" onClick={handleMaxClick}>
                     MAX
                   </Button>
                 </InputAdornment>
               ),
             }}
             sx={{ mb: 1 }}
-            disabled={loading}
           />
           <Typography variant="caption" color="text.secondary">
-            Available: {userBalance.toFixed(2)} tokens
+            Available: {userCollateral.toFixed(2)} collateral tokens
           </Typography>
         </Box>
 
-        {amount && parseFloat(amount) > 0 && (
+        {amount && parseFloat(amount) > 0 && expectedLiquidity > 0 && (
           <Alert severity="info" sx={{ mb: 3 }}>
             <Typography variant="body2">
-              <strong>Expected yearly earnings:</strong>{" "}
-              {(parseFloat(amount) * (apy / 100)).toFixed(2)} tokens
+              <strong>You will receive approximately:</strong>{" "}
+              {expectedLiquidity.toFixed(4)} liquidity tokens
             </Typography>
-            <Typography variant="caption">
-              You will receive collateral tokens that represent your deposit + earned interest
+            <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
+              The exact amount is calculated on-chain based on the current exchange rate
             </Typography>
           </Alert>
         )}
 
-        {amount && parseFloat(amount) > userBalance && (
+        {amount && parseFloat(amount) > userCollateral && (
           <Alert severity="error" sx={{ mb: 3 }}>
-            Insufficient balance. You only have {userBalance.toFixed(2)} tokens available.
+            Insufficient collateral. You only have {userCollateral.toFixed(2)} collateral tokens.
           </Alert>
         )}
 
@@ -343,26 +411,27 @@ const DepositLiquidity: React.FC = () => {
           fullWidth
           variant="contained"
           size="large"
-          onClick={handleDeposit}
-          disabled={loading || !amount || parseFloat(amount) <= 0 || parseFloat(amount) > userBalance}
+          onClick={handleWithdraw}
+          disabled={loading || !amount || parseFloat(amount) <= 0 || parseFloat(amount) > userCollateral}
           sx={{ py: 1.5 }}
         >
           {loading ? (
             <>
-              <CircularProgress size={24} sx={{ mr: 1, color: "white" }} />
-              Depositing...
+              <CircularProgress size={24} sx={{ mr: 1 }} />
+              Withdrawing...
             </>
           ) : (
-            "Supply Liquidity"
+            "Withdraw Liquidity"
           )}
         </Button>
 
         {/* Info */}
         <Box sx={{ mt: 3, p: 2, bgcolor: "grey.100", borderRadius: 1 }}>
           <Typography variant="body2" color="text.secondary">
-            <strong>How it works:</strong> When you supply liquidity, you receive collateral
-            tokens that represent your deposit. These tokens automatically earn interest based on
-            the reserve's APY. You can redeem them anytime to get back your deposit + earnings.
+            ℹ<strong>How it works:</strong> When you withdraw, you redeem your collateral
+            tokens for the underlying liquidity tokens. The amount you receive includes your
+            original deposit plus any interest earned. The exchange rate improves over time
+            as interest accrues.
           </Typography>
         </Box>
       </Paper>
@@ -370,4 +439,4 @@ const DepositLiquidity: React.FC = () => {
   );
 };
 
-export default DepositLiquidity;
+export default WithdrawLiquidity;

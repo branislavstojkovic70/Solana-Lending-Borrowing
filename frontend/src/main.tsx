@@ -23,6 +23,7 @@ import InitReserve from "./components/Admin/initReserves/initReserves";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import MarketOverview from './components/Admin/reservesLists/marketOverview';
 import DepositLiquidity from './components/DepositLiquidity/depositLiquidity';
+import WithdrawLiquidity from './components/Withdraw/withdrawLiquidity';
 
 const theme = createTheme({
 	palette: {
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
 			{
 				path: "/deposit/:reserveAddress",
 				element: <DepositLiquidity />
+			},
+			{
+				path: "/withdraw/:reserveAddress",
+				element: <WithdrawLiquidity />
 			}
 		],
 	},
