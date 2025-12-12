@@ -19,8 +19,6 @@ import { useProgram } from "../../utils/useProgram";
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import toast from "react-hot-toast";
-
-
 import { refreshReserve } from "../../services/reserves/refreshService";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";

@@ -32,7 +32,6 @@ export const DepositForm: React.FC<DepositFormProps> = ({
 
   return (
     <>
-      {/* Amount Input */}
       <Box sx={{ mb: 3 }}>
         <Typography variant="body1" gutterBottom fontWeight="500">
           Amount to Supply
@@ -64,7 +63,6 @@ export const DepositForm: React.FC<DepositFormProps> = ({
         </Typography>
       </Box>
 
-      {/* Expected Returns */}
       {amount && parseFloat(amount) > 0 && (
         <Alert severity="info" sx={{ mb: 3 }}>
           <Typography variant="body2">
